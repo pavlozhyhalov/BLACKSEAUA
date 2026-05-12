@@ -1,0 +1,1183 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WoWS Legends · Клан</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Source+Sans+3:wght@300;400;600&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:       #06101a;
+  --bg2:      #0a1a28;
+  --surface:  #0d2035;
+  --surface2: #102540;
+  --border:   #1a3a55;
+  --border2:  #254a68;
+  --accent:   #3a9fd8;
+  --accent2:  #e8c560;
+  --accent3:  #5dd88a;
+  --red:      #e05555;
+  --text:     #b8d4e8;
+  --muted:    #406070;
+  --white:    #e8f4fa;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Source Sans 3', sans-serif;
+  font-weight: 300;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ═══════════════════ BG ATMOSPHERE ═══════════════════ */
+.bg-atmo {
+  position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background:
+    radial-gradient(ellipse 100% 50% at 50% 100%, rgba(20,70,120,.22) 0%, transparent 65%),
+    radial-gradient(ellipse 50% 40% at 10% 50%,  rgba(10,50,90,.14) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 30% at 90% 20%,  rgba(30,90,140,.10) 0%, transparent 60%);
+}
+
+/* ═══════════════════ HEADER ═══════════════════ */
+header {
+  position: relative; z-index: 10;
+  border-bottom: 1px solid var(--border);
+  background: rgba(6,16,26,.92);
+  backdrop-filter: blur(12px);
+}
+
+.header-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  height: 58px;
+}
+
+.logo {
+  font-family: 'Orbitron', monospace;
+  font-weight: 900;
+  font-size: .78rem;
+  letter-spacing: .25em;
+  color: var(--accent2);
+  text-transform: uppercase;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo-divider {
+  width: 1px; height: 28px;
+  background: var(--border2);
+}
+
+.logo-sub {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: .72rem;
+  letter-spacing: .3em;
+  color: var(--muted);
+  font-weight: 400;
+}
+
+nav {
+  display: flex;
+  gap: 2px;
+  margin-left: auto;
+}
+
+.nav-btn {
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 600;
+  font-size: .78rem;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--muted);
+  background: transparent;
+  border: none;
+  padding: 8px 20px;
+  cursor: pointer;
+  transition: color .2s, background .2s;
+  position: relative;
+}
+
+.nav-btn::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 20%; right: 20%;
+  height: 1px;
+  background: var(--accent2);
+  transform: scaleX(0);
+  transition: transform .2s;
+}
+
+.nav-btn:hover { color: var(--text); }
+.nav-btn.active { color: var(--white); }
+.nav-btn.active::after { transform: scaleX(1); }
+
+/* ═══════════════════ PAGES ═══════════════════ */
+.page { display: none; position: relative; z-index: 1; }
+.page.active { display: block; }
+
+/* ═══════════════════ HOME PAGE ═══════════════════ */
+.hero {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 80px 24px 60px;
+  text-align: center;
+}
+
+.hero-eyebrow {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: .68rem;
+  letter-spacing: .4em;
+  color: var(--muted);
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+
+.hero-title {
+  font-family: 'Orbitron', monospace;
+  font-weight: 900;
+  font-size: clamp(1.8rem, 5vw, 3.2rem);
+  color: var(--white);
+  letter-spacing: .06em;
+  line-height: 1.1;
+  margin-bottom: 16px;
+}
+
+.hero-title span { color: var(--accent2); }
+
+.hero-sub {
+  font-size: 1rem;
+  color: var(--muted);
+  letter-spacing: .06em;
+  margin-bottom: 56px;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 32px 28px;
+  cursor: pointer;
+  transition: border-color .2s, transform .2s, box-shadow .2s;
+  text-align: left;
+  position: relative;
+  overflow: hidden;
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(58,159,216,.06) 0%, transparent 60%);
+  opacity: 0;
+  transition: opacity .2s;
+}
+
+.card:hover { border-color: var(--border2); transform: translateY(-3px); box-shadow: 0 12px 40px rgba(0,0,0,.3); }
+.card:hover::before { opacity: 1; }
+.card.card-gold::before { background: linear-gradient(135deg, rgba(232,197,96,.06) 0%, transparent 60%); }
+.card.card-gold:hover { border-color: rgba(232,197,96,.4); }
+
+.card-icon {
+  font-size: 2rem;
+  margin-bottom: 14px;
+  display: block;
+}
+
+.card-title {
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 700;
+  font-size: 1.15rem;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--white);
+  margin-bottom: 8px;
+}
+
+.card-desc {
+  font-size: .85rem;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.card-arrow {
+  position: absolute;
+  bottom: 20px; right: 24px;
+  font-size: 1.1rem;
+  color: var(--border2);
+  transition: color .2s, transform .2s;
+}
+.card:hover .card-arrow { color: var(--accent2); transform: translateX(4px); }
+
+/* ═══════════════════ SECTION HEADER ═══════════════════ */
+.section-header {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 40px 24px 24px;
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.section-title {
+  font-family: 'Orbitron', monospace;
+  font-weight: 700;
+  font-size: 1rem;
+  letter-spacing: .2em;
+  color: var(--white);
+  text-transform: uppercase;
+}
+
+.section-sub {
+  font-size: .72rem;
+  letter-spacing: .2em;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+
+.back-btn {
+  margin-left: auto;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: .72rem;
+  letter-spacing: .15em;
+  color: var(--muted);
+  background: transparent;
+  border: 1px solid var(--border);
+  padding: 5px 14px;
+  cursor: pointer;
+  transition: color .2s, border-color .2s;
+}
+.back-btn:hover { color: var(--text); border-color: var(--border2); }
+
+/* ═══════════════════ LOTTERY PAGE ═══════════════════ */
+.lottery-wrap {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 32px 24px 60px;
+}
+
+.lottery-layout {
+  display: grid;
+  grid-template-columns: 1fr 280px;
+  gap: 40px;
+  align-items: start;
+}
+
+@media (max-width: 660px) {
+  .lottery-layout { grid-template-columns: 1fr; }
+}
+
+.wheel-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.wheel-frame {
+  position: relative;
+  display: inline-block;
+}
+
+.pointer {
+  position: absolute;
+  right: -22px; top: 50%;
+  transform: translateY(-50%);
+  width: 0; height: 0;
+  border-top: 9px solid transparent;
+  border-bottom: 9px solid transparent;
+  border-right: 18px solid var(--accent2);
+  filter: drop-shadow(0 0 6px rgba(232,197,96,.6));
+  z-index: 10;
+}
+
+canvas#wheel {
+  display: block;
+  border-radius: 50%;
+  box-shadow: 0 0 0 2px var(--border), 0 0 60px rgba(58,159,216,.12);
+}
+
+.spin-btn {
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 700;
+  font-size: .9rem;
+  letter-spacing: .25em;
+  text-transform: uppercase;
+  background: transparent;
+  color: var(--accent);
+  border: 1px solid var(--accent);
+  padding: 10px 44px;
+  cursor: pointer;
+  transition: background .18s, color .18s, box-shadow .18s;
+}
+.spin-btn:hover:not(:disabled) {
+  background: var(--accent);
+  color: var(--bg);
+  box-shadow: 0 0 24px rgba(58,159,216,.3);
+}
+.spin-btn:disabled { opacity: .3; cursor: not-allowed; }
+
+.winner-box {
+  display: none;
+  text-align: center;
+  padding: 14px 28px;
+  border-top: 1px solid var(--accent2);
+  animation: fadeUp .3s ease;
+}
+@keyframes fadeUp {
+  from { opacity:0; transform:translateY(8px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+.winner-box.show { display: block; }
+.winner-label { font-size: .65rem; letter-spacing: .25em; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
+.winner-name { font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 1.8rem; color: var(--accent2); word-break: break-all; }
+
+/* sidebar panels */
+.sidebar { display: flex; flex-direction: column; gap: 16px; }
+
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 16px;
+}
+
+.panel-title {
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 600;
+  font-size: .72rem;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.count-badge {
+  background: var(--accent);
+  color: var(--bg);
+  font-size: .65rem;
+  font-weight: 700;
+  padding: 1px 7px;
+  border-radius: 2px;
+}
+
+textarea {
+  width: 100%;
+  min-height: 180px;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  color: var(--white);
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: .85rem;
+  font-weight: 300;
+  padding: 9px 11px;
+  resize: vertical;
+  outline: none;
+  transition: border-color .2s;
+  line-height: 1.9;
+  border-radius: 0;
+}
+textarea:focus { border-color: var(--accent); }
+textarea::placeholder { color: var(--muted); }
+
+.hint { font-size: .68rem; color: var(--muted); margin-top: 5px; letter-spacing: .04em; }
+
+.chip-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  max-height: 100px;
+  overflow-y: auto;
+}
+.chip {
+  font-size: .72rem;
+  padding: 2px 8px;
+  border: 1px solid var(--border);
+  color: var(--text);
+  border-radius: 2px;
+  background: var(--bg2);
+}
+.empty-msg { font-size: .75rem; color: var(--muted); font-style: italic; }
+
+/* ═══════════════════ TOURNAMENT PAGE ═══════════════════ */
+.tournament-wrap {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 32px 24px 60px;
+}
+
+/* rules block */
+.rules-box {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent2);
+  padding: 20px 24px;
+  margin-bottom: 28px;
+}
+
+.rules-title {
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 700;
+  font-size: .78rem;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--accent2);
+  margin-bottom: 12px;
+}
+
+.rules-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 10px;
+}
+
+.rule-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: .82rem;
+  color: var(--text);
+  line-height: 1.5;
+}
+
+.rule-dot {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--accent2);
+  margin-top: 6px;
+  flex-shrink: 0;
+}
+
+/* stages */
+.stages-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin-bottom: 28px;
+}
+
+@media (max-width: 600px) { .stages-row { grid-template-columns: repeat(2, 1fr); } }
+
+.stage-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 14px 16px;
+  text-align: center;
+}
+
+.stage-num {
+  font-family: 'Orbitron', monospace;
+  font-weight: 700;
+  font-size: .65rem;
+  letter-spacing: .2em;
+  color: var(--muted);
+  margin-bottom: 4px;
+  text-transform: uppercase;
+}
+
+.stage-days {
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 600;
+  font-size: .92rem;
+  color: var(--accent);
+  letter-spacing: .08em;
+}
+
+.stage-label {
+  font-size: .72rem;
+  color: var(--muted);
+  margin-top: 3px;
+}
+
+/* prizes */
+.prizes-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 28px;
+}
+
+@media (max-width: 500px) { .prizes-row { grid-template-columns: 1fr; } }
+
+.prize-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 16px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.prize-card.gold-prize { border-color: rgba(232,197,96,.4); }
+.prize-card.silver-prize { border-color: rgba(180,190,200,.3); }
+.prize-card.bronze-prize { border-color: rgba(180,120,60,.3); }
+
+.prize-medal { font-size: 1.6rem; margin-bottom: 6px; display: block; }
+.prize-place { font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: .75rem; letter-spacing: .2em; color: var(--muted); text-transform: uppercase; margin-bottom: 4px; }
+.prize-amount { font-family: 'Orbitron', monospace; font-weight: 700; font-size: 1.1rem; color: var(--accent2); }
+.prize-unit { font-size: .7rem; color: var(--muted); letter-spacing: .1em; margin-top: 2px; }
+
+/* leaderboard */
+.lb-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.lb-title {
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 700;
+  font-size: .78rem;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.add-player-btn {
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 600;
+  font-size: .72rem;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  background: transparent;
+  color: var(--accent);
+  border: 1px solid var(--accent);
+  padding: 5px 14px;
+  cursor: pointer;
+  transition: background .18s, color .18s;
+}
+.add-player-btn:hover { background: var(--accent); color: var(--bg); }
+
+/* table */
+.lb-table-wrap { overflow-x: auto; }
+
+table.lb {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 620px;
+}
+
+table.lb thead tr {
+  background: var(--bg2);
+  border-bottom: 2px solid var(--accent2);
+}
+
+table.lb th {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: .68rem;
+  letter-spacing: .18em;
+  color: var(--accent2);
+  padding: 10px 12px;
+  text-align: left;
+  font-weight: 600;
+  white-space: nowrap;
+  text-transform: uppercase;
+}
+
+table.lb th.center, table.lb td.center { text-align: center; }
+
+table.lb tbody tr {
+  border-bottom: 1px solid var(--border);
+  transition: background .15s;
+}
+table.lb tbody tr:hover { background: rgba(255,255,255,.025); }
+table.lb tbody tr:last-child { border-bottom: none; }
+
+table.lb td {
+  padding: 10px 12px;
+  font-size: .88rem;
+  vertical-align: middle;
+}
+
+.rank-badge {
+  font-family: 'Orbitron', monospace;
+  font-weight: 700;
+  font-size: .72rem;
+  width: 28px; height: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 2px;
+}
+.rank-1 { background: rgba(232,197,96,.2); color: var(--accent2); border: 1px solid rgba(232,197,96,.4); }
+.rank-2 { background: rgba(180,190,200,.15); color: #b8c8d8; border: 1px solid rgba(180,190,200,.3); }
+.rank-3 { background: rgba(180,120,60,.15); color: #d8a060; border: 1px solid rgba(180,120,60,.3); }
+.rank-n { background: var(--bg2); color: var(--muted); border: 1px solid var(--border); }
+
+.player-name { font-weight: 600; color: var(--white); font-size: .92rem; }
+
+.xp-cell {
+  font-family: 'Orbitron', monospace;
+  font-size: .78rem;
+  color: var(--accent);
+}
+.xp-cell.filled { color: var(--accent3); }
+.xp-cell.empty-xp { color: var(--muted); }
+
+.total-cell {
+  font-family: 'Orbitron', monospace;
+  font-weight: 700;
+  font-size: .88rem;
+  color: var(--accent2);
+}
+.total-cell.zero { color: var(--muted); }
+
+.class-icon { font-size: 1rem; }
+
+/* score bar */
+.score-bar-wrap { display: flex; align-items: center; gap: 8px; }
+.score-bar-bg { flex: 1; height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; }
+.score-bar-fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent2)); border-radius: 2px; transition: width .4s ease; }
+
+/* editable */
+.xp-input {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--border);
+  color: var(--accent3);
+  font-family: 'Orbitron', monospace;
+  font-size: .78rem;
+  width: 72px;
+  text-align: center;
+  outline: none;
+  padding: 2px 4px;
+  transition: border-color .2s;
+}
+.xp-input:focus { border-color: var(--accent); }
+.xp-input::placeholder { color: var(--muted); font-size: .7rem; font-family: 'Source Sans 3', sans-serif; font-style: italic; }
+
+/* modal */
+.modal-overlay {
+  display: none;
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,.7);
+  z-index: 100;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(4px);
+}
+.modal-overlay.open { display: flex; }
+
+.modal {
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  padding: 28px 32px;
+  width: min(440px, 90vw);
+  animation: fadeUp .25s ease;
+}
+
+.modal-title {
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 700;
+  font-size: .82rem;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--accent2);
+  margin-bottom: 20px;
+}
+
+.form-row { margin-bottom: 14px; }
+
+.form-label {
+  font-size: .72rem;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  display: block;
+  margin-bottom: 5px;
+}
+
+.form-input {
+  width: 100%;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  color: var(--white);
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: .9rem;
+  padding: 8px 11px;
+  outline: none;
+  transition: border-color .2s;
+  border-radius: 0;
+}
+.form-input:focus { border-color: var(--accent); }
+
+.modal-actions { display: flex; gap: 10px; margin-top: 20px; }
+
+.btn-primary {
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 700;
+  font-size: .78rem;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  background: var(--accent);
+  color: var(--bg);
+  border: none;
+  padding: 9px 24px;
+  cursor: pointer;
+  transition: opacity .18s;
+  flex: 1;
+}
+.btn-primary:hover { opacity: .85; }
+
+.btn-secondary {
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 600;
+  font-size: .78rem;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  background: transparent;
+  color: var(--muted);
+  border: 1px solid var(--border);
+  padding: 9px 20px;
+  cursor: pointer;
+  transition: color .18s, border-color .18s;
+}
+.btn-secondary:hover { color: var(--text); border-color: var(--border2); }
+
+/* scrollbar */
+::-webkit-scrollbar { width: 3px; height: 3px; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+/* responsive */
+@media (max-width: 480px) {
+  .header-inner { padding: 0 14px; gap: 16px; }
+  .logo-sub, .logo-divider { display: none; }
+  .nav-btn { padding: 8px 12px; font-size: .72rem; }
+}
+</style>
+</head>
+<body>
+
+<div class="bg-atmo"></div>
+
+<!-- ═══ HEADER ═══ -->
+<header>
+  <div class="header-inner">
+    <div class="logo">
+      ⚓
+      <div class="logo-divider"></div>
+      <span>WoWS Legends</span>
+      <div class="logo-divider"></div>
+      <span class="logo-sub">Clan Hub</span>
+    </div>
+    <nav>
+      <button class="nav-btn active" onclick="showPage('home')">Головна</button>
+      <button class="nav-btn" onclick="showPage('lottery')">Лотерея</button>
+      <button class="nav-btn" onclick="showPage('tournament')">Турнір</button>
+    </nav>
+  </div>
+</header>
+
+<!-- ═══════════════════ HOME ═══════════════════ -->
+<div id="page-home" class="page active">
+  <div class="hero">
+    <p class="hero-eyebrow">Clan Hub · World of Warships Legends</p>
+    <h1 class="hero-title">Ласкаво<br>просимо, <span>Командире</span></h1>
+    <p class="hero-sub">Обери розділ нижче</p>
+
+    <div class="cards">
+      <div class="card" onclick="showPage('lottery')">
+        <span class="card-icon">🎰</span>
+        <div class="card-title">Лотерея</div>
+        <div class="card-desc">Колесо розіграшу для учасників клану. Додай нікнейми і крути.</div>
+        <span class="card-arrow">→</span>
+      </div>
+      <div class="card card-gold" onclick="showPage('tournament')">
+        <span class="card-icon">🏆</span>
+        <div class="card-title">Турнір</div>
+        <div class="card-desc">Челендж «Універсал» — 4 класи, 12 днів, таблиця результатів.</div>
+        <span class="card-arrow">→</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════ LOTTERY ═══════════════════ -->
+<div id="page-lottery" class="page">
+  <div class="section-header">
+    <span class="section-title">Лотерея</span>
+    <span class="section-sub">Giveaway Wheel</span>
+    <button class="back-btn" onclick="showPage('home')">← Назад</button>
+  </div>
+  <div class="lottery-wrap">
+    <div class="lottery-layout">
+      <div class="wheel-col">
+        <div class="wheel-frame">
+          <canvas id="wheel" width="340" height="340"></canvas>
+          <div class="pointer"></div>
+        </div>
+        <button class="spin-btn" id="spinBtn" onclick="spin()">Крутити</button>
+        <div class="winner-box" id="winnerBox">
+          <div class="winner-label">Переможець</div>
+          <div class="winner-name" id="winnerName"></div>
+        </div>
+      </div>
+      <div class="sidebar">
+        <div class="panel">
+          <div class="panel-title">
+            Учасники
+            <span class="count-badge" id="countBadge">0</span>
+          </div>
+          <textarea id="namesInput"
+            placeholder="Кожен нікнейм з нового рядку:&#10;&#10;Admiral_Kraken&#10;NavyStorm99&#10;SeaWolf_UA&#10;..."
+            oninput="updateList()"></textarea>
+          <p class="hint">↵ кожен нікнейм — новий рядок</p>
+        </div>
+        <div class="panel">
+          <div class="panel-title">Список</div>
+          <div class="chip-list" id="chipList">
+            <span class="empty-msg">Ще немає учасників</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════ TOURNAMENT ═══════════════════ -->
+<div id="page-tournament" class="page">
+  <div class="section-header">
+    <span class="section-title">Турнір</span>
+    <span class="section-sub">Челендж «Універсал»</span>
+    <button class="back-btn" onclick="showPage('home')">← Назад</button>
+  </div>
+  <div class="tournament-wrap">
+
+    <!-- Rules -->
+    <div class="rules-box">
+      <div class="rules-title">📋 Правила челенджу</div>
+      <div class="rules-grid">
+        <div class="rule-item"><div class="rule-dot"></div><div>4 класи: ЛК, КР, ЕМ, АВ</div></div>
+        <div class="rule-item"><div class="rule-dot"></div><div>12 днів, 4 етапи по 3 дні</div></div>
+        <div class="rule-item"><div class="rule-dot"></div><div>1 найкращий бій на клас</div></div>
+        <div class="rule-item"><div class="rule-dot"></div><div>Тільки Рандом, рівень V+</div></div>
+        <div class="rule-item"><div class="rule-dot"></div><div>Скріншот «Командний результат»</div></div>
+        <div class="rule-item"><div class="rule-dot"></div><div>Рахунок: XP ÷ 1000 (округл. вниз)</div></div>
+        <div class="rule-item"><div class="rule-dot"></div><div>Не здав етап вчасно = 0 балів</div></div>
+        <div class="rule-item"><div class="rule-dot"></div><div>Класи не повторюються</div></div>
+      </div>
+    </div>
+
+    <!-- Stages -->
+    <div class="stages-row">
+      <div class="stage-card">
+        <div class="stage-num">Етап 1</div>
+        <div class="stage-days">Дні 1–3</div>
+        <div class="stage-label">Ср → Пт · Будь-який клас</div>
+      </div>
+      <div class="stage-card">
+        <div class="stage-num">Етап 2</div>
+        <div class="stage-days">Дні 4–6</div>
+        <div class="stage-label">Сб → Пн · Будь-який клас</div>
+      </div>
+      <div class="stage-card">
+        <div class="stage-num">Етап 3</div>
+        <div class="stage-days">Дні 7–9</div>
+        <div class="stage-label">Вт → Чт · Будь-який клас</div>
+      </div>
+      <div class="stage-card">
+        <div class="stage-num">Етап 4</div>
+        <div class="stage-days">Дні 10–12</div>
+        <div class="stage-label">Пт → Нд · Останній клас</div>
+      </div>
+    </div>
+
+    <!-- Prizes -->
+    <div class="prizes-row">
+      <div class="prize-card gold-prize">
+        <span class="prize-medal">🥇</span>
+        <div class="prize-place">1 місце</div>
+        <div class="prize-amount">10 000</div>
+        <div class="prize-unit">🪙 ГОЛДИ</div>
+      </div>
+      <div class="prize-card silver-prize">
+        <span class="prize-medal">🥈</span>
+        <div class="prize-place">2 місце</div>
+        <div class="prize-amount">5 000</div>
+        <div class="prize-unit">🪙 ГОЛДИ</div>
+      </div>
+      <div class="prize-card bronze-prize">
+        <span class="prize-medal">🥉</span>
+        <div class="prize-place">3 місце</div>
+        <div class="prize-amount">2 500</div>
+        <div class="prize-unit">🪙 ГОЛДИ</div>
+      </div>
+    </div>
+
+    <!-- Leaderboard -->
+    <div class="lb-header">
+      <span class="lb-title">🏅 Таблиця результатів</span>
+      <button class="add-player-btn" onclick="openModal()">+ Додати гравця</button>
+    </div>
+
+    <div class="lb-table-wrap">
+      <table class="lb" id="lbTable">
+        <thead>
+          <tr>
+            <th style="width:48px">#</th>
+            <th>Гравець</th>
+            <th class="center">⚓ ЛК</th>
+            <th class="center">🚢 КР</th>
+            <th class="center">🚤 ЕМ</th>
+            <th class="center">✈️ АВ</th>
+            <th class="center">Сума балів</th>
+            <th class="center" style="width:120px">Прогрес</th>
+          </tr>
+        </thead>
+        <tbody id="lbBody">
+        </tbody>
+      </table>
+    </div>
+    <p class="hint" style="margin-top:10px">Клікни на клітинку XP щоб ввести результат. XP округляється до тисячі вниз автоматично.</p>
+
+  </div>
+</div>
+
+<!-- ═══════════════════ MODAL ═══════════════════ -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModalOutside(event)">
+  <div class="modal">
+    <div class="modal-title">➕ Додати гравця</div>
+    <div class="form-row">
+      <label class="form-label">Нікнейм</label>
+      <input type="text" class="form-input" id="modalNick" placeholder="Pavlo_Zhyhalov">
+    </div>
+    <div class="modal-actions">
+      <button class="btn-primary" onclick="addPlayer()">Додати</button>
+      <button class="btn-secondary" onclick="closeModal()">Скасувати</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ═══════════════════ NAVIGATION ═══════════════════ */
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  const btns = document.querySelectorAll('.nav-btn');
+  const map = { home:0, lottery:1, tournament:2 };
+  btns[map[id]].classList.add('active');
+  window.scrollTo(0,0);
+}
+
+/* ═══════════════════ WHEEL ═══════════════════ */
+const canvas = document.getElementById('wheel');
+const ctx    = canvas.getContext('2d');
+const W = canvas.width, H = canvas.height;
+const CX = W/2, CY = H/2;
+const RADIUS = W/2 - 8;
+
+const COLORS = [
+  '#1a4a6e','#1e5c5c','#2a3f6e','#1e4a3a','#3a4a6e',
+  '#2a5a72','#1a3a5a','#2e5248','#1e3a6e','#24574a',
+  '#1a3a72','#265248','#1e2a6e','#2a4a3a','#163a6e',
+];
+
+let wNames = [];
+let wAngle = 0;
+let wSpinning = false;
+
+function drawWheel(rot) {
+  ctx.clearRect(0,0,W,H);
+  if (wNames.length === 0) {
+    ctx.beginPath();
+    ctx.arc(CX,CY,RADIUS,0,Math.PI*2);
+    ctx.fillStyle='#0a1a28'; ctx.fill();
+    ctx.strokeStyle='#1a3a55'; ctx.lineWidth=2; ctx.stroke();
+    ctx.fillStyle='#406070';
+    ctx.font='400 13px "Source Sans 3",sans-serif';
+    ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.fillText('Додай учасників →',CX,CY);
+    return;
+  }
+  const n=wNames.length, slice=(Math.PI*2)/n;
+  for(let i=0;i<n;i++){
+    const s=rot+i*slice, e=s+slice;
+    ctx.beginPath(); ctx.moveTo(CX,CY); ctx.arc(CX,CY,RADIUS,s,e); ctx.closePath();
+    ctx.fillStyle=COLORS[i%COLORS.length]; ctx.fill();
+    ctx.strokeStyle='#06101a'; ctx.lineWidth=1.5; ctx.stroke();
+    ctx.save(); ctx.translate(CX,CY); ctx.rotate(s+slice/2);
+    ctx.textAlign='right'; ctx.textBaseline='middle';
+    const fs=n<=6?13:n<=12?11:n<=20?9:8;
+    ctx.font=`600 ${fs}px "Rajdhani",sans-serif`;
+    const lbl=wNames[i].length>13?wNames[i].slice(0,12)+'…':wNames[i];
+    ctx.fillStyle='rgba(0,0,0,.45)'; ctx.fillText(lbl,RADIUS-10,1);
+    ctx.fillStyle='#c8dde8'; ctx.fillText(lbl,RADIUS-11,0);
+    ctx.restore();
+  }
+  ctx.beginPath(); ctx.arc(CX,CY,RADIUS,0,Math.PI*2);
+  ctx.strokeStyle='#1a3a55'; ctx.lineWidth=3; ctx.stroke();
+  ctx.beginPath(); ctx.arc(CX,CY,14,0,Math.PI*2);
+  ctx.fillStyle='#06101a'; ctx.fill();
+  ctx.strokeStyle='#3a9fd8'; ctx.lineWidth=1.5; ctx.stroke();
+}
+
+function calcWinner(rot) {
+  const n=wNames.length, slice=(Math.PI*2)/n;
+  const norm=((rot%(Math.PI*2))+Math.PI*2)%(Math.PI*2);
+  const offset=((0-norm)%(Math.PI*2)+Math.PI*2)%(Math.PI*2);
+  return Math.floor(offset/slice)%n;
+}
+
+function spin() {
+  wNames=getWNames();
+  if(wNames.length<2){alert('Додай мінімум 2 учасники!');return;}
+  if(wSpinning)return;
+  wSpinning=true;
+  document.getElementById('spinBtn').disabled=true;
+  document.getElementById('winnerBox').classList.remove('show');
+  const n=wNames.length, slice=(Math.PI*2)/n;
+  const winIdx=Math.floor(Math.random()*n);
+  const offsetTarget=winIdx*slice+slice/2;
+  const finalRotMod=((-offsetTarget)%(Math.PI*2)+Math.PI*2)%(Math.PI*2);
+  const curMod=((wAngle%(Math.PI*2))+Math.PI*2)%(Math.PI*2);
+  let diff=finalRotMod-curMod; if(diff<0)diff+=Math.PI*2;
+  const fullSpins=(7+Math.floor(Math.random()*4))*Math.PI*2;
+  const totalDelta=fullSpins+diff;
+  const startAngle=wAngle, duration=4500+Math.random()*1000, t0=performance.now();
+  function easeOut(t){return 1-Math.pow(1-t,4);}
+  (function frame(now){
+    const t=Math.min((now-t0)/duration,1);
+    wAngle=startAngle+totalDelta*easeOut(t);
+    drawWheel(wAngle);
+    if(t<1){requestAnimationFrame(frame);}
+    else{
+      const w=calcWinner(wAngle);
+      wSpinning=false;
+      document.getElementById('spinBtn').disabled=false;
+      document.getElementById('winnerName').textContent=wNames[w];
+      const box=document.getElementById('winnerBox');
+      box.classList.remove('show'); void box.offsetWidth; box.classList.add('show');
+    }
+  })(t0);
+}
+
+function getWNames(){
+  return document.getElementById('namesInput').value
+    .split('\n').map(s=>s.trim()).filter(s=>s.length>0);
+}
+
+function updateList(){
+  wNames=getWNames();
+  document.getElementById('countBadge').textContent=wNames.length;
+  const cl=document.getElementById('chipList');
+  cl.innerHTML=wNames.length===0
+    ?'<span class="empty-msg">Ще немає учасників</span>'
+    :wNames.map(n=>`<span class="chip">${esc(n)}</span>`).join('');
+  drawWheel(wAngle);
+}
+
+function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+/* ═══════════════════ TOURNAMENT ═══════════════════ */
+let players = [];
+
+function addPlayer() {
+  const nick = document.getElementById('modalNick').value.trim();
+  if (!nick) return;
+  players.push({ nick, xp: [null, null, null, null] });
+  closeModal();
+  document.getElementById('modalNick').value = '';
+  renderTable();
+}
+
+function calcScore(xp) {
+  return xp.reduce((sum, v) => sum + (v !== null ? Math.floor(v / 1000) : 0), 0);
+}
+
+function renderTable() {
+  const sorted = [...players]
+    .map((p, i) => ({ ...p, origIdx: i, score: calcScore(p.xp) }))
+    .sort((a, b) => b.score - a.score);
+
+  const maxScore = sorted.length ? Math.max(...sorted.map(p => p.score), 1) : 1;
+  const classes = ['⚓ ЛК', '🚢 КР', '🚤 ЕМ', '✈️ АВ'];
+  const body = document.getElementById('lbBody');
+
+  if (sorted.length === 0) {
+    body.innerHTML = `<tr><td colspan="8" style="text-align:center;padding:32px;color:var(--muted);font-style:italic;font-size:.85rem;">Поки немає учасників. Натисни «+ Додати гравця»</td></tr>`;
+    return;
+  }
+
+  body.innerHTML = sorted.map((p, rank) => {
+    const rankClass = rank === 0 ? 'rank-1' : rank === 1 ? 'rank-2' : rank === 2 ? 'rank-3' : 'rank-n';
+    const barW = maxScore > 0 ? Math.round((p.score / maxScore) * 100) : 0;
+    const xpCells = p.xp.map((v, ci) => {
+      const idx = p.origIdx;
+      if (v !== null) {
+        return `<td class="center"><span class="xp-cell filled">${v.toLocaleString()}<br><small style="font-size:.65rem;color:var(--muted)">${Math.floor(v/1000)} бал</small></span></td>`;
+      } else {
+        return `<td class="center"><input class="xp-input" type="number" min="0" placeholder="XP" onchange="setXP(${idx},${ci},this.value)" title="${classes[ci]}"></td>`;
+      }
+    }).join('');
+    return `
+      <tr>
+        <td class="center"><span class="rank-badge ${rankClass}">${rank+1}</span></td>
+        <td><span class="player-name">${esc(p.nick)}</span></td>
+        ${xpCells}
+        <td class="center"><span class="total-cell ${p.score===0?'zero':''}">${p.score}</span></td>
+        <td class="center">
+          <div class="score-bar-wrap">
+            <div class="score-bar-bg"><div class="score-bar-fill" style="width:${barW}%"></div></div>
+            <span style="font-size:.68rem;color:var(--muted);min-width:28px">${barW}%</span>
+          </div>
+        </td>
+      </tr>`;
+  }).join('');
+}
+
+function setXP(playerIdx, classIdx, val) {
+  const v = parseInt(val);
+  if (!isNaN(v) && v >= 0) {
+    players[playerIdx].xp[classIdx] = v;
+  } else {
+    players[playerIdx].xp[classIdx] = null;
+  }
+  renderTable();
+}
+
+/* modal */
+function openModal() {
+  document.getElementById('modalOverlay').classList.add('open');
+  setTimeout(() => document.getElementById('modalNick').focus(), 50);
+}
+function closeModal() {
+  document.getElementById('modalOverlay').classList.remove('open');
+}
+function closeModalOutside(e) {
+  if (e.target === document.getElementById('modalOverlay')) closeModal();
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeModal();
+  if (e.key === 'Enter' && document.getElementById('modalOverlay').classList.contains('open')) addPlayer();
+});
+
+/* init */
+drawWheel(0);
+renderTable();
+</script>
+</body>
+</html>
