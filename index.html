@@ -63,7 +63,7 @@ header {
 .clan-title {
   font-family: 'Orbitron', monospace;
   font-weight: 900;
-  font-size: 1.1rem;
+  font-size: 1rem;
   letter-spacing: 0.25em;
   color: var(--accent2);
   text-transform: uppercase;
@@ -181,7 +181,39 @@ header {
 .lottery-wrap {
   max-width: 1000px;
   margin: 0 auto;
-  padding: 40px 24px;
+  padding: 30px 24px 50px;
+}
+
+.lottery-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  flex-wrap: wrap;
+  gap: 15px;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 15px;
+}
+
+.lottery-header h2 {
+  font-family: 'Orbitron', monospace;
+  font-size: 1.2rem;
+  letter-spacing: 0.2em;
+  color: var(--accent2);
+}
+
+.back-home-btn {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 6px 20px;
+  cursor: pointer;
+  font-family: monospace;
+  transition: all 0.2s;
+}
+.back-home-btn:hover {
+  border-color: var(--accent2);
+  color: var(--accent2);
 }
 
 .lottery-layout {
@@ -256,15 +288,27 @@ canvas#wheelCanvas {
 .winner-box {
   display: none;
   text-align: center;
-  padding: 16px 24px;
-  background: rgba(0,0,0,0.5);
-  border-radius: 60px;
-  border-left: 2px solid var(--accent2);
+  padding: 12px 28px;
+  background: rgba(0,0,0,0.6);
+  border-radius: 50px;
+  border-left: 3px solid var(--accent2);
   animation: fadeUp 0.4s ease;
 }
 .winner-box.show { display: block; }
-.winner-label { font-size: .7rem; letter-spacing: .25em; color: var(--muted); text-transform: uppercase; }
-.winner-name { font-family: 'Rajdhani', sans-serif; font-weight: 800; font-size: 1.6rem; color: var(--accent2); }
+.winner-label { 
+  font-size: 0.65rem; 
+  letter-spacing: 0.25em; 
+  color: var(--accent2); 
+  text-transform: uppercase;
+  font-weight: 600;
+}
+.winner-name { 
+  font-family: 'Rajdhani', sans-serif; 
+  font-weight: 800; 
+  font-size: 1.4rem; 
+  color: var(--white);
+  margin-top: 4px;
+}
 
 .sidebar {
   display: flex;
@@ -356,7 +400,13 @@ textarea:focus { border-color: var(--accent); }
   padding: 6px 20px;
   cursor: pointer;
   font-family: monospace;
+  transition: all 0.2s;
 }
+.back-home:hover {
+  border-color: var(--accent2);
+  color: var(--accent2);
+}
+
 .rules-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -364,6 +414,7 @@ textarea:focus { border-color: var(--accent); }
   background: var(--surface);
   padding: 20px;
   margin-bottom: 30px;
+  border-radius: 8px;
 }
 .rule-item {
   font-size: .85rem;
@@ -382,6 +433,7 @@ textarea:focus { border-color: var(--accent); }
   text-align: center;
   padding: 12px;
   border: 1px solid var(--border);
+  border-radius: 8px;
 }
 .prizes-container {
   display: grid;
@@ -393,12 +445,16 @@ textarea:focus { border-color: var(--accent); }
   text-align: center;
   padding: 15px;
   background: var(--surface);
+  border-radius: 8px;
+  border: 1px solid var(--border);
 }
 .lb-control {
   display: flex;
   justify-content: space-between;
   margin-bottom: 20px;
   align-items: center;
+  flex-wrap: wrap;
+  gap: 15px;
 }
 .add-btn {
   background: var(--accent);
@@ -407,12 +463,15 @@ textarea:focus { border-color: var(--accent); }
   color: var(--bg);
   font-weight: bold;
   cursor: pointer;
+  border-radius: 4px;
+}
+.table-wrapper {
+  overflow-x: auto;
 }
 table {
   width: 100%;
   border-collapse: collapse;
-  overflow-x: auto;
-  display: block;
+  min-width: 600px;
 }
 th, td {
   padding: 12px 8px;
@@ -423,6 +482,7 @@ th {
   color: var(--accent2);
   font-size: .7rem;
   letter-spacing: .1em;
+  text-transform: uppercase;
 }
 .xp-input {
   width: 70px;
@@ -431,6 +491,7 @@ th {
   border-bottom: 1px solid var(--border);
   color: var(--accent3);
   text-align: center;
+  outline: none;
 }
 .delete-btn {
   background: none;
@@ -438,6 +499,7 @@ th {
   color: var(--red);
   padding: 2px 8px;
   cursor: pointer;
+  border-radius: 4px;
 }
 .modal {
   display: none;
@@ -457,6 +519,26 @@ th {
   padding: 30px;
   width: 90%;
   max-width: 400px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+}
+.modal-content h3 {
+  color: var(--accent2);
+  margin-bottom: 15px;
+}
+.modal-content input {
+  width: 100%;
+  padding: 10px;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  color: white;
+  margin: 15px 0;
+}
+.modal-content button {
+  width: 100%;
+  padding: 10px;
+  margin-top: 8px;
+  cursor: pointer;
 }
 </style>
 </head>
@@ -469,69 +551,60 @@ th {
   </div>
 </header>
 
-<!-- ГОЛОВНА СТОРІНКА (БЛОКИ) -->
+<!-- ГОЛОВНА СТОРІНКА -->
 <div id="homePage" class="page active">
   <div class="hero">
     <h1 class="hero-title">Ласкаво просимо, <span>Командире</span></h1>
     <p class="hero-sub">Обери розділ нижче</p>
     <div class="cards">
       <div class="card" onclick="openLottery()">
-        <span class="card-icon">🎡</span>
+        <span class="card-icon">🎰</span>
         <div class="card-title">РОЗІГРАШ</div>
         <div class="card-desc">Колесо удачі для учасників клану</div>
         <span class="card-arrow">→</span>
       </div>
-      <div class="card" onclick="openTournament()">
+      <div class="card" onclick="openTournamentsList()">
         <span class="card-icon">🏆</span>
-        <div class="card-title">ТУРНІР</div>
-        <div class="card-desc">Челендж «Гнучкість»</div>
+        <div class="card-title">ТУРНІРИ</div>
+        <div class="card-desc">Челенджі та змагання клану</div>
         <span class="card-arrow">→</span>
       </div>
     </div>
   </div>
 </div>
 
-<!-- СТОРІНКА ЛОТЕРЕЇ -->
-<div id="lotteryPage" class="page">
+<!-- СТОРІНКА СПИСКУ ТУРНІРІВ -->
+<div id="tournamentsListPage" class="page">
   <div class="lottery-wrap">
-    <div class="lottery-layout">
-      <div class="wheel-col">
-        <div class="wheel-frame">
-          <canvas id="wheelCanvas" width="400" height="400"></canvas>
-          <div class="pointer"></div>
-        </div>
-        <button class="spin-btn" id="spinButton">КРУТИТИ КОЛЕСО</button>
-        <div class="winner-box" id="winnerBox">
-          <div class="winner-label">ПЕРЕМОЖЕЦЬ</div>
-          <div class="winner-name" id="winnerName">-</div>
-        </div>
-      </div>
-      <div class="sidebar">
-        <div class="panel">
-          <div class="panel-title">УЧАСНИКИ <span id="playerCount">0</span></div>
-          <textarea id="playersList" placeholder="Введіть імена гравців кожне з нового рядка"></textarea>
-          <button onclick="updateWheelFromList()" style="margin-top:10px; background:var(--border); border:none; padding:5px; color:white;">Оновити колесо</button>
-        </div>
-        <div class="panel">
-          <div class="panel-title">СПИСОК</div>
-          <div id="chipContainer"></div>
-        </div>
+    <div class="lottery-header">
+      <h2>🏆 ТУРНІРИ</h2>
+      <button class="back-home-btn" onclick="backToHome()">← На головну</button>
+    </div>
+    <div class="cards" style="max-width: 500px; margin: 0 auto;">
+      <div class="card" onclick="openTournament('flexibility')">
+        <span class="card-icon">🏅</span>
+        <div class="card-title">ГНУЧКІСТЬ</div>
+        <div class="card-desc">4 класи, 12 днів, призовий фонд</div>
+        <span class="card-arrow">→</span>
       </div>
     </div>
   </div>
 </div>
 
-<!-- СТОРІНКА ТУРНІРУ -->
-<div id="tournamentPage" class="page">
+<!-- СТОРІНКА ТУРНІРУ "ГНУЧКІСТЬ" -->
+<div id="tournamentFlexPage" class="page">
   <div class="tournament-wrap">
     <div class="tournament-header">
       <div class="tournament-title">🏅 ЧЕЛЕНДЖ «ГНУЧКІСТЬ»</div>
-      <button class="back-home" onclick="backToHome()">← На головну</button>
+      <button class="back-home" onclick="backToTournamentsList()">← До списку</button>
     </div>
     <div class="rules-grid">
-      <div class="rule-item">⚓ 4 класи: ЛК, КР, ЕМ, АВ</div><div class="rule-item">📅 12 днів / 4 етапи</div>
-      <div class="rule-item">🎯 XP ÷ 1000 = бали</div><div class="rule-item">🚫 Класи не повторюються</div>
-      <div class="rule-item">🏆 Тільки Рандом V+</div><div class="rule-item">⏰ Не вклався = 0 балів</div>
+      <div class="rule-item">⚓ 4 класи: ЛК, КР, ЕМ, АВ</div>
+      <div class="rule-item">📅 12 днів / 4 етапи</div>
+      <div class="rule-item">🎯 XP ÷ 1000 = бали</div>
+      <div class="rule-item">🚫 Класи не повторюються</div>
+      <div class="rule-item">🏆 Тільки Рандом V+</div>
+      <div class="rule-item">⏰ Не вклався = 0 балів</div>
     </div>
     <div class="stages-container">
       <div class="stage-card"><b>ЕТАП 1</b><br>Дні 1-3</div>
@@ -548,7 +621,7 @@ th {
       <span>🏆 ТАБЛИЦЯ РЕЗУЛЬТАТІВ</span>
       <button class="add-btn" onclick="openPlayerModal()">+ ДОДАТИ ГРАВЦЯ</button>
     </div>
-    <div style="overflow-x: auto;">
+    <div class="table-wrapper">
       <table id="tournamentTable">
         <thead><tr><th>#</th><th>Гравець</th><th>⚓ ЛК</th><th>🚢 КР</th><th>🚤 ЕМ</th><th>✈️ АВ</th><th>СУМА</th><th></th></tr></thead>
         <tbody id="tournamentTbody"></tbody>
@@ -557,17 +630,77 @@ th {
   </div>
 </div>
 
+<!-- СТОРІНКА ЛОТЕРЕЇ -->
+<div id="lotteryPage" class="page">
+  <div class="lottery-wrap">
+    <div class="lottery-header">
+      <h2>🎡 РОЗІГРАШ</h2>
+      <button class="back-home-btn" onclick="backToHome()">← На головну</button>
+    </div>
+    <div class="lottery-layout">
+      <div class="wheel-col">
+        <div class="wheel-frame">
+          <canvas id="wheelCanvas" width="400" height="400"></canvas>
+          <div class="pointer"></div>
+        </div>
+        <button class="spin-btn" id="spinButton">КРУТИТИ КОЛЕСО</button>
+        <div class="winner-box" id="winnerBox">
+          <div class="winner-label">ПЕРЕМОЖЕЦЬ</div>
+          <div class="winner-name" id="winnerName">-</div>
+        </div>
+      </div>
+      <div class="sidebar">
+        <div class="panel">
+          <div class="panel-title">УЧАСНИКИ <span id="playerCount">0</span></div>
+          <textarea id="playersList" placeholder="Введіть імена гравців кожне з нового рядка"></textarea>
+          <button onclick="updateWheelFromList()" style="margin-top:10px; background:var(--border); border:none; padding:8px; color:white; cursor:pointer; border-radius:4px;">Оновити колесо</button>
+        </div>
+        <div class="panel">
+          <div class="panel-title">СПИСОК</div>
+          <div id="chipContainer" class="chip-list"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div id="playerModal" class="modal">
   <div class="modal-content">
-    <h3>Новий гравець</h3>
-    <input type="text" id="newPlayerName" placeholder="Нікнейм" style="width:100%; padding:8px; margin:15px 0;">
-    <button onclick="addPlayerToList()" style="background:var(--accent); border:none; padding:8px; width:100%;">Додати</button>
-    <button onclick="closeModal()" style="margin-top:10px; background:transparent; border:1px solid gray; padding:8px; width:100%;">Скасувати</button>
+    <h3>➕ Новий гравець</h3>
+    <input type="text" id="newPlayerName" placeholder="Нікнейм">
+    <button onclick="addPlayerToList()" style="background:var(--accent); color:var(--bg); border:none;">Додати</button>
+    <button onclick="closeModal()" style="background:transparent; border:1px solid gray; color:white;">Скасувати</button>
   </div>
 </div>
 
 <script>
-  // ---------- ГЛОБАЛЬНІ ЗМІННІ ----------
+  // ========== НАВІГАЦІЯ ==========
+  function backToHome() {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById('homePage').classList.add('active');
+  }
+  function openLottery() {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById('lotteryPage').classList.add('active');
+    setTimeout(() => { drawWheel(); }, 50);
+  }
+  function openTournamentsList() {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById('tournamentsListPage').classList.add('active');
+  }
+  function backToTournamentsList() {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById('tournamentsListPage').classList.add('active');
+  }
+  function openTournament(name) {
+    if (name === 'flexibility') {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.getElementById('tournamentFlexPage').classList.add('active');
+      renderTournamentTable();
+    }
+  }
+
+  // ========== ЛОТЕРЕЯ ==========
   let lotteryPlayers = [];
   let currentAngle = 0;
   let animationFrame = null;
@@ -577,28 +710,6 @@ th {
   let centerX = width/2, centerY = height/2;
   let radius = width/2 - 10;
 
-  // Турнірні дані
-  let tournamentData = [];
-
-  // ---------- НАВІГАЦІЯ ----------
-  window.openLottery = () => {
-    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-    document.getElementById('lotteryPage').classList.add('active');
-    if (lotteryPlayers.length === 0) loadLotteryFromStorage();
-    drawWheel();
-  };
-  window.openTournament = () => {
-    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-    document.getElementById('tournamentPage').classList.add('active');
-    loadTournamentFromStorage();
-    renderTournamentTable();
-  };
-  window.backToHome = () => {
-    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-    document.getElementById('homePage').classList.add('active');
-  };
-
-  // ---------- ЛОТЕРЕЯ (КОЛЕСО З СЕКТОРАМИ ТА ПРАВИЛЬНИМ ВИПАДАННЯМ) ----------
   function setCanvasSize() {
     const container = document.querySelector('.wheel-frame');
     const size = Math.min(container.clientWidth, 380);
@@ -619,7 +730,8 @@ th {
     if (lotteryPlayers.length === 0) {
       ctx.fillStyle = '#1a2a3a';
       ctx.beginPath(); ctx.arc(centerX, centerY, radius, 0, Math.PI*2); ctx.fill();
-      ctx.fillStyle = 'white'; ctx.font = '14px sans-serif'; ctx.fillText('Додайте гравців', centerX-60, centerY);
+      ctx.fillStyle = '#8aa0b0'; ctx.font = 'bold 14px sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText('Додайте гравців', centerX, centerY);
       return;
     }
     const count = lotteryPlayers.length;
@@ -640,7 +752,7 @@ th {
       ctx.textBaseline = 'middle';
       let name = lotteryPlayers[i];
       if (name.length > 12) name = name.slice(0,10)+'..';
-      ctx.font = `bold ${Math.max(10, 16 - Math.floor(count/2))}px "Rajdhani"`;
+      ctx.font = `bold ${Math.max(10, 16 - Math.floor(count/3))}px "Rajdhani"`;
       ctx.fillStyle = '#ffffff';
       ctx.shadowBlur = 0;
       ctx.fillText(name, radius - 28, 5);
@@ -657,17 +769,14 @@ th {
     let pointerAngle = -Math.PI / 2;
     let rawAngle = (pointerAngle - currentAngle) % (Math.PI * 2);
     if (rawAngle < 0) rawAngle += Math.PI * 2;
-    let idx = Math.floor(rawAngle / angleStep);
-    return idx % lotteryPlayers.length;
+    return Math.floor(rawAngle / angleStep) % lotteryPlayers.length;
   }
 
   function spinWheel() {
-    if (lotteryPlayers.length < 2) {
-      alert("Додайте хоча б 2 гравці!");
-      return;
-    }
+    if (lotteryPlayers.length < 2) { alert("Додайте хоча б 2 гравці!"); return; }
     const spinBtn = document.getElementById('spinButton');
     spinBtn.disabled = true;
+    document.getElementById('winnerBox').classList.remove('show');
     const totalSpins = 10 + Math.random() * 8;
     const targetDelta = Math.random() * Math.PI * 2;
     const startAngle = currentAngle;
@@ -688,7 +797,7 @@ th {
         document.getElementById('winnerName').innerText = winner;
         document.getElementById('winnerBox').classList.add('show');
         spinBtn.disabled = false;
-        cancelAnimationFrame(animationFrame);
+        if (animationFrame) cancelAnimationFrame(animationFrame);
       }
     }
     animationFrame = requestAnimationFrame(animateSpin);
@@ -704,6 +813,7 @@ th {
     drawWheel();
     localStorage.setItem('lotteryData', JSON.stringify(lotteryPlayers));
   }
+  
   function loadLotteryFromStorage() {
     const saved = localStorage.getItem('lotteryData');
     if (saved) {
@@ -713,17 +823,30 @@ th {
       updateWheelFromList();
     }
   }
-  function escapeHtml(str) { return str.replace(/[&<>]/g, function(m){if(m==='&') return '&amp;'; if(m==='<') return '&lt;'; if(m==='>') return '&gt;'; return m;}); }
+  
+  function escapeHtml(str) { 
+    if (!str) return '';
+    return str.replace(/[&<>]/g, function(m){
+      if(m==='&') return '&amp;'; 
+      if(m==='<') return '&lt;'; 
+      if(m==='>') return '&gt;'; 
+      return m;
+    }); 
+  }
 
-  // ---------- ТУРНІР (ЗБЕРЕЖЕННЯ, РЕДАГУВАННЯ, ВИДАЛЕННЯ) ----------
+  // ========== ТУРНІР ==========
+  let tournamentData = [];
+
   function saveTournamentData() {
     localStorage.setItem('tournamentFlexData', JSON.stringify(tournamentData));
   }
+  
   function loadTournamentFromStorage() {
     const saved = localStorage.getItem('tournamentFlexData');
     if (saved) tournamentData = JSON.parse(saved);
     else tournamentData = [];
   }
+  
   function renderTournamentTable() {
     let playersWithScores = tournamentData.map((p, idx) => {
       let total = p.xp.reduce((sum, val) => sum + (val ? Math.floor(val/1000) : 0), 0);
@@ -732,7 +855,7 @@ th {
     playersWithScores.sort((a,b) => b.total - a.total);
     const tbody = document.getElementById('tournamentTbody');
     if (!tournamentData.length) {
-      tbody.innerHTML = '<tr><td colspan="7">Немає учасників. Додайте гравця.</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="7" style="padding:40px; text-align:center;">Немає учасників. Додайте гравця.<tr></tr>';
       return;
     }
     tbody.innerHTML = playersWithScores.map((p, rank) => {
@@ -740,50 +863,58 @@ th {
       for(let i=0; i<4; i++) {
         let val = tournamentData[p.idx].xp[i];
         if (val) xpCells += `<td>${val}<br><small>${Math.floor(val/1000)}</small></td>`;
-        else xpCells += `<td><input class="xp-input" type="number" placeholder="XP" onchange="updateXP(${p.idx}, ${i}, this.value)"></td>`;
+        else xpCells += `<td><input class="xp-input" type="number" placeholder="XP" onchange="updateXP(${p.idx}, ${i}, this.value)"><tr>`;
       }
       return `<tr>
         <td>${rank+1}</td>
         <td ondblclick="editNickname(${p.idx})" style="cursor:pointer;">${escapeHtml(p.nick)}</td>
         ${xpCells}
         <td><b>${p.total}</b></td>
-        <td><button class="delete-btn" onclick="deletePlayer(${p.idx})">X</button></td>
+        <td><button class="delete-btn" onclick="deletePlayer(${p.idx})">🗑</button></td>
       </tr>`;
     }).join('');
   }
+  
   window.updateXP = (idx, classIdx, value) => {
     let num = parseInt(value);
     tournamentData[idx].xp[classIdx] = isNaN(num) ? null : num;
     saveTournamentData();
     renderTournamentTable();
   };
+  
   window.deletePlayer = (idx) => {
-    tournamentData.splice(idx, 1);
-    saveTournamentData();
-    renderTournamentTable();
+    if (confirm(`Видалити гравця ${tournamentData[idx].nick}?`)) {
+      tournamentData.splice(idx, 1);
+      saveTournamentData();
+      renderTournamentTable();
+    }
   };
+  
   window.editNickname = (idx) => {
     let newName = prompt("Новий нікнейм", tournamentData[idx].nick);
     if(newName && newName.trim()) tournamentData[idx].nick = newName.trim();
     saveTournamentData();
     renderTournamentTable();
   };
+  
   window.openPlayerModal = () => {
     document.getElementById('playerModal').classList.add('active');
   };
+  
   window.closeModal = () => {
     document.getElementById('playerModal').classList.remove('active');
+    document.getElementById('newPlayerName').value = '';
   };
+  
   window.addPlayerToList = () => {
     let name = document.getElementById('newPlayerName').value.trim();
     if(!name) return;
     tournamentData.push({ nick: name, xp: [null, null, null, null] });
     saveTournamentData();
     renderTournamentTable();
-    document.getElementById('newPlayerName').value = '';
     closeModal();
   };
-  
+
   // Ініціалізація
   document.getElementById('spinButton').onclick = spinWheel;
   document.getElementById('playersList').addEventListener('input', updateWheelFromList);
