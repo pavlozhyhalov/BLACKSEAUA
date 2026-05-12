@@ -634,7 +634,7 @@ th {
 <div id="lotteryPage" class="page">
   <div class="lottery-wrap">
     <div class="lottery-header">
-      <h2>РОЗІГРАШ</h2>
+      <h2>🎲 РОЗІГРАШ</h2>
       <button class="back-home-btn" onclick="backToHome()">← На головну</button>
     </div>
     <div class="lottery-layout">
@@ -844,13 +844,17 @@ th {
   
   function loadTournamentFromStorage() {
     const saved = localStorage.getItem('tournamentFlexData');
-    if (saved) tournamentData = JSON.parse(saved);
-    else tournamentData = [];
+    if (saved) {
+      tournamentData = JSON.parse(saved);
+    } else {
+      tournamentData = [];
+    }
   }
   
   function renderTournamentTable() {
+    if (!tournamentData) tournamentData = [];
     let playersWithScores = tournamentData.map((p, idx) => {
-      let total = p.xp.reduce((sum, val) => sum + (val ? Math.floor(val/1000) : 0), 0);
+      let total = (p.xp || [null, null, null, null]).reduce((sum, val) => sum + (val ? Math.floor(val/1000) : 0), 0);
       return { ...p, total, idx };
     });
     playersWithScores.sort((a,b) => b.total - a.total);
@@ -862,13 +866,13 @@ th {
     tbody.innerHTML = playersWithScores.map((p, rank) => {
       let xpCells = '';
       for(let i=0; i<4; i++) {
-        let val = tournamentData[p.idx].xp[i];
+        let val = tournamentData[p.idx].xp ? tournamentData[p.idx].xp[i] : null;
         if (val) xpCells += `<td>${val}<br><small>${Math.floor(val/1000)}</small></td>`;
         else xpCells += `<td><input class="xp-input" type="number" placeholder="XP" onchange="updateXP(${p.idx}, ${i}, this.value)"></td>`;
       }
       return `<tr>
         <td>${rank+1}</td>
-        <td ondblclick="editNickname(${p.idx})" style="cursor:pointer; font-weight:500;">✏️ ${escapeHtml(p.nick)}</td>
+        <td onclick="editNickname(${p.idx})" style="cursor:pointer; font-weight:500;">${escapeHtml(p.nick)}</td>
         ${xpCells}
         <td><b>${p.total}</b></td>
         <td><button class="delete-btn" onclick="deletePlayer(${p.idx})">🗑</button></td>
@@ -878,6 +882,7 @@ th {
   
   window.updateXP = (idx, classIdx, value) => {
     let num = parseInt(value);
+    if (!tournamentData[idx].xp) tournamentData[idx].xp = [null, null, null, null];
     tournamentData[idx].xp[classIdx] = isNaN(num) ? null : num;
     saveTournamentData();
     renderTournamentTable();
