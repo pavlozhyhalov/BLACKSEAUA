@@ -821,7 +821,11 @@ th {
       lotteryPlayers = JSON.parse(saved);
       document.getElementById('playersList').value = lotteryPlayers.join('\n');
       document.getElementById('playerCount').innerText = lotteryPlayers.length;
-      updateWheelFromList();
+      if (lotteryPlayers.length > 0) {
+        const container = document.getElementById('chipContainer');
+        container.innerHTML = lotteryPlayers.map(p => `<div class="chip">${escapeHtml(p)}</div>`).join('');
+        drawWheel();
+      }
     }
   }
   
@@ -835,53 +839,73 @@ th {
     }); 
   }
 
-  // ========== ТУРНІР ==========
+  // ========== ТУРНІР (З ПРАВИЛЬНИМ ЗБЕРЕЖЕННЯМ) ==========
   let tournamentData = [];
 
   function saveTournamentData() {
     localStorage.setItem('tournamentFlexData', JSON.stringify(tournamentData));
+    console.log('Збережено:', tournamentData);
   }
   
   function loadTournamentFromStorage() {
     const saved = localStorage.getItem('tournamentFlexData');
     if (saved) {
       tournamentData = JSON.parse(saved);
+      console.log('Завантажено:', tournamentData);
     } else {
       tournamentData = [];
+      console.log('Немає збережених даних');
     }
   }
   
   function renderTournamentTable() {
     if (!tournamentData) tournamentData = [];
+    
     let playersWithScores = tournamentData.map((p, idx) => {
-      let total = (p.xp || [null, null, null, null]).reduce((sum, val) => sum + (val ? Math.floor(val/1000) : 0), 0);
-      return { ...p, total, idx };
+      let xpArr = p.xp || [null, null, null, null];
+      let total = xpArr.reduce((sum, val) => sum + (val ? Math.floor(val/1000) : 0), 0);
+      return { 
+        nick: p.nick, 
+        xp: xpArr, 
+        total: total, 
+        idx: idx 
+      };
     });
+    
     playersWithScores.sort((a,b) => b.total - a.total);
     const tbody = document.getElementById('tournamentTbody');
-    if (!tournamentData.length) {
+    
+    if (tournamentData.length === 0) {
       tbody.innerHTML = '<tr><td colspan="7" style="padding:40px; text-align:center;">Немає учасників. Додайте гравця.</td></tr>';
       return;
     }
+    
     tbody.innerHTML = playersWithScores.map((p, rank) => {
+      const rankClass = rank === 0 ? 'rank-1' : rank === 1 ? 'rank-2' : rank === 2 ? 'rank-3' : '';
       let xpCells = '';
-      for(let i=0; i<4; i++) {
-        let val = tournamentData[p.idx].xp ? tournamentData[p.idx].xp[i] : null;
-        if (val) xpCells += `<td>${val}<br><small>${Math.floor(val/1000)}</small></td>`;
-        else xpCells += `<td><input class="xp-input" type="number" placeholder="XP" onchange="updateXP(${p.idx}, ${i}, this.value)"></td>`;
+      for(let i = 0; i < 4; i++) {
+        let val = p.xp[i];
+        if (val && val !== null) {
+          xpCells += `<td class="center">${val}<br><small style="font-size:.65rem;color:var(--muted)">${Math.floor(val/1000)}</small></td>`;
+        } else {
+          xpCells += `<td class="center"><input class="xp-input" type="number" min="0" placeholder="XP" onchange="updateXP(${p.idx}, ${i}, this.value)"></td>`;
+        }
       }
-      return `<tr>
-        <td>${rank+1}</td>
-        <td onclick="editNickname(${p.idx})" style="cursor:pointer; font-weight:500;">${escapeHtml(p.nick)}</td>
-        ${xpCells}
-        <td><b>${p.total}</b></td>
-        <td><button class="delete-btn" onclick="deletePlayer(${p.idx})">🗑</button></td>
-      </tr>`;
+      return `
+        <tr>
+          <td class="center"><span class="rank-badge ${rankClass}">${rank+1}</span></td>
+          <td onclick="editNickname(${p.idx})" style="cursor:pointer; font-weight:500;">${escapeHtml(p.nick)}</td>
+          ${xpCells}
+          <td class="center"><b>${p.total}</b></td>
+          <td class="center"><button class="delete-btn" onclick="deletePlayer(${p.idx})">🗑</button></td>
+        </tr>
+      `;
     }).join('');
   }
   
   window.updateXP = (idx, classIdx, value) => {
     let num = parseInt(value);
+    if (!tournamentData[idx]) return;
     if (!tournamentData[idx].xp) tournamentData[idx].xp = [null, null, null, null];
     tournamentData[idx].xp[classIdx] = isNaN(num) ? null : num;
     saveTournamentData();
@@ -898,9 +922,11 @@ th {
   
   window.editNickname = (idx) => {
     let newName = prompt("Новий нікнейм", tournamentData[idx].nick);
-    if(newName && newName.trim()) tournamentData[idx].nick = newName.trim();
-    saveTournamentData();
-    renderTournamentTable();
+    if(newName && newName.trim()) {
+      tournamentData[idx].nick = newName.trim();
+      saveTournamentData();
+      renderTournamentTable();
+    }
   };
   
   window.openPlayerModal = () => {
@@ -914,9 +940,18 @@ th {
   
   window.addPlayerToList = () => {
     let name = document.getElementById('newPlayerName').value.trim();
-    if(!name) return;
-    if (tournamentData.some(p => p.nick === name)) { alert("Такий гравець вже є!"); return; }
-    tournamentData.push({ nick: name, xp: [null, null, null, null] });
+    if(!name) {
+      alert("Введіть нікнейм гравця!");
+      return;
+    }
+    if (tournamentData.some(p => p.nick.toLowerCase() === name.toLowerCase())) {
+      alert("Такий гравець вже є!");
+      return;
+    }
+    tournamentData.push({ 
+      nick: name, 
+      xp: [null, null, null, null] 
+    });
     saveTournamentData();
     renderTournamentTable();
     closeModal();
@@ -927,6 +962,7 @@ th {
   document.getElementById('playersList').addEventListener('input', updateWheelFromList);
   
   window.addEventListener('load', () => {
+    console.log('Сторінка завантажена');
     setCanvasSize();
     loadLotteryFromStorage();
     loadTournamentFromStorage();
