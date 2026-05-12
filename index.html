@@ -242,6 +242,7 @@ canvas#wheelCanvas {
   background: var(--bg2);
   border-radius: 50%;
   box-shadow: 0 0 0 3px var(--border), 0 15px 35px rgba(0,0,0,0.4);
+  cursor: pointer;
 }
 
 .pointer {
@@ -686,7 +687,10 @@ function backToHome() {
 function openLottery() {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.getElementById('lotteryPage').classList.add('active');
-  setTimeout(() => { drawWheel(); setCanvasSize(); }, 50);
+  setTimeout(() => { 
+    resizeCanvas(); 
+    drawWheel(); 
+  }, 50);
 }
 
 function openTournamentsList() {
@@ -707,120 +711,161 @@ function openTournament(name) {
   }
 }
 
-// ========== ЛОТЕРЕЯ ==========
+// ========== ЛОТЕРЕЯ (ПРАВИЛЬНЕ КОЛЕСО) ==========
 let lotteryPlayers = [];
-let currentAngle = 0;
-let animationFrame = null;
+let currentRotation = 0;
+let animating = false;
+let animFrame = null;
+
 const canvas = document.getElementById('wheelCanvas');
 const ctx = canvas.getContext('2d');
-let width = canvas.width, height = canvas.height;
-let centerX = width/2, centerY = height/2;
-let radius = width/2 - 10;
+let w = 400, h = 400;
+let cx = 200, cy = 200;
+let radius = 185;
 
-function setCanvasSize() {
+const sectorColors = ['#e63946', '#f1c40f', '#2ecc71', '#3498db', '#9b59b6', '#e67e22', '#1abc9c', '#e84393', '#2c3e50', '#f39c12'];
+
+function resizeCanvas() {
   const container = document.querySelector('.wheel-frame');
   if (!container) return;
   const size = Math.min(container.clientWidth, 380);
   canvas.width = size;
   canvas.height = size;
-  width = size; height = size;
-  centerX = width/2; centerY = height/2;
-  radius = width/2 - 8;
+  w = size; h = size;
+  cx = w/2; cy = h/2;
+  radius = w/2 - 12;
   drawWheel();
 }
 
-window.addEventListener('resize', () => { 
-  if(document.getElementById('lotteryPage').classList.contains('active')) setCanvasSize(); 
-});
-
-const sectorColors = ['#e63946', '#f1c40f', '#2ecc71', '#3498db', '#9b59b6', '#e67e22', '#1abc9c', '#e84393', '#2c3e50', '#f39c12'];
-
 function drawWheel() {
   if (!ctx) return;
-  ctx.clearRect(0, 0, width, height);
+  ctx.clearRect(0, 0, w, h);
+  
   if (lotteryPlayers.length === 0) {
     ctx.fillStyle = '#1a2a3a';
-    ctx.beginPath(); ctx.arc(centerX, centerY, radius, 0, Math.PI*2); ctx.fill();
-    ctx.fillStyle = '#8aa0b0'; ctx.font = 'bold 14px sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-    ctx.fillText('Додайте гравців', centerX, centerY);
-    return;
-  }
-  const count = lotteryPlayers.length;
-  const angleStep = (Math.PI * 2) / count;
-  for (let i = 0; i < count; i++) {
-    const start = i * angleStep + currentAngle;
-    const end = start + angleStep;
-    ctx.beginPath();
-    ctx.moveTo(centerX, centerY);
-    ctx.arc(centerX, centerY, radius, start, end);
-    ctx.closePath();
-    ctx.fillStyle = sectorColors[i % sectorColors.length];
-    ctx.fill();
-    ctx.save();
-    ctx.translate(centerX, centerY);
-    ctx.rotate(start + angleStep/2);
+    ctx.beginPath(); ctx.arc(cx, cy, radius, 0, Math.PI*2); ctx.fill();
+    ctx.fillStyle = '#8aa0b0';
+    ctx.font = 'bold 14px sans-serif';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
+    ctx.fillText('Додайте гравців', cx, cy);
+    return;
+  }
+  
+  const count = lotteryPlayers.length;
+  const angleStep = (Math.PI * 2) / count;
+  
+  for (let i = 0; i < count; i++) {
+    const start = i * angleStep + currentRotation;
+    const end = start + angleStep;
+    
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.arc(cx, cy, radius, start, end);
+    ctx.closePath();
+    
+    ctx.fillStyle = sectorColors[i % sectorColors.length];
+    ctx.fill();
+    ctx.strokeStyle = '#06101a';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+    
+    ctx.save();
+    ctx.translate(cx, cy);
+    ctx.rotate(start + angleStep / 2);
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    
     let name = lotteryPlayers[i];
-    if (name.length > 12) name = name.slice(0,10)+'..';
-    ctx.font = `bold ${Math.max(10, 16 - Math.floor(count/3))}px "Rajdhani"`;
+    if (name.length > 12) name = name.slice(0, 10) + '..';
+    const fontSize = Math.max(10, 14 - Math.floor(count / 3));
+    ctx.font = `bold ${fontSize}px "Rajdhani"`;
     ctx.fillStyle = '#ffffff';
     ctx.shadowBlur = 0;
     ctx.fillText(name, radius - 28, 5);
     ctx.restore();
   }
-  ctx.beginPath(); ctx.arc(centerX, centerY, 12, 0, Math.PI*2);
-  ctx.fillStyle = '#06101a'; ctx.fill();
-  ctx.strokeStyle = '#e8c560'; ctx.lineWidth = 2; ctx.stroke();
+  
+  // Центральний круг
+  ctx.beginPath();
+  ctx.arc(cx, cy, 14, 0, Math.PI * 2);
+  ctx.fillStyle = '#06101a';
+  ctx.fill();
+  ctx.strokeStyle = '#e8c560';
+  ctx.lineWidth = 2.5;
+  ctx.stroke();
 }
 
-function getWinnerIndex() {
-  if (!lotteryPlayers.length) return -1;
+function getWinner() {
+  if (lotteryPlayers.length === 0) return null;
   const angleStep = (Math.PI * 2) / lotteryPlayers.length;
-  let pointerAngle = -Math.PI / 2;
-  let rawAngle = (pointerAngle - currentAngle) % (Math.PI * 2);
+  // Стрілка зверху (кут -PI/2)
+  let rawAngle = (-Math.PI / 2 - currentRotation) % (Math.PI * 2);
   if (rawAngle < 0) rawAngle += Math.PI * 2;
-  return Math.floor(rawAngle / angleStep) % lotteryPlayers.length;
+  const idx = Math.floor(rawAngle / angleStep) % lotteryPlayers.length;
+  return lotteryPlayers[idx];
 }
 
 function spinWheel() {
-  if (lotteryPlayers.length < 2) { alert("Додайте хоча б 2 гравці!"); return; }
+  if (animating) return;
+  if (lotteryPlayers.length < 2) {
+    alert("Додайте хоча б 2 гравці!");
+    return;
+  }
+  
+  animating = true;
   const spinBtn = document.getElementById('spinButton');
   spinBtn.disabled = true;
   document.getElementById('winnerBox').classList.remove('show');
-  const totalSpins = 10 + Math.random() * 8;
-  const targetDelta = Math.random() * Math.PI * 2;
-  const startAngle = currentAngle;
-  const startTime = performance.now();
-  const duration = 2000;
   
-  function animateSpin(now) {
+  const startRotation = currentRotation;
+  const spinAmount = Math.PI * 2 * (8 + Math.random() * 6);
+  const startTime = performance.now();
+  const duration = 2200;
+  
+  function animate(now) {
     const elapsed = now - startTime;
     let t = Math.min(1, elapsed / duration);
-    let ease = 1 - Math.pow(1 - t, 3);
-    currentAngle = startAngle + (totalSpins * Math.PI * 2 + targetDelta) * ease;
+    // Плавне сповільнення
+    const ease = 1 - Math.pow(1 - t, 3);
+    currentRotation = startRotation + spinAmount * ease;
     drawWheel();
+    
     if (t < 1) {
-      requestAnimationFrame(animateSpin);
+      animFrame = requestAnimationFrame(animate);
     } else {
-      const winnerIdx = getWinnerIndex();
-      const winner = lotteryPlayers[winnerIdx];
-      document.getElementById('winnerName').innerText = winner;
-      document.getElementById('winnerBox').classList.add('show');
+      // Фінальний кут
+      currentRotation = startRotation + spinAmount;
+      drawWheel();
+      
+      const winner = getWinner();
+      if (winner) {
+        document.getElementById('winnerName').innerText = winner;
+        document.getElementById('winnerBox').classList.add('show');
+      }
+      
+      animating = false;
       spinBtn.disabled = false;
-      if (animationFrame) cancelAnimationFrame(animationFrame);
+      cancelAnimationFrame(animFrame);
     }
   }
-  animationFrame = requestAnimationFrame(animateSpin);
+  
+  if (animFrame) cancelAnimationFrame(animFrame);
+  animFrame = requestAnimationFrame(animate);
 }
 
 function updateWheelFromList() {
   const raw = document.getElementById('playersList').value;
-  lotteryPlayers = raw.split('\n').filter(l => l.trim().length > 0);
+  lotteryPlayers = raw.split('\n').map(s => s.trim()).filter(s => s.length > 0);
   document.getElementById('playerCount').innerText = lotteryPlayers.length;
+  
   const container = document.getElementById('chipContainer');
-  if (lotteryPlayers.length === 0) container.innerHTML = '<div class="chip">Немає гравців</div>';
-  else container.innerHTML = lotteryPlayers.map(p => `<div class="chip">${escapeHtml(p)}</div>`).join('');
+  if (lotteryPlayers.length === 0) {
+    container.innerHTML = '<div class="chip">Немає гравців</div>';
+  } else {
+    container.innerHTML = lotteryPlayers.map(p => `<div class="chip">${escapeHtml(p)}</div>`).join('');
+  }
+  
   drawWheel();
   localStorage.setItem('lotteryData', JSON.stringify(lotteryPlayers));
 }
@@ -832,79 +877,72 @@ function loadLotteryFromStorage() {
     document.getElementById('playersList').value = lotteryPlayers.join('\n');
     document.getElementById('playerCount').innerText = lotteryPlayers.length;
     const container = document.getElementById('chipContainer');
-    if (lotteryPlayers.length === 0) container.innerHTML = '<div class="chip">Немає гравців</div>';
-    else container.innerHTML = lotteryPlayers.map(p => `<div class="chip">${escapeHtml(p)}</div>`).join('');
+    if (lotteryPlayers.length === 0) {
+      container.innerHTML = '<div class="chip">Немає гравців</div>';
+    } else {
+      container.innerHTML = lotteryPlayers.map(p => `<div class="chip">${escapeHtml(p)}</div>`).join('');
+    }
     drawWheel();
   }
 }
 
-// ========== ТУРНІР (З ПРАВИЛЬНИМ ЗБЕРЕЖЕННЯМ!) ==========
+// ========== ТУРНІР ==========
 let tournamentData = [];
 
-// Збереження в localStorage
 function saveTournament() {
   localStorage.setItem('tournamentFlex', JSON.stringify(tournamentData));
-  console.log('💾 Збережено:', tournamentData);
 }
 
-// Завантаження з localStorage
 function loadTournament() {
   const saved = localStorage.getItem('tournamentFlex');
   if (saved) {
     tournamentData = JSON.parse(saved);
-    console.log('📂 Завантажено:', tournamentData);
   } else {
     tournamentData = [];
-    console.log('📂 Немає даних, створено порожній масив');
   }
 }
 
-// Підрахунок балів гравця
-function calculatePlayerScore(player) {
-  if (!player.xp) return 0;
-  return player.xp.reduce((sum, val) => sum + (val ? Math.floor(val / 1000) : 0), 0);
+function calcScore(xpArray) {
+  if (!xpArray) return 0;
+  return xpArray.reduce((sum, val) => sum + (val ? Math.floor(val / 1000) : 0), 0);
 }
 
-// Відображення таблиці
 function renderTournamentTable() {
   const tbody = document.getElementById('tournamentTbody');
   
   if (!tournamentData.length) {
-    tbody.innerHTML = '<tr><td colspan="8" style="padding:40px; text-align:center; color:var(--muted);">Немає учасників. Натисніть «+ ДОДАТИ ГРАВЦЯ»</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="8" style="padding:40px; text-align:center;">Немає учасників. Додайте гравця.</td></tr>';
     return;
   }
   
-  // Створюємо копію з підрахунком балів
-  const playersWithScore = tournamentData.map((player, idx) => ({
-    ...player,
-    originalIndex: idx,
-    totalScore: calculatePlayerScore(player)
+  const playersWithScore = tournamentData.map((p, idx) => ({
+    ...p,
+    originalIdx: idx,
+    total: calcScore(p.xp || [null, null, null, null])
   }));
   
-  // Сортуємо за балами
-  playersWithScore.sort((a, b) => b.totalScore - a.totalScore);
+  playersWithScore.sort((a, b) => b.total - a.total);
   
   let html = '';
-  playersWithScore.forEach((player, rank) => {
+  playersWithScore.forEach((p, rank) => {
     const rankClass = rank === 0 ? 'rank-1' : rank === 1 ? 'rank-2' : rank === 2 ? 'rank-3' : 'rank-n';
-    const xpArray = player.xp || [null, null, null, null];
+    const xpArr = p.xp || [null, null, null, null];
     
-    // Клітинки для 4 класів
-    const xpCells = xpArray.map((xp, classIdx) => {
-      if (xp && xp !== null) {
+    const xpCells = xpArr.map((xp, idx) => {
+      if (xp) {
         return `<td class="center">${xp}<br><small style="font-size:.65rem;color:var(--muted)">${Math.floor(xp/1000)}</small></td>`;
       } else {
-        return `<td class="center"><input class="xp-input" type="number" min="0" placeholder="XP" onchange="updatePlayerXP(${player.originalIndex}, ${classIdx}, this.value)"></td>`;
+        return `<td class="center"><input class="xp-input" type="number" placeholder="XP" onchange="updateXP(${p.originalIdx}, ${idx}, this.value)"></td>`;
       }
     }).join('');
     
     html += `
       <tr>
         <td class="center"><span class="rank-badge ${rankClass}">${rank+1}</span></td>
-        <td onclick="editPlayerNick(${player.originalIndex})" style="cursor:pointer; font-weight:500;">✏️ ${escapeHtml(player.nick)}</td>
+        <td onclick="editNick(${p.originalIdx})" style="cursor:pointer; font-weight:500;">${escapeHtml(p.nick)}</td>
         ${xpCells}
-        <td class="center"><b>${player.totalScore}</b></td>
-        <td class="center"><button class="delete-btn" onclick="deletePlayer(${player.originalIndex})">🗑</button></td>
+        <td class="center"><b>${p.total}</b></td>
+        <td class="center"><button class="delete-btn" onclick="deletePlayer(${p.originalIdx})">🗑</button></td>
       </tr>
     `;
   });
@@ -912,72 +950,62 @@ function renderTournamentTable() {
   tbody.innerHTML = html;
 }
 
-// Оновлення XP гравця
-window.updatePlayerXP = function(playerIndex, classIndex, value) {
-  if (!tournamentData[playerIndex]) return;
-  if (!tournamentData[playerIndex].xp) tournamentData[playerIndex].xp = [null, null, null, null];
-  
+window.updateXP = function(idx, classIdx, value) {
+  if (!tournamentData[idx]) return;
+  if (!tournamentData[idx].xp) tournamentData[idx].xp = [null, null, null, null];
   const num = parseInt(value);
-  tournamentData[playerIndex].xp[classIndex] = isNaN(num) ? null : num;
-  
+  tournamentData[idx].xp[classIdx] = isNaN(num) ? null : num;
   saveTournament();
   renderTournamentTable();
 };
 
-// Видалення гравця
-window.deletePlayer = function(playerIndex) {
-  if (!tournamentData[playerIndex]) return;
-  if (confirm(`Видалити гравця ${tournamentData[playerIndex].nick}?`)) {
-    tournamentData.splice(playerIndex, 1);
+window.deletePlayer = function(idx) {
+  if (!tournamentData[idx]) return;
+  if (confirm(`Видалити ${tournamentData[idx].nick}?`)) {
+    tournamentData.splice(idx, 1);
     saveTournament();
     renderTournamentTable();
   }
 };
 
-// Редагування ніка
-window.editPlayerNick = function(playerIndex) {
-  if (!tournamentData[playerIndex]) return;
-  const newNick = prompt('Новий нікнейм:', tournamentData[playerIndex].nick);
-  if (newNick && newNick.trim() && newNick.trim() !== tournamentData[playerIndex].nick) {
-    tournamentData[playerIndex].nick = newNick.trim();
+window.editNick = function(idx) {
+  if (!tournamentData[idx]) return;
+  const newNick = prompt('Новий нікнейм:', tournamentData[idx].nick);
+  if (newNick && newNick.trim()) {
+    tournamentData[idx].nick = newNick.trim();
     saveTournament();
     renderTournamentTable();
   }
 };
 
-// Додавання гравця
-window.addPlayerToList = function() {
-  const name = document.getElementById('newPlayerName').value.trim();
-  if (!name) {
-    alert('Введіть нікнейм гравця!');
-    return;
-  }
-  if (tournamentData.some(p => p.nick.toLowerCase() === name.toLowerCase())) {
-    alert('Гравець з таким нікнеймом вже існує!');
-    return;
-  }
-  
-  tournamentData.push({
-    nick: name,
-    xp: [null, null, null, null]
-  });
-  
-  saveTournament();
-  renderTournamentTable();
-  closeModal();
-  document.getElementById('newPlayerName').value = '';
-};
-
-// Модальне вікно
 window.openPlayerModal = function() {
   document.getElementById('playerModal').classList.add('active');
 };
 
 window.closeModal = function() {
   document.getElementById('playerModal').classList.remove('active');
+  document.getElementById('newPlayerName').value = '';
 };
 
-// Загальні функції
+window.addPlayerToList = function() {
+  const name = document.getElementById('newPlayerName').value.trim();
+  if (!name) {
+    alert('Введіть нікнейм');
+    return;
+  }
+  if (tournamentData.some(p => p.nick.toLowerCase() === name.toLowerCase())) {
+    alert('Гравець вже існує!');
+    return;
+  }
+  tournamentData.push({
+    nick: name,
+    xp: [null, null, null, null]
+  });
+  saveTournament();
+  renderTournamentTable();
+  closeModal();
+};
+
 function escapeHtml(str) {
   if (!str) return '';
   return str.replace(/[&<>]/g, function(m) {
@@ -988,38 +1016,30 @@ function escapeHtml(str) {
   });
 }
 
-// Ініціалізація при завантаженні сторінки
+// Ініціалізація
 window.addEventListener('load', function() {
-  console.log('🚀 Сторінка завантажена');
-  
-  // Завантажуємо дані лотереї
+  resizeCanvas();
   loadLotteryFromStorage();
-  
-  // Завантажуємо дані турніру
   loadTournament();
-  
-  // Відображаємо таблицю
   renderTournamentTable();
-  
-  // Налаштовуємо колесо
-  setCanvasSize();
   drawWheel();
   
-  // Кнопка крутіння
   document.getElementById('spinButton').onclick = spinWheel;
-  
-  // Збереження лотереї при зміні
   document.getElementById('playersList').addEventListener('input', updateWheelFromList);
   
-  // Закриття модалки по Esc
+  window.addEventListener('resize', function() {
+    if (document.getElementById('lotteryPage').classList.contains('active')) {
+      resizeCanvas();
+    }
+  });
+  
+  document.getElementById('playerModal').addEventListener('click', function(e) {
+    if (e.target === this) closeModal();
+  });
+  
   document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') closeModal();
   });
-});
-
-// Закриття модалки при кліку поза нею
-document.getElementById('playerModal').addEventListener('click', function(e) {
-  if (e.target === this) closeModal();
 });
 </script>
 </body>
