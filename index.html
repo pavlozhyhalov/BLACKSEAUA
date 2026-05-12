@@ -242,7 +242,6 @@ canvas#wheelCanvas {
   background: var(--bg2);
   border-radius: 50%;
   box-shadow: 0 0 0 3px var(--border), 0 15px 35px rgba(0,0,0,0.4);
-  cursor: pointer;
 }
 
 .pointer {
@@ -781,7 +780,6 @@ function drawWheel() {
     const fontSize = Math.max(10, 14 - Math.floor(count / 3));
     ctx.font = `bold ${fontSize}px "Rajdhani"`;
     ctx.fillStyle = '#ffffff';
-    ctx.shadowBlur = 0;
     ctx.fillText(name, radius - 28, 5);
     ctx.restore();
   }
@@ -796,14 +794,13 @@ function drawWheel() {
   ctx.stroke();
 }
 
-function getWinner() {
-  if (lotteryPlayers.length === 0) return null;
+function getWinnerIndex() {
+  if (lotteryPlayers.length === 0) return -1;
   const angleStep = (Math.PI * 2) / lotteryPlayers.length;
   // Стрілка зверху (кут -PI/2)
-  let rawAngle = (-Math.PI / 2 - currentRotation) % (Math.PI * 2);
+  let rawAngle = ((-Math.PI / 2) - currentRotation) % (Math.PI * 2);
   if (rawAngle < 0) rawAngle += Math.PI * 2;
-  const idx = Math.floor(rawAngle / angleStep) % lotteryPlayers.length;
-  return lotteryPlayers[idx];
+  return Math.floor(rawAngle / angleStep) % lotteryPlayers.length;
 }
 
 function spinWheel() {
@@ -819,31 +816,25 @@ function spinWheel() {
   document.getElementById('winnerBox').classList.remove('show');
   
   const startRotation = currentRotation;
-  const spinAmount = Math.PI * 2 * (8 + Math.random() * 6);
+  const extraSpins = Math.PI * 2 * (8 + Math.random() * 6);
   const startTime = performance.now();
   const duration = 2200;
   
   function animate(now) {
     const elapsed = now - startTime;
     let t = Math.min(1, elapsed / duration);
-    // Плавне сповільнення
     const ease = 1 - Math.pow(1 - t, 3);
-    currentRotation = startRotation + spinAmount * ease;
+    currentRotation = startRotation + extraSpins * ease;
     drawWheel();
     
     if (t < 1) {
       animFrame = requestAnimationFrame(animate);
     } else {
-      // Фінальний кут
-      currentRotation = startRotation + spinAmount;
-      drawWheel();
-      
-      const winner = getWinner();
-      if (winner) {
-        document.getElementById('winnerName').innerText = winner;
+      const winnerIdx = getWinnerIndex();
+      if (winnerIdx !== -1) {
+        document.getElementById('winnerName').innerText = lotteryPlayers[winnerIdx];
         document.getElementById('winnerBox').classList.add('show');
       }
-      
       animating = false;
       spinBtn.disabled = false;
       cancelAnimationFrame(animFrame);
@@ -856,7 +847,7 @@ function spinWheel() {
 
 function updateWheelFromList() {
   const raw = document.getElementById('playersList').value;
-  lotteryPlayers = raw.split('\n').map(s => s.trim()).filter(s => s.length > 0);
+  lotteryPlayers = raw.split('\n').filter(l => l.trim().length > 0).map(l => l.trim());
   document.getElementById('playerCount').innerText = lotteryPlayers.length;
   
   const container = document.getElementById('chipContainer');
@@ -866,6 +857,7 @@ function updateWheelFromList() {
     container.innerHTML = lotteryPlayers.map(p => `<div class="chip">${escapeHtml(p)}</div>`).join('');
   }
   
+  // Не скидаємо currentRotation, просто перемальовуємо
   drawWheel();
   localStorage.setItem('lotteryData', JSON.stringify(lotteryPlayers));
 }
@@ -915,10 +907,12 @@ function renderTournamentTable() {
     return;
   }
   
+  // Створюємо копію з підрахунком балів (використовуємо оригінальний індекс)
   const playersWithScore = tournamentData.map((p, idx) => ({
-    ...p,
-    originalIdx: idx,
-    total: calcScore(p.xp || [null, null, null, null])
+    nick: p.nick,
+    xp: p.xp || [null, null, null, null],
+    total: calcScore(p.xp || [null, null, null, null]),
+    originalIdx: idx
   }));
   
   playersWithScore.sort((a, b) => b.total - a.total);
@@ -926,13 +920,12 @@ function renderTournamentTable() {
   let html = '';
   playersWithScore.forEach((p, rank) => {
     const rankClass = rank === 0 ? 'rank-1' : rank === 1 ? 'rank-2' : rank === 2 ? 'rank-3' : 'rank-n';
-    const xpArr = p.xp || [null, null, null, null];
     
-    const xpCells = xpArr.map((xp, idx) => {
-      if (xp) {
+    const xpCells = p.xp.map((xp, classIdx) => {
+      if (xp && xp !== null) {
         return `<td class="center">${xp}<br><small style="font-size:.65rem;color:var(--muted)">${Math.floor(xp/1000)}</small></td>`;
       } else {
-        return `<td class="center"><input class="xp-input" type="number" placeholder="XP" onchange="updateXP(${p.originalIdx}, ${idx}, this.value)"></td>`;
+        return `<td class="center"><input class="xp-input" type="number" placeholder="XP" onchange="updateXP(${p.originalIdx}, ${classIdx}, this.value)"></td>`;
       }
     }).join('');
     
@@ -980,6 +973,7 @@ window.editNick = function(idx) {
 
 window.openPlayerModal = function() {
   document.getElementById('playerModal').classList.add('active');
+  document.getElementById('newPlayerName').focus();
 };
 
 window.closeModal = function() {
@@ -1016,6 +1010,16 @@ function escapeHtml(str) {
   });
 }
 
+// Закриття модалки по кліку поза нею
+document.getElementById('playerModal').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
+
+// Закриття модалки по Escape
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closeModal();
+});
+
 // Ініціалізація
 window.addEventListener('load', function() {
   resizeCanvas();
@@ -1031,14 +1035,6 @@ window.addEventListener('load', function() {
     if (document.getElementById('lotteryPage').classList.contains('active')) {
       resizeCanvas();
     }
-  });
-  
-  document.getElementById('playerModal').addEventListener('click', function(e) {
-    if (e.target === this) closeModal();
-  });
-  
-  document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape') closeModal();
   });
 });
 </script>
