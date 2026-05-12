@@ -288,15 +288,15 @@ canvas#wheelCanvas {
 .winner-box {
   display: none;
   text-align: center;
-  padding: 12px 28px;
-  background: rgba(0,0,0,0.6);
-  border-radius: 50px;
-  border-left: 3px solid var(--accent2);
+  padding: 12px 24px;
+  background: transparent;
+  border: 2px solid var(--accent2);
+  border-radius: 60px;
   animation: fadeUp 0.4s ease;
 }
 .winner-box.show { display: block; }
 .winner-label { 
-  font-size: 0.65rem; 
+  font-size: 0.7rem; 
   letter-spacing: 0.25em; 
   color: var(--accent2); 
   text-transform: uppercase;
@@ -682,7 +682,7 @@ th {
   function openLottery() {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.getElementById('lotteryPage').classList.add('active');
-    setTimeout(() => { drawWheel(); }, 50);
+    setTimeout(() => { drawWheel(); setCanvasSize(); }, 50);
   }
   function openTournamentsList() {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
@@ -712,6 +712,7 @@ th {
 
   function setCanvasSize() {
     const container = document.querySelector('.wheel-frame');
+    if (!container) return;
     const size = Math.min(container.clientWidth, 380);
     canvas.width = size;
     canvas.height = size;
@@ -855,7 +856,7 @@ th {
     playersWithScores.sort((a,b) => b.total - a.total);
     const tbody = document.getElementById('tournamentTbody');
     if (!tournamentData.length) {
-      tbody.innerHTML = '<tr><td colspan="7" style="padding:40px; text-align:center;">Немає учасників. Додайте гравця.<tr></tr>';
+      tbody.innerHTML = '<tr><td colspan="7" style="padding:40px; text-align:center;">Немає учасників. Додайте гравця.</td></tr>';
       return;
     }
     tbody.innerHTML = playersWithScores.map((p, rank) => {
@@ -863,11 +864,11 @@ th {
       for(let i=0; i<4; i++) {
         let val = tournamentData[p.idx].xp[i];
         if (val) xpCells += `<td>${val}<br><small>${Math.floor(val/1000)}</small></td>`;
-        else xpCells += `<td><input class="xp-input" type="number" placeholder="XP" onchange="updateXP(${p.idx}, ${i}, this.value)"><tr>`;
+        else xpCells += `<td><input class="xp-input" type="number" placeholder="XP" onchange="updateXP(${p.idx}, ${i}, this.value)"></td>`;
       }
       return `<tr>
         <td>${rank+1}</td>
-        <td ondblclick="editNickname(${p.idx})" style="cursor:pointer;">${escapeHtml(p.nick)}</td>
+        <td ondblclick="editNickname(${p.idx})" style="cursor:pointer; font-weight:500;">✏️ ${escapeHtml(p.nick)}</td>
         ${xpCells}
         <td><b>${p.total}</b></td>
         <td><button class="delete-btn" onclick="deletePlayer(${p.idx})">🗑</button></td>
@@ -909,6 +910,7 @@ th {
   window.addPlayerToList = () => {
     let name = document.getElementById('newPlayerName').value.trim();
     if(!name) return;
+    if (tournamentData.some(p => p.nick === name)) { alert("Такий гравець вже є!"); return; }
     tournamentData.push({ nick: name, xp: [null, null, null, null] });
     saveTournamentData();
     renderTournamentTable();
@@ -918,11 +920,14 @@ th {
   // Ініціалізація
   document.getElementById('spinButton').onclick = spinWheel;
   document.getElementById('playersList').addEventListener('input', updateWheelFromList);
-  setCanvasSize();
-  loadLotteryFromStorage();
-  loadTournamentFromStorage();
-  renderTournamentTable();
-  drawWheel();
+  
+  window.addEventListener('load', () => {
+    setCanvasSize();
+    loadLotteryFromStorage();
+    loadTournamentFromStorage();
+    renderTournamentTable();
+    drawWheel();
+  });
 </script>
 </body>
 </html>
