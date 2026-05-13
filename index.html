@@ -4,845 +4,458 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <title>BLACKSEAUA · WORLD OF WARSHIPS LEGENDS</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Source+Sans+3:wght@300;400;600&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
 <style>
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 :root {
-  --bg: #0a0f1a;
-  --surface: #141e2a;
-  --card: #1a2a3a;
-  --border: #2a4a6a;
-  --accent: #3a9fd8;
-  --accent2: #e8c560;
-  --accent3: #5dd88a;
-  --red: #e05555;
-  --text: #c8d8e8;
-  --muted: #6a7a8a;
-  --white: #ffffff;
+  --bg:#06101a; --bg2:#0a1a28; --surface:#0d2035; --surface2:#102540;
+  --border:#1a3a55; --border2:#254a68; --accent:#3a9fd8; --accent2:#e8c560;
+  --accent3:#5dd88a; --red:#e05555; --text:#b8d4e8; --muted:#406070; --white:#e8f4fa;
 }
-
-body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: system-ui, -apple-system, sans-serif;
-  min-height: 100vh;
-}
-
-header {
-  border-bottom: 1px solid var(--border);
-  background: rgba(10,15,26,0.95);
-  padding: 15px 20px;
-  text-align: center;
-}
-
-.clan-title {
-  font-size: 1rem;
-  letter-spacing: 3px;
-  color: var(--accent2);
-  font-weight: bold;
-}
-
-.game-title {
-  font-size: 0.7rem;
-  letter-spacing: 2px;
-  color: var(--muted);
-  margin-top: 5px;
-}
-
-.page {
-  display: none;
-  padding: 20px;
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-.page.active {
-  display: block;
-}
-
-button {
-  cursor: pointer;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  color: var(--text);
-  padding: 8px 20px;
-  border-radius: 8px;
-  font-size: 14px;
-  transition: all 0.2s;
-}
-
-button:hover {
-  border-color: var(--accent2);
-  color: var(--accent2);
-}
-
-.back-btn {
-  background: transparent;
-  margin-bottom: 20px;
-}
-
-.cards {
-  display: flex;
-  gap: 20px;
-  justify-content: center;
-  flex-wrap: wrap;
-  margin-top: 50px;
-}
-
-.card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  padding: 30px 40px;
-  cursor: pointer;
-  text-align: center;
-  border-radius: 16px;
-  transition: all 0.2s;
-}
-
-.card:hover {
-  border-color: var(--accent2);
-  transform: translateY(-3px);
-}
-
-.card-icon {
-  font-size: 3rem;
-  margin-bottom: 15px;
-}
-
-.card-title {
-  font-size: 1.2rem;
-  font-weight: bold;
-  color: var(--white);
-}
-
-/* ЛОТЕРЕЯ */
-.lottery-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 40px;
-  justify-content: center;
-}
-
-.wheel-section {
-  text-align: center;
-  flex: 1;
-  min-width: 300px;
-}
-
-.wheel-wrapper {
-  position: relative;
-  display: inline-block;
-  margin-bottom: 20px;
-}
-
-canvas {
-  background: var(--bg);
-  border-radius: 50%;
-  box-shadow: 0 0 0 3px var(--border);
-}
-
-.pointer {
-  position: absolute;
-  top: -20px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 0;
-  height: 0;
-  border-left: 15px solid transparent;
-  border-right: 15px solid transparent;
-  border-top: 30px solid var(--accent2);
-  z-index: 10;
-}
-
-.winner-box {
-  margin-top: 20px;
-  padding: 12px 24px;
-  border: 2px solid var(--accent2);
-  border-radius: 60px;
-  display: none;
-}
-
-.winner-box.show {
-  display: block;
-}
-
-.players-section {
-  flex: 1;
-  min-width: 280px;
-}
-
-.panel {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  padding: 20px;
-  border-radius: 12px;
-  margin-bottom: 20px;
-}
-
-.panel-title {
-  font-weight: bold;
-  color: var(--accent2);
-  margin-bottom: 10px;
-  display: flex;
-  justify-content: space-between;
-}
-
-textarea {
-  width: 100%;
-  min-height: 150px;
-  background: var(--bg);
-  border: 1px solid var(--border);
-  color: var(--text);
-  padding: 10px;
-  border-radius: 8px;
-  font-family: monospace;
-  resize: vertical;
-}
-
-.chip-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  max-height: 120px;
-  overflow-y: auto;
-}
-
-.chip {
-  background: var(--bg);
-  border: 1px solid var(--border);
-  padding: 4px 12px;
-  border-radius: 20px;
-  font-size: 0.8rem;
-}
-
-/* ТУРНІР */
-.tournament-container {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.rules {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 15px;
-  background: var(--surface);
-  padding: 15px 20px;
-  border-radius: 12px;
-}
-
-.rule {
-  font-size: 0.85rem;
-}
-
-.stages, .prizes {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 15px;
-}
-
-@media (max-width: 600px) {
-  .stages, .prizes { grid-template-columns: repeat(2, 1fr); }
-}
-
-.prizes {
-  grid-template-columns: repeat(3, 1fr);
-}
-
-@media (max-width: 500px) {
-  .prizes { grid-template-columns: 1fr; }
-}
-
-.stage, .prize {
-  background: var(--surface);
-  padding: 12px;
-  text-align: center;
-  border-radius: 8px;
-}
-
-.table-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 15px;
-  margin: 20px 0 15px;
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-  overflow-x: auto;
-  display: block;
-}
-
-th, td {
-  padding: 10px 6px;
-  border-bottom: 1px solid var(--border);
-  text-align: center;
-  font-size: 0.85rem;
-}
-
-th {
-  color: var(--accent2);
-  font-size: 0.7rem;
-}
-
-.xp-input {
-  width: 65px;
-  background: transparent;
-  border: none;
-  border-bottom: 1px solid var(--border);
-  color: var(--accent3);
-  text-align: center;
-  padding: 4px;
-  outline: none;
-}
-
-.xp-input:focus {
-  border-bottom-color: var(--accent);
-}
-
-.delete-btn {
-  background: transparent;
-  border: 1px solid var(--red);
-  color: var(--red);
-  padding: 2px 8px;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 0.7rem;
-}
-
-.delete-btn:hover {
-  background: var(--red);
-  color: white;
-}
-
-.rank-badge {
-  display: inline-block;
-  width: 28px;
-  height: 28px;
-  line-height: 26px;
-  border-radius: 50%;
-  font-weight: bold;
-  font-size: 0.75rem;
-}
-
-.rank-1 { background: rgba(232,197,96,0.3); border: 1px solid var(--accent2); color: var(--accent2); }
-.rank-2 { background: rgba(180,190,200,0.2); border: 1px solid #b8c8d8; color: #b8c8d8; }
-.rank-3 { background: rgba(180,120,60,0.2); border: 1px solid #d8a060; color: #d8a060; }
-
-.modal {
-  display: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.8);
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-}
-
-.modal.active {
-  display: flex;
-}
-
-.modal-content {
-  background: var(--surface);
-  padding: 25px;
-  border-radius: 16px;
-  width: 90%;
-  max-width: 350px;
-  border: 1px solid var(--border);
-}
-
-.modal-content h3 {
-  color: var(--accent2);
-  margin-bottom: 15px;
-}
-
-.modal-content input {
-  width: 100%;
-  padding: 10px;
-  margin: 10px 0;
-  background: var(--bg);
-  border: 1px solid var(--border);
-  color: white;
-  border-radius: 8px;
-}
-
-.modal-content button {
-  width: 100%;
-  margin-top: 8px;
-}
-
-.clickable-name {
-  cursor: pointer;
-  font-weight: 500;
-}
-
-.clickable-name:hover {
-  color: var(--accent2);
-  text-decoration: underline;
-}
+body { background:var(--bg); color:var(--text); font-family:'Source Sans 3',sans-serif; font-weight:300; min-height:100vh; overflow-x:hidden; }
+.bg-atmo { position:fixed; inset:0; pointer-events:none; z-index:0;
+  background: radial-gradient(ellipse 100% 50% at 50% 100%, rgba(20,70,120,.22) 0%, transparent 65%),
+              radial-gradient(ellipse 50% 40% at 10% 50%, rgba(10,50,90,.14) 0%, transparent 60%); }
+header { position:relative; z-index:10; border-bottom:1px solid var(--border); background:rgba(6,16,26,.95); backdrop-filter:blur(12px); }
+.header-inner { max-width:1100px; margin:0 auto; padding:14px 24px; display:flex; flex-direction:column; align-items:center; gap:4px; }
+.clan-title { font-family:'Orbitron',monospace; font-weight:900; font-size:1.1rem; letter-spacing:.25em; color:var(--accent2); text-transform:uppercase; }
+.game-title { font-family:'Rajdhani',sans-serif; font-size:.68rem; letter-spacing:.3em; color:var(--muted); font-weight:500; text-transform:uppercase; }
+.page { display:none; position:relative; z-index:1; animation:fadeIn .25s ease; }
+.page.active { display:block; }
+@keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+.hero { max-width:1100px; margin:0 auto; padding:60px 24px 50px; text-align:center; }
+.hero-title { font-family:'Orbitron',monospace; font-weight:900; font-size:clamp(1.8rem,5vw,3rem); color:var(--white); letter-spacing:.06em; line-height:1.15; margin-bottom:16px; }
+.hero-title span { color:var(--accent2); }
+.hero-sub { font-size:.95rem; color:var(--muted); letter-spacing:.06em; margin-bottom:52px; }
+.cards { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:20px; max-width:720px; margin:0 auto; }
+.card { background:var(--surface); border:1px solid var(--border); padding:32px 28px; cursor:pointer; transition:all .22s; text-align:left; position:relative; overflow:hidden; }
+.card:hover { border-color:var(--accent2); transform:translateY(-4px); box-shadow:0 14px 32px rgba(0,0,0,.35); }
+.card-icon { font-size:2.4rem; margin-bottom:14px; display:block; }
+.card-title { font-family:'Rajdhani',sans-serif; font-weight:700; font-size:1.2rem; letter-spacing:.14em; text-transform:uppercase; color:var(--white); margin-bottom:8px; }
+.card-desc { font-size:.82rem; color:var(--muted); line-height:1.55; }
+.card-arrow { position:absolute; bottom:20px; right:22px; font-size:1.1rem; color:var(--border2); transition:all .2s; }
+.card:hover .card-arrow { color:var(--accent2); transform:translateX(5px); }
+.page-header { max-width:1100px; margin:0 auto; padding:28px 24px 18px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid var(--border); flex-wrap:wrap; gap:12px; }
+.page-header-title { font-family:'Orbitron',monospace; font-size:1rem; letter-spacing:.22em; color:var(--accent2); text-transform:uppercase; }
+.back-btn { background:transparent; border:1px solid var(--border); color:var(--muted); padding:6px 18px; cursor:pointer; font-family:'Rajdhani',sans-serif; font-size:.78rem; letter-spacing:.12em; text-transform:uppercase; transition:all .2s; }
+.back-btn:hover { border-color:var(--accent2); color:var(--accent2); }
+.lottery-wrap { max-width:960px; margin:0 auto; padding:28px 24px 50px; }
+.lottery-layout { display:grid; grid-template-columns:1fr 290px; gap:40px; align-items:start; }
+@media(max-width:700px){ .lottery-layout{grid-template-columns:1fr;gap:28px;} }
+.wheel-col { display:flex; flex-direction:column; align-items:center; gap:22px; }
+.wheel-frame { position:relative; display:inline-block; width:100%; max-width:360px; }
+.pointer { position:absolute; top:-18px; left:50%; transform:translateX(-50%); width:0; height:0; border-left:16px solid transparent; border-right:16px solid transparent; border-top:32px solid var(--accent2); filter:drop-shadow(0 4px 8px rgba(232,197,96,.5)); z-index:10; }
+canvas#wheelCanvas { width:100%; height:auto; border-radius:50%; box-shadow:0 0 0 3px var(--border),0 12px 32px rgba(0,0,0,.45); display:block; }
+.spin-btn { font-family:'Rajdhani',sans-serif; font-weight:700; font-size:.95rem; letter-spacing:.22em; text-transform:uppercase; background:linear-gradient(135deg,var(--accent),#2a7ab8); color:var(--bg); border:none; padding:12px 48px; cursor:pointer; transition:all .2s; border-radius:40px; box-shadow:0 4px 16px rgba(0,0,0,.3); }
+.spin-btn:hover:not(:disabled) { transform:scale(1.03); box-shadow:0 6px 20px rgba(58,159,216,.4); }
+.spin-btn:disabled { opacity:.45; cursor:not-allowed; transform:none; }
+.winner-box { display:none; text-align:center; padding:10px 28px; border:2px solid var(--accent2); border-radius:50px; animation:fadeUp .35s ease; min-width:200px; }
+.winner-box.show { display:block; }
+@keyframes fadeUp { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+.winner-label { font-size:.64rem; letter-spacing:.25em; color:var(--accent2); text-transform:uppercase; font-weight:600; }
+.winner-name { font-family:'Rajdhani',sans-serif; font-weight:800; font-size:1.5rem; color:var(--white); margin-top:3px; word-break:break-all; }
+.sidebar { display:flex; flex-direction:column; gap:18px; }
+.panel { background:var(--surface); border:1px solid var(--border); padding:18px; border-radius:6px; }
+.panel-title { font-family:'Rajdhani',sans-serif; font-weight:600; font-size:.75rem; letter-spacing:.2em; text-transform:uppercase; color:var(--accent2); margin-bottom:12px; display:flex; justify-content:space-between; align-items:center; }
+.count-badge { background:var(--accent); color:var(--bg); font-size:.65rem; font-weight:700; padding:1px 7px; border-radius:3px; }
+textarea { width:100%; min-height:175px; background:var(--bg2); border:1px solid var(--border); color:var(--white); font-family:'Source Sans 3',sans-serif; font-size:.85rem; padding:10px; resize:vertical; outline:none; transition:border-color .2s; line-height:1.85; border-radius:4px; }
+textarea:focus { border-color:var(--accent); }
+textarea::placeholder { color:var(--muted); }
+.hint { font-size:.68rem; color:var(--muted); margin-top:6px; }
+.chip-list { display:flex; flex-wrap:wrap; gap:6px; max-height:108px; overflow-y:auto; }
+.chip { background:var(--bg2); border:1px solid var(--border); padding:3px 10px; font-size:.75rem; border-radius:16px; color:var(--text); }
+.empty-msg { font-size:.75rem; color:var(--muted); font-style:italic; }
+.section-wrap { max-width:960px; margin:0 auto; padding:28px 24px 50px; }
+.tournament-wrap { max-width:1060px; margin:0 auto; padding:28px 24px 50px; }
+.rules-box { background:var(--surface); border:1px solid var(--border); border-left:3px solid var(--accent2); padding:18px 22px; margin-bottom:22px; border-radius:4px; }
+.rules-box-title { font-family:'Rajdhani',sans-serif; font-weight:700; font-size:.75rem; letter-spacing:.2em; text-transform:uppercase; color:var(--accent2); margin-bottom:12px; }
+.rules-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(195px,1fr)); gap:8px; }
+.rule-item { font-size:.82rem; color:var(--text); line-height:1.45; }
+.stages-row { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-bottom:22px; }
+@media(max-width:560px){ .stages-row{grid-template-columns:repeat(2,1fr);} }
+.stage-card { background:var(--surface); text-align:center; padding:14px 10px; border:1px solid var(--border); border-radius:6px; }
+.stage-card b { font-family:'Rajdhani',sans-serif; font-weight:700; font-size:.82rem; letter-spacing:.12em; color:var(--accent); display:block; margin-bottom:4px; text-transform:uppercase; }
+.stage-card small { font-size:.72rem; color:var(--muted); }
+.prizes-row { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:28px; }
+@media(max-width:460px){ .prizes-row{grid-template-columns:1fr;} }
+.prize-card { text-align:center; padding:16px 10px; background:var(--surface); border:1px solid var(--border); border-radius:6px; }
+.prize-medal { font-size:1.7rem; display:block; margin-bottom:6px; }
+.prize-place { font-size:.7rem; letter-spacing:.2em; color:var(--muted); text-transform:uppercase; margin-bottom:4px; }
+.prize-amount { font-family:'Orbitron',monospace; font-weight:700; font-size:1.05rem; color:var(--accent2); }
+.prize-unit { font-size:.68rem; color:var(--muted); margin-top:2px; }
+.lb-control { display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:12px; }
+.lb-label { font-family:'Rajdhani',sans-serif; font-weight:700; font-size:.78rem; letter-spacing:.2em; text-transform:uppercase; color:var(--muted); }
+.add-player-btn { font-family:'Rajdhani',sans-serif; font-weight:700; font-size:.75rem; letter-spacing:.14em; text-transform:uppercase; background:var(--accent); border:none; padding:7px 18px; color:var(--bg); cursor:pointer; border-radius:4px; transition:opacity .2s; }
+.add-player-btn:hover { opacity:.85; }
+.table-wrapper { overflow-x:auto; }
+table.lb { width:100%; border-collapse:collapse; min-width:560px; }
+table.lb thead tr { background:var(--bg2); border-bottom:2px solid var(--accent2); }
+table.lb th { font-family:'Rajdhani',sans-serif; font-size:.68rem; letter-spacing:.15em; color:var(--accent2); padding:10px; text-align:center; font-weight:700; text-transform:uppercase; white-space:nowrap; }
+table.lb tbody tr { border-bottom:1px solid var(--border); transition:background .15s; }
+table.lb tbody tr:hover { background:rgba(255,255,255,.02); }
+table.lb td { padding:10px; font-size:.88rem; vertical-align:middle; text-align:center; }
+table.lb td.name-cell { text-align:left; font-weight:500; color:var(--white); cursor:pointer; }
+table.lb td.name-cell:hover { color:var(--accent2); }
+.rank-badge { font-family:'Orbitron',monospace; font-weight:700; font-size:.72rem; width:30px; height:30px; display:inline-flex; align-items:center; justify-content:center; border-radius:50%; }
+.rank-1 { background:rgba(232,197,96,.25); color:var(--accent2); border:1px solid var(--accent2); }
+.rank-2 { background:rgba(180,190,200,.18); color:#b8c8d8; border:1px solid rgba(180,190,200,.4); }
+.rank-3 { background:rgba(180,120,60,.18); color:#d8a060; border:1px solid rgba(180,120,60,.4); }
+.rank-n { background:var(--bg2); color:var(--muted); border:1px solid var(--border); }
+.xp-val { font-family:'Orbitron',monospace; font-size:.75rem; color:var(--accent3); cursor:pointer; }
+.xp-val:hover { color:var(--accent2); text-decoration:underline; }
+.xp-empty { font-size:.72rem; color:var(--muted); cursor:pointer; font-style:italic; }
+.xp-empty:hover { color:var(--accent); }
+.score-total { font-family:'Orbitron',monospace; font-weight:700; font-size:.88rem; color:var(--accent2); }
+.score-total.zero { color:var(--muted); }
+.delete-btn { background:none; border:1px solid rgba(224,85,85,.3); color:var(--red); padding:3px 9px; cursor:pointer; border-radius:4px; font-size:.75rem; transition:all .2s; }
+.delete-btn:hover { background:rgba(224,85,85,.15); border-color:var(--red); }
+.modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.75); z-index:1000; align-items:center; justify-content:center; backdrop-filter:blur(4px); }
+.modal-overlay.active { display:flex; }
+.modal-box { background:var(--surface2); border:1px solid var(--border2); padding:28px; width:min(400px,92vw); border-radius:8px; animation:fadeUp .22s ease; }
+.modal-title { font-family:'Rajdhani',sans-serif; font-weight:700; font-size:.82rem; letter-spacing:.22em; text-transform:uppercase; color:var(--accent2); margin-bottom:18px; }
+.modal-label { font-size:.7rem; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); display:block; margin-bottom:5px; }
+.modal-input { width:100%; background:var(--bg2); border:1px solid var(--border); color:var(--white); font-family:'Source Sans 3',sans-serif; font-size:.9rem; padding:9px 12px; outline:none; border-radius:4px; transition:border-color .2s; margin-bottom:16px; }
+.modal-input:focus { border-color:var(--accent); }
+.modal-actions { display:flex; gap:10px; }
+.btn-primary { flex:1; font-family:'Rajdhani',sans-serif; font-weight:700; font-size:.78rem; letter-spacing:.18em; text-transform:uppercase; background:var(--accent); color:var(--bg); border:none; padding:9px; cursor:pointer; border-radius:4px; transition:opacity .18s; }
+.btn-primary:hover { opacity:.85; }
+.btn-secondary { font-family:'Rajdhani',sans-serif; font-weight:600; font-size:.78rem; letter-spacing:.14em; text-transform:uppercase; background:transparent; color:var(--muted); border:1px solid var(--border); padding:9px 18px; cursor:pointer; border-radius:4px; transition:all .18s; }
+.btn-secondary:hover { color:var(--text); border-color:var(--border2); }
+.xp-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:16px; }
+.xp-field-label { font-size:.7rem; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); display:block; margin-bottom:4px; }
+::-webkit-scrollbar { width:4px; height:4px; }
+::-webkit-scrollbar-thumb { background:var(--border); border-radius:2px; }
 </style>
 </head>
 <body>
-
+<div class="bg-atmo"></div>
 <header>
-  <div class="clan-title">⚓ CLAN BLACKSEAUA ⚓</div>
-  <div class="game-title">WORLD OF WARSHIPS LEGENDS</div>
+  <div class="header-inner">
+    <div class="clan-title">⚓ CLAN BLACKSEAUA ⚓</div>
+    <div class="game-title">WORLD OF WARSHIPS LEGENDS</div>
+  </div>
 </header>
 
-<!-- ГОЛОВНА -->
 <div id="homePage" class="page active">
-  <div class="cards">
-    <div class="card" onclick="showPage('lottery')">
-      <div class="card-icon">🎰</div>
-      <div class="card-title">РОЗІГРАШ</div>
-      <div class="card-desc">Колесо удачі</div>
-    </div>
-    <div class="card" onclick="showPage('tournamentsList')">
-      <div class="card-icon">🏆</div>
-      <div class="card-title">ТУРНІРИ</div>
-      <div class="card-desc">Челенджі клану</div>
+  <div class="hero">
+    <h1 class="hero-title">Ласкаво просимо,<br><span>Командире</span></h1>
+    <p class="hero-sub">Обери розділ нижче</p>
+    <div class="cards">
+      <div class="card" onclick="openLottery()">
+        <span class="card-icon">🎰</span>
+        <div class="card-title">РОЗІГРАШ</div>
+        <div class="card-desc">Колесо удачі для учасників клану. Додай нікнейми і крути.</div>
+        <span class="card-arrow">→</span>
+      </div>
+      <div class="card" onclick="openTournamentsList()">
+        <span class="card-icon">🏆</span>
+        <div class="card-title">ТУРНІРИ</div>
+        <div class="card-desc">Челенджі та змагання клану з таблицею результатів.</div>
+        <span class="card-arrow">→</span>
+      </div>
     </div>
   </div>
 </div>
 
-<!-- СПИСОК ТУРНІРІВ -->
 <div id="tournamentsListPage" class="page">
-  <button class="back-btn" onclick="showPage('home')">← На головну</button>
-  <div class="cards">
-    <div class="card" onclick="openTournament()">
-      <div class="card-icon">🏅</div>
-      <div class="card-title">ГНУЧКІСТЬ</div>
-      <div class="card-desc">4 класи, 12 днів, призи</div>
+  <div class="page-header">
+    <span class="page-header-title">🏆 ТУРНІРИ</span>
+    <button class="back-btn" onclick="backToHome()">← На головну</button>
+  </div>
+  <div class="section-wrap">
+    <div class="cards" style="max-width:480px;margin:0 auto;">
+      <div class="card" onclick="openTournamentFlex()">
+        <span class="card-icon">🏅</span>
+        <div class="card-title">ГНУЧКІСТЬ</div>
+        <div class="card-desc">4 класи, 12 днів, призовий фонд до 10 000 дублонів</div>
+        <span class="card-arrow">→</span>
+      </div>
     </div>
   </div>
 </div>
 
-<!-- ТУРНІР -->
-<div id="tournamentPage" class="page">
-  <button class="back-btn" onclick="showPage('tournamentsList')">← До списку</button>
-  
-  <div class="tournament-container">
-    <div class="rules">
-      <div class="rule">⚓ 4 класи: ЛК, КР, ЕМ, АВ</div>
-      <div class="rule">📅 12 днів / 4 етапи</div>
-      <div class="rule">🎯 XP ÷ 1000 = бали</div>
-      <div class="rule">🚫 Класи не повторюються</div>
-      <div class="rule">🏆 Тільки Рандом V+</div>
+<div id="tournamentFlexPage" class="page">
+  <div class="page-header">
+    <span class="page-header-title">🏅 ЧЕЛЕНДЖ «ГНУЧКІСТЬ»</span>
+    <button class="back-btn" onclick="openTournamentsList()">← До списку</button>
+  </div>
+  <div class="tournament-wrap">
+    <div class="rules-box">
+      <div class="rules-box-title">📋 Правила</div>
+      <div class="rules-grid">
+        <div class="rule-item">⚓ 4 класи: ЛК, КР, ЕМ, АВ</div>
+        <div class="rule-item">📅 12 днів / 4 етапи по 3 дні</div>
+        <div class="rule-item">🎯 XP ÷ 1000 (округл. вниз) = бали</div>
+        <div class="rule-item">🚫 Класи не повторюються</div>
+        <div class="rule-item">🏆 Тільки Рандом, рівень V+</div>
+        <div class="rule-item">⏰ Не здав вчасно = 0 балів</div>
+        <div class="rule-item">📸 Скріншот «Командний результат»</div>
+        <div class="rule-item">🔢 Виграє найвища сума балів</div>
+      </div>
     </div>
-    
-    <div class="stages">
-      <div class="stage"><b>ЕТАП 1</b><br>Дні 1-3</div>
-      <div class="stage"><b>ЕТАП 2</b><br>Дні 4-6</div>
-      <div class="stage"><b>ЕТАП 3</b><br>Дні 7-9</div>
-      <div class="stage"><b>ЕТАП 4</b><br>Дні 10-12</div>
+    <div class="stages-row">
+      <div class="stage-card"><b>ЕТАП 1</b><small>Дні 1–3 (Ср–Пт)</small></div>
+      <div class="stage-card"><b>ЕТАП 2</b><small>Дні 4–6 (Сб–Пн)</small></div>
+      <div class="stage-card"><b>ЕТАП 3</b><small>Дні 7–9 (Вт–Чт)</small></div>
+      <div class="stage-card"><b>ЕТАП 4</b><small>Дні 10–12 (Пт–Нд)</small></div>
     </div>
-    
-    <div class="prizes">
-      <div class="prize">🥇 1 місце<br>10 000 дублонів</div>
-      <div class="prize">🥈 2 місце<br>5 000 дублонів</div>
-      <div class="prize">🥉 3 місце<br>2 500 дублонів</div>
+    <div class="prizes-row">
+      <div class="prize-card"><span class="prize-medal">🥇</span><div class="prize-place">1 Місце</div><div class="prize-amount">10 000</div><div class="prize-unit">🪙 ДУБЛОНІВ</div></div>
+      <div class="prize-card"><span class="prize-medal">🥈</span><div class="prize-place">2 Місце</div><div class="prize-amount">5 000</div><div class="prize-unit">🪙 ДУБЛОНІВ</div></div>
+      <div class="prize-card"><span class="prize-medal">🥉</span><div class="prize-place">3 Місце</div><div class="prize-amount">2 500</div><div class="prize-unit">🪙 ДУБЛОНІВ</div></div>
     </div>
-    
-    <div class="table-header">
-      <span>🏆 ТАБЛИЦЯ РЕЗУЛЬТАТІВ</span>
-      <button onclick="openAddPlayerModal()">+ Додати гравця</button>
+    <div class="lb-control">
+      <span class="lb-label">🏅 Таблиця результатів</span>
+      <button class="add-player-btn" onclick="openAddPlayerModal()">+ Додати гравця</button>
     </div>
-    
-    <div style="overflow-x: auto;">
-      <table id="tournamentTable">
+    <div class="table-wrapper">
+      <table class="lb">
         <thead>
-          <tr><th>#</th><th>Гравець</th><th>⚓ ЛК</th><th>🚢 КР</th><th>🚤 ЕМ</th><th>✈️ АВ</th><th>СУМА</th><th></th></tr>
+          <tr>
+            <th style="width:44px">#</th>
+            <th style="text-align:left">Гравець</th>
+            <th>⚓ ЛК</th><th>🚢 КР</th><th>🚤 ЕМ</th><th>✈️ АВ</th>
+            <th>СУМА</th>
+            <th style="width:44px"></th>
+          </tr>
         </thead>
-        <tbody id="tournamentBody"></tbody>
+        <tbody id="tournamentTbody"></tbody>
       </table>
     </div>
+    <p class="hint" style="margin-top:10px">Клікни на XP або «+ XP» щоб ввести результат. Клікни на ім'я гравця щоб змінити нікнейм.</p>
   </div>
 </div>
 
-<!-- ЛОТЕРЕЯ -->
 <div id="lotteryPage" class="page">
-  <button class="back-btn" onclick="showPage('home')">← На головну</button>
-  
-  <div class="lottery-container">
-    <div class="wheel-section">
-      <div class="wheel-wrapper">
-        <canvas id="wheelCanvas" width="300" height="300"></canvas>
-        <div class="pointer"></div>
-      </div>
-      <button id="spinBtn">КРУТИТИ КОЛЕСО</button>
-      <div class="winner-box" id="winnerBox">
-        <div style="font-size:12px; color:var(--accent2);">ПЕРЕМОЖЕЦЬ</div>
-        <div id="winnerName" style="font-size:20px; font-weight:bold;">-</div>
-      </div>
-    </div>
-    
-    <div class="players-section">
-      <div class="panel">
-        <div class="panel-title">
-          УЧАСНИКИ
-          <span id="playersCount">0</span>
+  <div class="page-header">
+    <span class="page-header-title">🎲 РОЗІГРАШ</span>
+    <button class="back-btn" onclick="backToHome()">← На головну</button>
+  </div>
+  <div class="lottery-wrap">
+    <div class="lottery-layout">
+      <div class="wheel-col">
+        <div class="wheel-frame">
+          <canvas id="wheelCanvas" width="400" height="400"></canvas>
+          <div class="pointer"></div>
         </div>
-        <textarea id="playersInput" placeholder="Кожен нікнейм з нового рядка"></textarea>
-        <button onclick="updateWheel()" style="margin-top:10px; width:100%;">Оновити колесо</button>
+        <button class="spin-btn" id="spinButton">КРУТИТИ КОЛЕСО</button>
+        <div class="winner-box" id="winnerBox">
+          <div class="winner-label">ПЕРЕМОЖЕЦЬ</div>
+          <div class="winner-name" id="winnerName">—</div>
+        </div>
       </div>
-      <div class="panel">
-        <div class="panel-title">СПИСОК УЧАСНИКІВ</div>
-        <div id="playersList" class="chip-list"></div>
+      <div class="sidebar">
+        <div class="panel">
+          <div class="panel-title">УЧАСНИКИ <span class="count-badge" id="playerCount">0</span></div>
+          <textarea id="playersList" placeholder="Кожен нікнейм з нового рядку:&#10;&#10;Admiral_Kraken&#10;NavyStorm99&#10;SeaWolf_UA"></textarea>
+          <p class="hint">↵ Кожен нікнейм — новий рядок</p>
+        </div>
+        <div class="panel">
+          <div class="panel-title">СПИСОК</div>
+          <div id="chipContainer" class="chip-list"><span class="empty-msg">Ще немає учасників</span></div>
+        </div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- МОДАЛЬНЕ ВІКНО -->
-<div id="playerModal" class="modal">
-  <div class="modal-content">
-    <h3>➕ Новий гравець</h3>
-    <input type="text" id="newPlayerName" placeholder="Нікнейм" autocomplete="off">
-    <button onclick="addTournamentPlayer()">Додати</button>
-    <button onclick="closeModal()">Скасувати</button>
+<div class="modal-overlay" id="addPlayerModal" onclick="if(event.target===this)closeModal('addPlayerModal')">
+  <div class="modal-box">
+    <div class="modal-title">➕ Додати гравця</div>
+    <label class="modal-label">Нікнейм</label>
+    <input type="text" class="modal-input" id="newPlayerNick" placeholder="Pavlo_Zhyhalov" autocomplete="off">
+    <div class="modal-actions">
+      <button class="btn-primary" onclick="confirmAddPlayer()">Додати</button>
+      <button class="btn-secondary" onclick="closeModal('addPlayerModal')">Скасувати</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="editXpModal" onclick="if(event.target===this)closeModal('editXpModal')">
+  <div class="modal-box">
+    <div class="modal-title" id="editXpTitle">✏️ Результати гравця</div>
+    <div class="xp-grid">
+      <div><label class="xp-field-label">⚓ Лінкор (XP)</label><input type="number" min="0" class="modal-input" id="xpField0" placeholder="напр. 1876"></div>
+      <div><label class="xp-field-label">🚢 Крейсер (XP)</label><input type="number" min="0" class="modal-input" id="xpField1" placeholder="напр. 2345"></div>
+      <div><label class="xp-field-label">🚤 Есмінець (XP)</label><input type="number" min="0" class="modal-input" id="xpField2" placeholder="напр. 1500"></div>
+      <div><label class="xp-field-label">✈️ Авіаносець (XP)</label><input type="number" min="0" class="modal-input" id="xpField3" placeholder="напр. 2100"></div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-primary" onclick="confirmEditXp()">Зберегти</button>
+      <button class="btn-secondary" onclick="closeModal('editXpModal')">Скасувати</button>
+    </div>
   </div>
 </div>
 
 <script>
-// ========== ГЛОБАЛЬНІ ЗМІННІ ==========
-let lotteryPlayers = [];
-let wheelRotation = 0;
-let isSpinning = false;
-let animFrame = null;
-let tournamentPlayers = [];
-
-const canvas = document.getElementById('wheelCanvas');
-const ctx = canvas.getContext('2d');
-let size = 300;
-let center = 150;
-let radius = 135;
-
-const colors = ['#e63946', '#f1c40f', '#2ecc71', '#3498db', '#9b59b6', '#e67e22', '#1abc9c', '#e84393'];
-
-// ========== НАВІГАЦІЯ ==========
-function showPage(pageId) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.getElementById(pageId + 'Page').classList.add('active');
+function backToHome(){ showPage('homePage'); }
+function openLottery(){ showPage('lotteryPage'); setTimeout(()=>{setCanvasSize();drawWheel();},40); }
+function openTournamentsList(){ showPage('tournamentsListPage'); }
+function openTournamentFlex(){ showPage('tournamentFlexPage'); renderTable(); }
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
 }
-
-function openTournament() {
-  showPage('tournament');
-  renderTournamentTable();
+let lp=[],wAngle=0,wSpin=false;
+const cv=document.getElementById('wheelCanvas'),cx=cv.getContext('2d');
+let cW=cv.width,cH=cv.height,cX=cW/2,cY=cH/2,cR=cW/2-8;
+const SC=['#1a4a6e','#1e5c5c','#2a3f6e','#1e4a3a','#3a4a6e','#2a5a72','#1a3a5a','#2e5248','#1e3a6e','#24574a','#1a3a72','#265248','#163a6e','#2a4a3a'];
+function setCanvasSize(){
+  const f=document.querySelector('.wheel-frame'); if(!f)return;
+  const sz=Math.min(f.clientWidth,360);
+  cv.width=sz;cv.height=sz;cW=sz;cH=sz;cX=sz/2;cY=sz/2;cR=sz/2-8;drawWheel();
 }
-
-// ========== ЛОТЕРЕЯ ==========
-function drawWheel() {
-  if (!ctx) return;
-  ctx.clearRect(0, 0, size, size);
-  
-  if (lotteryPlayers.length === 0) {
-    ctx.fillStyle = '#1a2a3a';
-    ctx.beginPath();
-    ctx.arc(center, center, radius, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.fillStyle = '#8aa0b0';
-    ctx.font = '12px sans-serif';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText('Додайте гравців', center, center);
-    return;
+window.addEventListener('resize',()=>{ if(document.getElementById('lotteryPage').classList.contains('active'))setCanvasSize(); });
+function drawWheel(){
+  cx.clearRect(0,0,cW,cH);
+  if(!lp.length){
+    cx.beginPath();cx.arc(cX,cY,cR,0,Math.PI*2);cx.fillStyle='#0a1a28';cx.fill();
+    cx.strokeStyle='#1a3a55';cx.lineWidth=2;cx.stroke();
+    cx.fillStyle='#406070';cx.font='400 13px "Source Sans 3",sans-serif';
+    cx.textAlign='center';cx.textBaseline='middle';cx.fillText('Додайте учасників →',cX,cY);return;
   }
-  
-  const count = lotteryPlayers.length;
-  const angleStep = (Math.PI * 2) / count;
-  
-  for (let i = 0; i < count; i++) {
-    const start = i * angleStep + wheelRotation;
-    const end = start + angleStep;
-    
-    ctx.beginPath();
-    ctx.moveTo(center, center);
-    ctx.arc(center, center, radius, start, end);
-    ctx.closePath();
-    
-    ctx.fillStyle = colors[i % colors.length];
-    ctx.fill();
-    ctx.strokeStyle = '#0a0f1a';
-    ctx.lineWidth = 1.5;
-    ctx.stroke();
-    
-    ctx.save();
-    ctx.translate(center, center);
-    ctx.rotate(start + angleStep / 2);
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    
-    let name = lotteryPlayers[i];
-    if (name.length > 10) name = name.slice(0, 8) + '..';
-    ctx.font = `bold ${Math.max(10, 12 - Math.floor(count / 4))}px system-ui`;
-    ctx.fillStyle = '#ffffff';
-    ctx.fillText(name, radius - 20, 4);
-    ctx.restore();
+  const n=lp.length,sl=(Math.PI*2)/n;
+  for(let i=0;i<n;i++){
+    const s=wAngle+i*sl,e=s+sl;
+    cx.beginPath();cx.moveTo(cX,cY);cx.arc(cX,cY,cR,s,e);cx.closePath();
+    cx.fillStyle=SC[i%SC.length];cx.fill();cx.strokeStyle='#06101a';cx.lineWidth=1.5;cx.stroke();
+    cx.save();cx.translate(cX,cY);cx.rotate(s+sl/2);
+    cx.textAlign='right';cx.textBaseline='middle';
+    const fs=n<=6?13:n<=12?11:n<=20?9:8;
+    cx.font=`600 ${fs}px "Rajdhani",sans-serif`;
+    const lb=lp[i].length>13?lp[i].slice(0,12)+'…':lp[i];
+    cx.fillStyle='rgba(0,0,0,.4)';cx.fillText(lb,cR-10,1);
+    cx.fillStyle='#e8f4fa';cx.fillText(lb,cR-11,0);cx.restore();
   }
-  
-  ctx.beginPath();
-  ctx.arc(center, center, 10, 0, Math.PI * 2);
-  ctx.fillStyle = '#0a0f1a';
-  ctx.fill();
-  ctx.strokeStyle = '#e8c560';
-  ctx.lineWidth = 2;
-  ctx.stroke();
+  cx.beginPath();cx.arc(cX,cY,cR,0,Math.PI*2);cx.strokeStyle='#1a3a55';cx.lineWidth=3;cx.stroke();
+  cx.beginPath();cx.arc(cX,cY,13,0,Math.PI*2);cx.fillStyle='#06101a';cx.fill();cx.strokeStyle='#3a9fd8';cx.lineWidth=2;cx.stroke();
 }
-
-function getWinner() {
-  if (lotteryPlayers.length === 0) return null;
-  const angleStep = (Math.PI * 2) / lotteryPlayers.length;
-  let pointerAngle = -Math.PI / 2;
-  let raw = (pointerAngle - wheelRotation) % (Math.PI * 2);
-  if (raw < 0) raw += Math.PI * 2;
-  return lotteryPlayers[Math.floor(raw / angleStep) % lotteryPlayers.length];
+function calcWinner(){
+  const n=lp.length,sl=(Math.PI*2)/n;
+  const pos=((-Math.PI/2)-wAngle%(Math.PI*2)+Math.PI*2*10)%(Math.PI*2);
+  return Math.floor(pos/sl)%n;
 }
-
-function spinWheel() {
-  if (isSpinning) return;
-  if (lotteryPlayers.length < 2) {
-    alert("Додайте хоча б 2 гравці!");
-    return;
-  }
-  
-  isSpinning = true;
-  const btn = document.getElementById('spinBtn');
-  btn.disabled = true;
+function spinLottery(){
+  if(lp.length<2){alert('Додай мінімум 2 учасники!');return;}
+  if(wSpin)return;
+  wSpin=true;document.getElementById('spinButton').disabled=true;
   document.getElementById('winnerBox').classList.remove('show');
-  
-  const startRot = wheelRotation;
-  const extraSpins = Math.PI * 2 * (6 + Math.random() * 6);
-  const startTime = performance.now();
-  const duration = 2000;
-  
-  function animate(now) {
-    const elapsed = now - startTime;
-    let t = Math.min(1, elapsed / duration);
-    const ease = 1 - Math.pow(1 - t, 3);
-    wheelRotation = startRot + extraSpins * ease;
-    drawWheel();
-    
-    if (t < 1) {
-      animFrame = requestAnimationFrame(animate);
-    } else {
-      const winner = getWinner();
-      if (winner) {
-        document.getElementById('winnerName').innerText = winner;
-        document.getElementById('winnerBox').classList.add('show');
-      }
-      isSpinning = false;
-      btn.disabled = false;
-      cancelAnimationFrame(animFrame);
+  const n=lp.length,sl=(Math.PI*2)/n;
+  const wi=Math.floor(Math.random()*n);
+  const tgt=(((-Math.PI/2)-wi*sl-sl/2)%(Math.PI*2)+Math.PI*2)%(Math.PI*2);
+  const cur=(wAngle%(Math.PI*2)+Math.PI*2)%(Math.PI*2);
+  let diff=tgt-cur; if(diff<0)diff+=Math.PI*2;
+  const total=(7+Math.floor(Math.random()*5))*Math.PI*2+diff;
+  const sa=wAngle,dur=4000+Math.random()*1200,t0=performance.now();
+  function ease(t){return 1-Math.pow(1-t,4);}
+  (function fr(now){
+    const t=Math.min((now-t0)/dur,1);
+    wAngle=sa+total*ease(t);drawWheel();
+    if(t<1){requestAnimationFrame(fr);}
+    else{
+      const w=lp[calcWinner()];
+      document.getElementById('winnerName').textContent=w;
+      const b=document.getElementById('winnerBox');
+      b.classList.remove('show');void b.offsetWidth;b.classList.add('show');
+      wSpin=false;document.getElementById('spinButton').disabled=false;
     }
-  }
-  
-  if (animFrame) cancelAnimationFrame(animFrame);
-  animFrame = requestAnimationFrame(animate);
+  })(t0);
 }
-
-function updateWheel() {
-  const text = document.getElementById('playersInput').value;
-  lotteryPlayers = text.split('\n').filter(l => l.trim().length > 0).map(l => l.trim());
-  
-  document.getElementById('playersCount').innerText = lotteryPlayers.length;
-  const container = document.getElementById('playersList');
-  
-  if (lotteryPlayers.length === 0) {
-    container.innerHTML = '<div class="chip">Немає гравців</div>';
-  } else {
-    container.innerHTML = lotteryPlayers.map(p => `<div class="chip">${escapeHtml(p)}</div>`).join('');
-  }
-  
-  localStorage.setItem('lotteryData', JSON.stringify(lotteryPlayers));
+function updateWheel(){
+  lp=document.getElementById('playersList').value.split('\n').map(s=>s.trim()).filter(s=>s.length>0);
+  document.getElementById('playerCount').textContent=lp.length;
+  const cc=document.getElementById('chipContainer');
+  cc.innerHTML=lp.length===0?'<span class="empty-msg">Ще немає учасників</span>':lp.map(p=>`<span class="chip">${esc(p)}</span>`).join('');
   drawWheel();
+  try{localStorage.setItem('lp',JSON.stringify(lp));}catch(e){}
 }
-
-function loadLottery() {
-  const saved = localStorage.getItem('lotteryData');
-  if (saved) {
-    lotteryPlayers = JSON.parse(saved);
-    document.getElementById('playersInput').value = lotteryPlayers.join('\n');
-    document.getElementById('playersCount').innerText = lotteryPlayers.length;
-    const container = document.getElementById('playersList');
-    if (lotteryPlayers.length === 0) {
-      container.innerHTML = '<div class="chip">Немає гравців</div>';
-    } else {
-      container.innerHTML = lotteryPlayers.map(p => `<div class="chip">${escapeHtml(p)}</div>`).join('');
+function loadLottery(){
+  try{
+    const s=localStorage.getItem('lp');
+    if(s){lp=JSON.parse(s);document.getElementById('playersList').value=lp.join('\n');updateWheel();}
+  }catch(e){}
+}
+let td=[],xpIdx=-1;
+function saveT(){try{localStorage.setItem('tflex',JSON.stringify(td));}catch(e){}}
+function loadT(){try{const s=localStorage.getItem('tflex');if(s)td=JSON.parse(s);}catch(e){td=[];}}
+function score(p){if(!p.xp)return 0;return p.xp.reduce((s,v)=>s+(v&&v>0?Math.floor(v/1000):0),0);}
+function renderTable(){
+  const tb=document.getElementById('tournamentTbody');
+  if(!td.length){
+    tb.innerHTML=`<tr><td colspan="8" style="padding:36px;color:var(--muted);font-style:italic;font-size:.85rem;text-align:center">Немає учасників. Натисніть «+ Додати гравця»</td></tr>`;
+    return;
+  }
+  const ws=td.map((p,i)=>({...p,_i:i,sc:score(p)})).sort((a,b)=>b.sc-a.sc);
+  tb.innerHTML=ws.map((p,r)=>{
+    const rc=r===0?'rank-1':r===1?'rank-2':r===2?'rank-3':'rank-n';
+    const xc=(p.xp||[null,null,null,null]).map((v,ci)=>
+      v&&v>0
+        ?`<td><span class="xp-val" onclick="openXp(${p._i})">${v.toLocaleString()}<br><small style="font-size:.6rem;color:var(--muted)">${Math.floor(v/1000)}б</small></span></td>`
+        :`<td><span class="xp-empty" onclick="openXp(${p._i})">+ XP</span></td>`
+    ).join('');
+    return `<tr>
+      <td><span class="rank-badge ${rc}">${r+1}</span></td>
+      <td class="name-cell" onclick="editNick(${p._i})">✏️ ${esc(p.nick)}</td>
+      ${xc}
+      <td><span class="score-total ${p.sc===0?'zero':''}">${p.sc}</span></td>
+      <td><button class="delete-btn" onclick="delP(${p._i})">🗑</button></td>
+    </tr>`;
+  }).join('');
+}
+function delP(i){
+  if(!td[i])return;
+  if(confirm(`Видалити «${td[i].nick}»?`)){td.splice(i,1);saveT();renderTable();}
+}
+function editNick(i){
+  if(!td[i])return;
+  const n=prompt('Новий нікнейм:',td[i].nick);
+  if(n&&n.trim()&&n.trim()!==td[i].nick){td[i].nick=n.trim();saveT();renderTable();}
+}
+function openAddPlayerModal(){
+  document.getElementById('addPlayerModal').classList.add('active');
+  setTimeout(()=>document.getElementById('newPlayerNick').focus(),50);
+}
+function confirmAddPlayer(){
+  const n=document.getElementById('newPlayerNick').value.trim();
+  if(!n){document.getElementById('newPlayerNick').focus();return;}
+  if(td.some(p=>p.nick.toLowerCase()===n.toLowerCase())){alert('Такий нікнейм вже є!');return;}
+  td.push({nick:n,xp:[null,null,null,null]});
+  saveT();renderTable();closeModal('addPlayerModal');
+  document.getElementById('newPlayerNick').value='';
+}
+function openXp(i){
+  xpIdx=i;const p=td[i];
+  document.getElementById('editXpTitle').textContent=`✏️ ${p.nick} — Результати`;
+  ['xpField0','xpField1','xpField2','xpField3'].forEach((f,ci)=>{
+    const v=p.xp?p.xp[ci]:null;
+    document.getElementById(f).value=(v&&v>0)?v:'';
+  });
+  document.getElementById('editXpModal').classList.add('active');
+  setTimeout(()=>document.getElementById('xpField0').focus(),50);
+}
+function confirmEditXp(){
+  if(xpIdx<0)return;
+  td[xpIdx].xp=['xpField0','xpField1','xpField2','xpField3'].map(f=>{
+    const v=parseInt(document.getElementById(f).value);
+    return(!isNaN(v)&&v>0)?v:null;
+  });
+  saveT();renderTable();closeModal('editXpModal');xpIdx=-1;
+}
+function closeModal(id){document.getElementById(id).classList.remove('active');}
+function esc(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+window.addEventListener('load',()=>{
+  loadLottery();loadT();renderTable();setCanvasSize();drawWheel();
+  document.getElementById('spinButton').addEventListener('click',spinLottery);
+  document.getElementById('playersList').addEventListener('input',updateWheel);
+  document.addEventListener('keydown',e=>{
+    if(e.key==='Escape'){closeModal('addPlayerModal');closeModal('editXpModal');}
+    if(e.key==='Enter'){
+      if(document.getElementById('addPlayerModal').classList.contains('active'))confirmAddPlayer();
+      if(document.getElementById('editXpModal').classList.contains('active'))confirmEditXp();
     }
-    drawWheel();
-  }
-}
-
-// ========== ТУРНІР ==========
-function saveTournament() {
-  localStorage.setItem('tournamentData', JSON.stringify(tournamentPlayers));
-}
-
-function loadTournament() {
-  const saved = localStorage.getItem('tournamentData');
-  if (saved) {
-    tournamentPlayers = JSON.parse(saved);
-  } else {
-    tournamentPlayers = [];
-  }
-}
-
-function calcScore(xpArr) {
-  if (!xpArr) return 0;
-  return xpArr.reduce((sum, val) => sum + (val ? Math.floor(val / 1000) : 0), 0);
-}
-
-function renderTournamentTable() {
-  const tbody = document.getElementById('tournamentBody');
-  
-  if (tournamentPlayers.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding:40px;">Немає учасників. Додайте гравця.</td></tr>';
-    return;
-  }
-  
-  const playersWithScore = tournamentPlayers.map((p, idx) => ({
-    ...p,
-    originalIdx: idx,
-    total: calcScore(p.xp || [null, null, null, null])
-  }));
-  
-  playersWithScore.sort((a, b) => b.total - a.total);
-  
-  let html = '';
-  playersWithScore.forEach((p, rank) => {
-    const rankClass = rank === 0 ? 'rank-1' : rank === 1 ? 'rank-2' : rank === 2 ? 'rank-3' : '';
-    const xp = p.xp || [null, null, null, null];
-    
-    const cells = xp.map((val, idx) => {
-      if (val) {
-        return `<td>${val}<br><small style="font-size:11px;">${Math.floor(val/1000)}</small></td>`;
-      } else {
-        return `<td><input class="xp-input" type="number" placeholder="XP" onchange="updateXP(${p.originalIdx}, ${idx}, this.value)"></td>`;
-      }
-    }).join('');
-    
-    html += `
-      <tr>
-        <td><span class="rank-badge ${rankClass}">${rank+1}</span></td>
-        <td class="clickable-name" onclick="editNick(${p.originalIdx})">${escapeHtml(p.nick)}</td>
-        ${cells}
-        <td><b>${p.total}</b></td>
-        <td><button class="delete-btn" onclick="deletePlayer(${p.originalIdx})">🗑</button></td>
-      </tr>
-    `;
   });
-  
-  tbody.innerHTML = html;
-}
-
-function updateXP(idx, classIdx, value) {
-  if (!tournamentPlayers[idx]) return;
-  if (!tournamentPlayers[idx].xp) tournamentPlayers[idx].xp = [null, null, null, null];
-  const num = parseInt(value);
-  tournamentPlayers[idx].xp[classIdx] = isNaN(num) ? null : num;
-  saveTournament();
-  renderTournamentTable();
-}
-
-function deletePlayer(idx) {
-  if (confirm(`Видалити ${tournamentPlayers[idx].nick}?`)) {
-    tournamentPlayers.splice(idx, 1);
-    saveTournament();
-    renderTournamentTable();
-  }
-}
-
-function editNick(idx) {
-  const newNick = prompt('Новий нікнейм:', tournamentPlayers[idx].nick);
-  if (newNick && newNick.trim()) {
-    tournamentPlayers[idx].nick = newNick.trim();
-    saveTournament();
-    renderTournamentTable();
-  }
-}
-
-function openAddPlayerModal() {
-  document.getElementById('playerModal').classList.add('active');
-  document.getElementById('newPlayerName').focus();
-}
-
-function closeModal() {
-  document.getElementById('playerModal').classList.remove('active');
-  document.getElementById('newPlayerName').value = '';
-}
-
-function addTournamentPlayer() {
-  const name = document.getElementById('newPlayerName').value.trim();
-  if (!name) {
-    alert('Введіть нікнейм');
-    return;
-  }
-  if (tournamentPlayers.some(p => p.nick.toLowerCase() === name.toLowerCase())) {
-    alert('Гравець вже існує');
-    return;
-  }
-  tournamentPlayers.push({
-    nick: name,
-    xp: [null, null, null, null]
-  });
-  saveTournament();
-  renderTournamentTable();
-  closeModal();
-}
-
-// ========== ДОПОМІЖНІ ==========
-function escapeHtml(str) {
-  if (!str) return '';
-  return str.replace(/[&<>]/g, function(m) {
-    if (m === '&') return '&amp;';
-    if (m === '<') return '&lt;';
-    if (m === '>') return '&gt;';
-    return m;
-  });
-}
-
-// ========== ІНІЦІАЛІЗАЦІЯ ==========
-document.getElementById('spinBtn').onclick = spinWheel;
-
-window.addEventListener('load', function() {
-  loadLottery();
-  loadTournament();
-  renderTournamentTable();
-  drawWheel();
 });
-
-document.getElementById('playerModal').addEventListener('click', function(e) {
-  if (e.target === this) closeModal();
-});
-
-document.addEventListener('keydown', function(e) {
-  if (e.key === 'Escape') closeModal();
-});
-
-// Коригування розміру canvas при завантаженні
-setTimeout(() => {
-  const rect = canvas.parentElement.getBoundingClientRect();
-  const newSize = Math.min(rect.width, 300);
-  if (newSize !== size) {
-    size = newSize;
-    center = size / 2;
-    radius = size / 2 - 15;
-    canvas.width = size;
-    canvas.height = size;
-    drawWheel();
-  }
-}, 100);
 </script>
 </body>
 </html>
