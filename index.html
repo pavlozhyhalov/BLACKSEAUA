@@ -18,7 +18,8 @@ body { background:var(--bg); color:var(--text); font-family:'Source Sans 3',sans
               radial-gradient(ellipse 50% 40% at 10% 50%, rgba(10,50,90,.14) 0%, transparent 60%); }
 header { position:relative; z-index:10; border-bottom:1px solid var(--border); background:rgba(6,16,26,.95); backdrop-filter:blur(12px); }
 .header-inner { max-width:1100px; margin:0 auto; padding:14px 24px; display:flex; flex-direction:column; align-items:center; gap:4px; }
-.clan-title { font-family:'Orbitron',monospace; font-weight:900; font-size:1.1rem; letter-spacing:.25em; color:var(--accent2); text-transform:uppercase; }
+.clan-title { font-family:'Orbitron',monospace; font-weight:900; font-size:1.1rem; letter-spacing:.25em; color:var(--accent2); text-transform:uppercase; cursor:pointer; transition:opacity .2s; }
+.clan-title:hover { opacity:.75; }
 .game-title { font-family:'Rajdhani',sans-serif; font-size:.68rem; letter-spacing:.3em; color:var(--muted); font-weight:500; text-transform:uppercase; }
 .page { display:none; position:relative; z-index:1; animation:fadeIn .25s ease; }
 .page.active { display:block; }
@@ -85,8 +86,15 @@ textarea::placeholder { color:var(--muted); }
 .prize-unit { font-size:.68rem; color:var(--muted); margin-top:2px; }
 .lb-control { display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:12px; }
 .lb-label { font-family:'Rajdhani',sans-serif; font-weight:700; font-size:.78rem; letter-spacing:.2em; text-transform:uppercase; color:var(--muted); }
+.lb-actions { display:flex; gap:8px; align-items:center; }
 .add-player-btn { font-family:'Rajdhani',sans-serif; font-weight:700; font-size:.75rem; letter-spacing:.14em; text-transform:uppercase; background:var(--accent); border:none; padding:7px 18px; color:var(--bg); cursor:pointer; border-radius:4px; transition:opacity .2s; }
 .add-player-btn:hover { opacity:.85; }
+.sync-status { font-family:'Rajdhani',sans-serif; font-size:.68rem; letter-spacing:.1em; color:var(--muted); display:flex; align-items:center; gap:5px; }
+.sync-dot { width:7px; height:7px; border-radius:50%; background:var(--muted); flex-shrink:0; transition:background .3s; }
+.sync-dot.ok { background:var(--accent3); }
+.sync-dot.err { background:var(--red); }
+.sync-dot.loading { background:var(--accent2); animation:pulse .8s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
 .table-wrapper { overflow-x:auto; }
 table.lb { width:100%; border-collapse:collapse; min-width:560px; }
 table.lb thead tr { background:var(--bg2); border-bottom:2px solid var(--accent2); }
@@ -131,7 +139,7 @@ table.lb td.name-cell:hover { color:var(--accent2); }
 <div class="bg-atmo"></div>
 <header>
   <div class="header-inner">
-    <div class="clan-title">⚓ CLAN BLACKSEAUA ⚓</div>
+    <div class="clan-title" onclick="backToHome()">⚓ CLAN BLACKSEAUA ⚓</div>
     <div class="game-title">WORLD OF WARSHIPS LEGENDS</div>
   </div>
 </header>
@@ -142,7 +150,7 @@ table.lb td.name-cell:hover { color:var(--accent2); }
     <p class="hero-sub">Обери розділ нижче</p>
     <div class="cards">
       <div class="card" onclick="openLottery()">
-        <span class="card-icon">🎲</span>
+        <span class="card-icon">🎡</span>
         <div class="card-title">РОЗІГРАШ</div>
         <div class="card-desc">Колесо удачі для учасників клану. Додай нікнейми і крути.</div>
         <span class="card-arrow">→</span>
@@ -194,10 +202,10 @@ table.lb td.name-cell:hover { color:var(--accent2); }
       </div>
     </div>
     <div class="stages-row">
-      <div class="stage-card"><b>ЕТАП 1</b><small>Дні 1–3 (Ср–Пт)</small></div>
-      <div class="stage-card"><b>ЕТАП 2</b><small>Дні 4–6 (Сб–Пн)</small></div>
-      <div class="stage-card"><b>ЕТАП 3</b><small>Дні 7–9 (Вт–Чт)</small></div>
-      <div class="stage-card"><b>ЕТАП 4</b><small>Дні 10–12 (Пт–Нд)</small></div>
+      <div class="stage-card"><b>ЕТАП 1</b><small>Дні 1–3</small></div>
+      <div class="stage-card"><b>ЕТАП 2</b><small>Дні 4–6</small></div>
+      <div class="stage-card"><b>ЕТАП 3</b><small>Дні 7–9</small></div>
+      <div class="stage-card"><b>ЕТАП 4</b><small>Дні 10–12</small></div>
     </div>
     <div class="prizes-row">
       <div class="prize-card"><span class="prize-medal">🥇</span><div class="prize-place">1 Місце</div><div class="prize-amount">10 000</div><div class="prize-unit">🪙 ДУБЛОНІВ</div></div>
@@ -206,7 +214,10 @@ table.lb td.name-cell:hover { color:var(--accent2); }
     </div>
     <div class="lb-control">
       <span class="lb-label">🏅 Таблиця результатів</span>
-      <button class="add-player-btn" onclick="openAddPlayerModal()">+ Додати гравця</button>
+      <div class="lb-actions">
+        <div class="sync-status"><div class="sync-dot loading" id="syncDot"></div><span id="syncText">Підключення...</span></div>
+        <button class="add-player-btn" onclick="openAddPlayerModal()">+ Додати гравця</button>
+      </div>
     </div>
     <div class="table-wrapper">
       <table class="lb">
@@ -222,13 +233,13 @@ table.lb td.name-cell:hover { color:var(--accent2); }
         <tbody id="tournamentTbody"></tbody>
       </table>
     </div>
-    <p class="hint" style="margin-top:10px">Клікни на XP або «+ XP» щоб ввести результат. Клікни на ім'я гравця щоб змінити нікнейм.</p>
+    <p class="hint" style="margin-top:10px">Клікни на XP або «+ XP» щоб ввести результат. Клікни на ім'я щоб змінити нікнейм. Дані синхронізуються у всіх.</p>
   </div>
 </div>
 
 <div id="lotteryPage" class="page">
   <div class="page-header">
-    <span class="page-header-title">🎲 РОЗІГРАШ</span>
+    <span class="page-header-title">🎡 РОЗІГРАШ</span>
     <button class="back-btn" onclick="backToHome()">← На головну</button>
   </div>
   <div class="lottery-wrap">
@@ -288,14 +299,36 @@ table.lb td.name-cell:hover { color:var(--accent2); }
 </div>
 
 <script>
-function backToHome(){ showPage('homePage'); }
-function openLottery(){ showPage('lotteryPage'); setTimeout(()=>{setCanvasSize();drawWheel();},40); }
-function openTournamentsList(){ showPage('tournamentsListPage'); }
-function openTournamentFlex(){ showPage('tournamentFlexPage'); renderTable(); }
+const SUPA_URL='https://otwcegfsmxmhiegukkyl.supabase.co';
+const SUPA_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im90d2NlZ2ZzbXhtaGllZ3Vra3lsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg2NTMwOTUsImV4cCI6MjA5NDIyOTA5NX0.FU45yk9GKVjEkuH-pWp5kB8fA_nVy2wpYQc48baxeL0';
+
+async function sbFetch(path,opts={}){
+  const res=await fetch(SUPA_URL+path,{...opts,headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY,'Content-Type':'application/json','Prefer':'return=representation',...(opts.headers||{})}});
+  if(!res.ok){const t=await res.text();throw new Error(t);}
+  const text=await res.text();return text?JSON.parse(text):[];
+}
+
+const PAGE_MAP={'':'homePage','home':'homePage','lottery':'lotteryPage','tournaments':'tournamentsListPage','flex':'tournamentFlexPage'};
+const HASH_MAP={'homePage':'home','lotteryPage':'lottery','tournamentsListPage':'tournaments','tournamentFlexPage':'flex'};
+
 function showPage(id){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.getElementById(id).classList.add('active');
+  window.location.hash=HASH_MAP[id]||'home';
   window.scrollTo(0,0);
+}
+function backToHome(){showPage('homePage');}
+function openLottery(){showPage('lotteryPage');setTimeout(()=>{setCanvasSize();drawWheel();},40);}
+function openTournamentsList(){showPage('tournamentsListPage');}
+function openTournamentFlex(){showPage('tournamentFlexPage');loadPlayers();}
+
+function restorePage(){
+  const hash=window.location.hash.replace('#','');
+  const pageId=PAGE_MAP[hash]||'homePage';
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById(pageId).classList.add('active');
+  if(pageId==='lotteryPage')setTimeout(()=>{setCanvasSize();drawWheel();},40);
+  if(pageId==='tournamentFlexPage')loadPlayers();
 }
 
 let lp=[],wAngle=0,wSpin=false;
@@ -304,11 +337,11 @@ let cW=cv.width,cH=cv.height,cX=cW/2,cY=cH/2,cR=cW/2-8;
 const SC=['#1a4a6e','#1e5c5c','#2a3f6e','#1e4a3a','#3a4a6e','#2a5a72','#1a3a5a','#2e5248','#1e3a6e','#24574a','#1a3a72','#265248','#163a6e','#2a4a3a'];
 
 function setCanvasSize(){
-  const f=document.querySelector('.wheel-frame'); if(!f)return;
+  const f=document.querySelector('.wheel-frame');if(!f)return;
   const sz=Math.min(f.clientWidth,360);
   cv.width=sz;cv.height=sz;cW=sz;cH=sz;cX=sz/2;cY=sz/2;cR=sz/2-8;drawWheel();
 }
-window.addEventListener('resize',()=>{ if(document.getElementById('lotteryPage').classList.contains('active'))setCanvasSize(); });
+window.addEventListener('resize',()=>{if(document.getElementById('lotteryPage').classList.contains('active'))setCanvasSize();});
 
 function drawWheel(){
   cx.clearRect(0,0,cW,cH);
@@ -350,7 +383,7 @@ function spinLottery(){
   const wi=Math.floor(Math.random()*n);
   const tgt=(((-Math.PI/2)-wi*sl-sl/2)%(Math.PI*2)+Math.PI*2)%(Math.PI*2);
   const cur=(wAngle%(Math.PI*2)+Math.PI*2)%(Math.PI*2);
-  let diff=tgt-cur; if(diff<0)diff+=Math.PI*2;
+  let diff=tgt-cur;if(diff<0)diff+=Math.PI*2;
   const total=(7+Math.floor(Math.random()*5))*Math.PI*2+diff;
   const sa=wAngle,dur=4000+Math.random()*1200,t0=performance.now();
   function ease(t){return 1-Math.pow(1-t,4);}
@@ -384,10 +417,34 @@ function loadLottery(){
   }catch(e){}
 }
 
-let td=[],xpIdx=-1;
-function saveT(){try{localStorage.setItem('tflex',JSON.stringify(td));}catch(e){}}
-function loadT(){try{const s=localStorage.getItem('tflex');if(s)td=JSON.parse(s);}catch(e){td=[];}}
-function score(p){if(!p.xp)return 0;return p.xp.reduce((s,v)=>s+(v&&v>0?Math.floor(v/1000):0),0);}
+let td=[],xpIdx=null,pollingStarted=false;
+
+function setSyncStatus(state,text){
+  const dot=document.getElementById('syncDot'),txt=document.getElementById('syncText');
+  if(!dot||!txt)return;
+  dot.className='sync-dot '+state;txt.textContent=text;
+}
+
+async function loadPlayers(){
+  setSyncStatus('loading','Завантаження...');
+  try{
+    const data=await sbFetch('/rest/v1/tournament_players?select=*&order=created_at.asc');
+    td=data;renderTable();setSyncStatus('ok','Синхронізовано');
+    if(!pollingStarted){pollingStarted=true;startPolling();}
+  }catch(e){setSyncStatus('err','Помилка з\'єднання');}
+}
+
+function startPolling(){
+  setInterval(async()=>{
+    if(!document.getElementById('tournamentFlexPage').classList.contains('active'))return;
+    try{
+      const data=await sbFetch('/rest/v1/tournament_players?select=*&order=created_at.asc');
+      if(JSON.stringify(data)!==JSON.stringify(td)){td=data;renderTable();setSyncStatus('ok','Оновлено');}
+    }catch(e){}
+  },5000);
+}
+
+function calcScore(p){return[p.xp_bb,p.xp_ca,p.xp_dd,p.xp_cv].reduce((s,v)=>s+(v&&v>0?Math.floor(v/1000):0),0);}
 
 function renderTable(){
   const tb=document.getElementById('tournamentTbody');
@@ -395,68 +452,96 @@ function renderTable(){
     tb.innerHTML=`<tr><td colspan="8" style="padding:36px;color:var(--muted);font-style:italic;font-size:.85rem;text-align:center">Немає учасників. Натисніть «+ Додати гравця»</td></tr>`;
     return;
   }
-  const ws=td.map((p,i)=>({...p,_i:i,sc:score(p)})).sort((a,b)=>b.sc-a.sc);
+  const ws=td.map(p=>({...p,sc:calcScore(p)})).sort((a,b)=>b.sc-a.sc);
+  const fields=['xp_bb','xp_ca','xp_dd','xp_cv'];
   tb.innerHTML=ws.map((p,r)=>{
     const rc=r===0?'rank-1':r===1?'rank-2':r===2?'rank-3':'rank-n';
-    const xc=(p.xp||[null,null,null,null]).map((v,ci)=>
-      v&&v>0
-        ?`<td><span class="xp-val" onclick="openXp(${p._i})">${v.toLocaleString()}<br><small style="font-size:.6rem;color:var(--muted)">${Math.floor(v/1000)}б</small></span></td>`
-        :`<td><span class="xp-empty" onclick="openXp(${p._i})">+ XP</span></td>`
+    const xc=fields.map(f=>
+      p[f]&&p[f]>0
+        ?`<td><span class="xp-val" onclick="openXp('${p.id}')">${p[f].toLocaleString()}<br><small style="font-size:.6rem;color:var(--muted)">${Math.floor(p[f]/1000)}б</small></span></td>`
+        :`<td><span class="xp-empty" onclick="openXp('${p.id}')">+ XP</span></td>`
     ).join('');
-    return `<tr>
+    return`<tr>
       <td><span class="rank-badge ${rc}">${r+1}</span></td>
-      <td class="name-cell" onclick="editNick(${p._i})">✏️ ${esc(p.nick)}</td>
+      <td class="name-cell" onclick="editNick('${p.id}')">✏️ ${esc(p.nick)}</td>
       ${xc}
       <td><span class="score-total ${p.sc===0?'zero':''}">${p.sc}</span></td>
-      <td><button class="delete-btn" onclick="delP(${p._i})">🗑</button></td>
+      <td><button class="delete-btn" onclick="delP('${p.id}')">🗑</button></td>
     </tr>`;
   }).join('');
 }
 
-function delP(i){
-  if(!td[i])return;
-  if(confirm(`Видалити «${td[i].nick}»?`)){td.splice(i,1);saveT();renderTable();}
+async function delP(id){
+  const p=td.find(x=>x.id===id);if(!p)return;
+  if(!confirm(`Видалити «${p.nick}»?`))return;
+  try{
+    await sbFetch(`/rest/v1/tournament_players?id=eq.${id}`,{method:'DELETE'});
+    td=td.filter(x=>x.id!==id);renderTable();setSyncStatus('ok','Збережено');
+  }catch(e){alert('Помилка: '+e.message);}
 }
-function editNick(i){
-  if(!td[i])return;
-  const n=prompt('Новий нікнейм:',td[i].nick);
-  if(n&&n.trim()&&n.trim()!==td[i].nick){td[i].nick=n.trim();saveT();renderTable();}
+
+async function editNick(id){
+  const p=td.find(x=>x.id===id);if(!p)return;
+  const n=prompt('Новий нікнейм:',p.nick);
+  if(!n||!n.trim()||n.trim()===p.nick)return;
+  try{
+    setSyncStatus('loading','Збереження...');
+    await sbFetch(`/rest/v1/tournament_players?id=eq.${id}`,{method:'PATCH',body:JSON.stringify({nick:n.trim(),updated_at:new Date().toISOString()})});
+    p.nick=n.trim();renderTable();setSyncStatus('ok','Збережено');
+  }catch(e){alert('Помилка: '+e.message);setSyncStatus('err','Помилка');}
 }
+
 function openAddPlayerModal(){
   document.getElementById('addPlayerModal').classList.add('active');
   setTimeout(()=>document.getElementById('newPlayerNick').focus(),50);
 }
-function confirmAddPlayer(){
+
+async function confirmAddPlayer(){
   const n=document.getElementById('newPlayerNick').value.trim();
   if(!n){document.getElementById('newPlayerNick').focus();return;}
   if(td.some(p=>p.nick.toLowerCase()===n.toLowerCase())){alert('Такий нікнейм вже є!');return;}
-  td.push({nick:n,xp:[null,null,null,null]});
-  saveT();renderTable();closeModal('addPlayerModal');
-  document.getElementById('newPlayerNick').value='';
+  try{
+    setSyncStatus('loading','Збереження...');
+    const res=await sbFetch('/rest/v1/tournament_players',{method:'POST',body:JSON.stringify({nick:n})});
+    if(Array.isArray(res)&&res[0])td.push(res[0]);
+    renderTable();setSyncStatus('ok','Збережено');
+    closeModal('addPlayerModal');document.getElementById('newPlayerNick').value='';
+  }catch(e){alert('Помилка: '+e.message);setSyncStatus('err','Помилка');}
 }
-function openXp(i){
-  xpIdx=i;const p=td[i];
+
+function openXp(id){
+  xpIdx=id;const p=td.find(x=>x.id===id);if(!p)return;
   document.getElementById('editXpTitle').textContent=`✏️ ${p.nick} — Результати`;
-  ['xpField0','xpField1','xpField2','xpField3'].forEach((f,ci)=>{
-    const v=p.xp?p.xp[ci]:null;
-    document.getElementById(f).value=(v&&v>0)?v:'';
-  });
+  document.getElementById('xpField0').value=p.xp_bb||'';
+  document.getElementById('xpField1').value=p.xp_ca||'';
+  document.getElementById('xpField2').value=p.xp_dd||'';
+  document.getElementById('xpField3').value=p.xp_cv||'';
   document.getElementById('editXpModal').classList.add('active');
   setTimeout(()=>document.getElementById('xpField0').focus(),50);
 }
-function confirmEditXp(){
-  if(xpIdx<0)return;
-  td[xpIdx].xp=['xpField0','xpField1','xpField2','xpField3'].map(f=>{
+
+async function confirmEditXp(){
+  if(!xpIdx)return;
+  const vals=['xpField0','xpField1','xpField2','xpField3'].map(f=>{
     const v=parseInt(document.getElementById(f).value);
     return(!isNaN(v)&&v>0)?v:null;
   });
-  saveT();renderTable();closeModal('editXpModal');xpIdx=-1;
+  try{
+    setSyncStatus('loading','Збереження...');
+    await sbFetch(`/rest/v1/tournament_players?id=eq.${xpIdx}`,{method:'PATCH',body:JSON.stringify({xp_bb:vals[0],xp_ca:vals[1],xp_dd:vals[2],xp_cv:vals[3],updated_at:new Date().toISOString()})});
+    const p=td.find(x=>x.id===xpIdx);
+    if(p){p.xp_bb=vals[0];p.xp_ca=vals[1];p.xp_dd=vals[2];p.xp_cv=vals[3];}
+    renderTable();setSyncStatus('ok','Збережено');
+    closeModal('editXpModal');xpIdx=null;
+  }catch(e){alert('Помилка: '+e.message);setSyncStatus('err','Помилка');}
 }
+
 function closeModal(id){document.getElementById(id).classList.remove('active');}
 function esc(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 
 window.addEventListener('load',()=>{
-  loadLottery();loadT();renderTable();setCanvasSize();drawWheel();
+  restorePage();
+  loadLottery();
   document.getElementById('spinButton').addEventListener('click',spinLottery);
   document.addEventListener('keydown',e=>{
     if(e.key==='Escape'){closeModal('addPlayerModal');closeModal('editXpModal');}
