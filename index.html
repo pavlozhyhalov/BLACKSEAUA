@@ -150,7 +150,7 @@ table.lb td.name-cell:hover { color:var(--accent2); }
     <p class="hero-sub">Обери розділ нижче</p>
     <div class="cards">
       <div class="card" onclick="openLottery()">
-        <span class="card-icon">🎡</span>
+        <span class="card-icon">🎲</span>
         <div class="card-title">РОЗІГРАШ</div>
         <div class="card-desc">Колесо удачі для учасників клану. Додай нікнейми і крути.</div>
         <span class="card-arrow">→</span>
@@ -233,13 +233,13 @@ table.lb td.name-cell:hover { color:var(--accent2); }
         <tbody id="tournamentTbody"></tbody>
       </table>
     </div>
-    <p class="hint" style="margin-top:10px">Клікни на XP або «+ XP» щоб ввести результат. Клікни на ім'я щоб змінити нікнейм. Дані синхронізуються у всіх.</p>
+    <p class="hint" style="margin-top:10px">Клікни на XP або «+ XP» щоб ввести результат. Клікни на ім'я щоб змінити нікнейм. Дані видні всім.</p>
   </div>
 </div>
 
 <div id="lotteryPage" class="page">
   <div class="page-header">
-    <span class="page-header-title">🎡 РОЗІГРАШ</span>
+    <span class="page-header-title">🎲 РОЗІГРАШ</span>
     <button class="back-btn" onclick="backToHome()">← На головну</button>
   </div>
   <div class="lottery-wrap">
@@ -303,9 +303,12 @@ const SUPA_URL='https://otwcegfsmxmhiegukkyl.supabase.co';
 const SUPA_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im90d2NlZ2ZzbXhtaGllZ3Vra3lsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg2NTMwOTUsImV4cCI6MjA5NDIyOTA5NX0.FU45yk9GKVjEkuH-pWp5kB8fA_nVy2wpYQc48baxeL0';
 
 async function sbFetch(path,opts={}){
-  const res=await fetch(SUPA_URL+path,{...opts,headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY,'Content-Type':'application/json','Prefer':'return=representation',...(opts.headers||{})}});
+  const headers={'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY,'Content-Type':'application/json'};
+  if(opts.method==='POST')headers['Prefer']='return=representation';
+  const res=await fetch(SUPA_URL+path,{...opts,headers:{...headers,...(opts.headers||{})}});
   if(!res.ok){const t=await res.text();throw new Error(t);}
-  const text=await res.text();return text?JSON.parse(text):[];
+  const text=await res.text();
+  return text?JSON.parse(text):[];
 }
 
 const PAGE_MAP={'':'homePage','home':'homePage','lottery':'lotteryPage','tournaments':'tournamentsListPage','flex':'tournamentFlexPage'};
@@ -431,7 +434,7 @@ async function loadPlayers(){
     const data=await sbFetch('/rest/v1/tournament_players?select=*&order=created_at.asc');
     td=data;renderTable();setSyncStatus('ok','Синхронізовано');
     if(!pollingStarted){pollingStarted=true;startPolling();}
-  }catch(e){setSyncStatus('err','Помилка з\'єднання');}
+  }catch(e){console.error(e);setSyncStatus('err','Помилка з\'єднання');}
 }
 
 function startPolling(){
@@ -444,7 +447,9 @@ function startPolling(){
   },5000);
 }
 
-function calcScore(p){return[p.xp_bb,p.xp_ca,p.xp_dd,p.xp_cv].reduce((s,v)=>s+(v&&v>0?Math.floor(v/1000):0),0);}
+function calcScore(p){
+  return[p.xp_bb,p.xp_ca,p.xp_dd,p.xp_cv].reduce((s,v)=>s+(v&&v>0?Math.floor(v/1000):0),0);
+}
 
 function renderTable(){
   const tb=document.getElementById('tournamentTbody');
@@ -458,15 +463,15 @@ function renderTable(){
     const rc=r===0?'rank-1':r===1?'rank-2':r===2?'rank-3':'rank-n';
     const xc=fields.map(f=>
       p[f]&&p[f]>0
-        ?`<td><span class="xp-val" onclick="openXp('${p.id}')">${p[f].toLocaleString()}<br><small style="font-size:.6rem;color:var(--muted)">${Math.floor(p[f]/1000)}б</small></span></td>`
-        :`<td><span class="xp-empty" onclick="openXp('${p.id}')">+ XP</span></td>`
+        ?`<td><span class="xp-val" onclick="openXp(${p.id})">${p[f].toLocaleString()}<br><small style="font-size:.6rem;color:var(--muted)">${Math.floor(p[f]/1000)}б</small></span></td>`
+        :`<td><span class="xp-empty" onclick="openXp(${p.id})">+ XP</span></td>`
     ).join('');
     return`<tr>
       <td><span class="rank-badge ${rc}">${r+1}</span></td>
-      <td class="name-cell" onclick="editNick('${p.id}')">✏️ ${esc(p.nick)}</td>
+      <td class="name-cell" onclick="editNick(${p.id})">✏️ ${esc(p.nick)}</td>
       ${xc}
       <td><span class="score-total ${p.sc===0?'zero':''}">${p.sc}</span></td>
-      <td><button class="delete-btn" onclick="delP('${p.id}')">🗑</button></td>
+      <td><button class="delete-btn" onclick="delP(${p.id})">🗑</button></td>
     </tr>`;
   }).join('');
 }
@@ -504,13 +509,15 @@ async function confirmAddPlayer(){
     setSyncStatus('loading','Збереження...');
     const res=await sbFetch('/rest/v1/tournament_players',{method:'POST',body:JSON.stringify({nick:n})});
     if(Array.isArray(res)&&res[0])td.push(res[0]);
+    else await loadPlayers();
     renderTable();setSyncStatus('ok','Збережено');
     closeModal('addPlayerModal');document.getElementById('newPlayerNick').value='';
   }catch(e){alert('Помилка: '+e.message);setSyncStatus('err','Помилка');}
 }
 
 function openXp(id){
-  xpIdx=id;const p=td.find(x=>x.id===id);if(!p)return;
+  xpIdx=id;
+  const p=td.find(x=>x.id===id);if(!p)return;
   document.getElementById('editXpTitle').textContent=`✏️ ${p.nick} — Результати`;
   document.getElementById('xpField0').value=p.xp_bb||'';
   document.getElementById('xpField1').value=p.xp_ca||'';
@@ -521,19 +528,22 @@ function openXp(id){
 }
 
 async function confirmEditXp(){
-  if(!xpIdx)return;
+  if(xpIdx===null)return;
   const vals=['xpField0','xpField1','xpField2','xpField3'].map(f=>{
     const v=parseInt(document.getElementById(f).value);
     return(!isNaN(v)&&v>0)?v:null;
   });
   try{
     setSyncStatus('loading','Збереження...');
-    await sbFetch(`/rest/v1/tournament_players?id=eq.${xpIdx}`,{method:'PATCH',body:JSON.stringify({xp_bb:vals[0],xp_ca:vals[1],xp_dd:vals[2],xp_cv:vals[3],updated_at:new Date().toISOString()})});
+    await sbFetch(`/rest/v1/tournament_players?id=eq.${xpIdx}`,{
+      method:'PATCH',
+      body:JSON.stringify({xp_bb:vals[0],xp_ca:vals[1],xp_dd:vals[2],xp_cv:vals[3],updated_at:new Date().toISOString()})
+    });
     const p=td.find(x=>x.id===xpIdx);
     if(p){p.xp_bb=vals[0];p.xp_ca=vals[1];p.xp_dd=vals[2];p.xp_cv=vals[3];}
     renderTable();setSyncStatus('ok','Збережено');
     closeModal('editXpModal');xpIdx=null;
-  }catch(e){alert('Помилка: '+e.message);setSyncStatus('err','Помилка');}
+  }catch(e){alert('Помилка збереження: '+e.message);setSyncStatus('err','Помилка');}
 }
 
 function closeModal(id){document.getElementById(id).classList.remove('active');}
