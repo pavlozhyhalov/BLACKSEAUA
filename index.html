@@ -142,7 +142,7 @@ table.lb td.name-cell:hover { color:var(--accent2); }
     <p class="hero-sub">Обери розділ нижче</p>
     <div class="cards">
       <div class="card" onclick="openLottery()">
-        <span class="card-icon">🎰</span>
+        <span class="card-icon">🎡</span>
         <div class="card-title">РОЗІГРАШ</div>
         <div class="card-desc">Колесо удачі для учасників клану. Додай нікнейми і крути.</div>
         <span class="card-arrow">→</span>
@@ -228,7 +228,7 @@ table.lb td.name-cell:hover { color:var(--accent2); }
 
 <div id="lotteryPage" class="page">
   <div class="page-header">
-    <span class="page-header-title">🎲 РОЗІГРАШ</span>
+    <span class="page-header-title">🎡 РОЗІГРАШ</span>
     <button class="back-btn" onclick="backToHome()">← На головну</button>
   </div>
   <div class="lottery-wrap">
@@ -247,7 +247,7 @@ table.lb td.name-cell:hover { color:var(--accent2); }
       <div class="sidebar">
         <div class="panel">
           <div class="panel-title">УЧАСНИКИ <span class="count-badge" id="playerCount">0</span></div>
-          <textarea id="playersList" placeholder="Кожен нікнейм з нового рядку:&#10;&#10;Admiral_Kraken&#10;NavyStorm99&#10;SeaWolf_UA"></textarea>
+          <textarea id="playersList" placeholder="Кожен нікнейм з нового рядку:&#10;&#10;Admiral_Kraken&#10;NavyStorm99&#10;SeaWolf_UA" oninput="updateWheel()"></textarea>
           <p class="hint">↵ Кожен нікнейм — новий рядок</p>
         </div>
         <div class="panel">
@@ -297,16 +297,19 @@ function showPage(id){
   document.getElementById(id).classList.add('active');
   window.scrollTo(0,0);
 }
+
 let lp=[],wAngle=0,wSpin=false;
 const cv=document.getElementById('wheelCanvas'),cx=cv.getContext('2d');
 let cW=cv.width,cH=cv.height,cX=cW/2,cY=cH/2,cR=cW/2-8;
 const SC=['#1a4a6e','#1e5c5c','#2a3f6e','#1e4a3a','#3a4a6e','#2a5a72','#1a3a5a','#2e5248','#1e3a6e','#24574a','#1a3a72','#265248','#163a6e','#2a4a3a'];
+
 function setCanvasSize(){
   const f=document.querySelector('.wheel-frame'); if(!f)return;
   const sz=Math.min(f.clientWidth,360);
   cv.width=sz;cv.height=sz;cW=sz;cH=sz;cX=sz/2;cY=sz/2;cR=sz/2-8;drawWheel();
 }
 window.addEventListener('resize',()=>{ if(document.getElementById('lotteryPage').classList.contains('active'))setCanvasSize(); });
+
 function drawWheel(){
   cx.clearRect(0,0,cW,cH);
   if(!lp.length){
@@ -331,11 +334,13 @@ function drawWheel(){
   cx.beginPath();cx.arc(cX,cY,cR,0,Math.PI*2);cx.strokeStyle='#1a3a55';cx.lineWidth=3;cx.stroke();
   cx.beginPath();cx.arc(cX,cY,13,0,Math.PI*2);cx.fillStyle='#06101a';cx.fill();cx.strokeStyle='#3a9fd8';cx.lineWidth=2;cx.stroke();
 }
+
 function calcWinner(){
   const n=lp.length,sl=(Math.PI*2)/n;
   const pos=((-Math.PI/2)-wAngle%(Math.PI*2)+Math.PI*2*10)%(Math.PI*2);
   return Math.floor(pos/sl)%n;
 }
+
 function spinLottery(){
   if(lp.length<2){alert('Додай мінімум 2 учасники!');return;}
   if(wSpin)return;
@@ -362,6 +367,7 @@ function spinLottery(){
     }
   })(t0);
 }
+
 function updateWheel(){
   lp=document.getElementById('playersList').value.split('\n').map(s=>s.trim()).filter(s=>s.length>0);
   document.getElementById('playerCount').textContent=lp.length;
@@ -370,16 +376,19 @@ function updateWheel(){
   drawWheel();
   try{localStorage.setItem('lp',JSON.stringify(lp));}catch(e){}
 }
+
 function loadLottery(){
   try{
     const s=localStorage.getItem('lp');
     if(s){lp=JSON.parse(s);document.getElementById('playersList').value=lp.join('\n');updateWheel();}
   }catch(e){}
 }
+
 let td=[],xpIdx=-1;
 function saveT(){try{localStorage.setItem('tflex',JSON.stringify(td));}catch(e){}}
 function loadT(){try{const s=localStorage.getItem('tflex');if(s)td=JSON.parse(s);}catch(e){td=[];}}
 function score(p){if(!p.xp)return 0;return p.xp.reduce((s,v)=>s+(v&&v>0?Math.floor(v/1000):0),0);}
+
 function renderTable(){
   const tb=document.getElementById('tournamentTbody');
   if(!td.length){
@@ -403,6 +412,7 @@ function renderTable(){
     </tr>`;
   }).join('');
 }
+
 function delP(i){
   if(!td[i])return;
   if(confirm(`Видалити «${td[i].nick}»?`)){td.splice(i,1);saveT();renderTable();}
@@ -444,10 +454,10 @@ function confirmEditXp(){
 }
 function closeModal(id){document.getElementById(id).classList.remove('active');}
 function esc(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
 window.addEventListener('load',()=>{
   loadLottery();loadT();renderTable();setCanvasSize();drawWheel();
   document.getElementById('spinButton').addEventListener('click',spinLottery);
-  document.getElementById('playersList').addEventListener('input',updateWheel);
   document.addEventListener('keydown',e=>{
     if(e.key==='Escape'){closeModal('addPlayerModal');closeModal('editXpModal');}
     if(e.key==='Enter'){
