@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <title>BLACKSEAUA · WORLD OF WARSHIPS LEGENDS</title>
-<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Source+Sans+3:wght@300;400;600&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
 <style>
 * {
   box-sizing: border-box;
@@ -13,184 +12,135 @@
 }
 
 :root {
-  --bg: #06101a;
-  --bg2: #0a1a28;
-  --surface: #0d2035;
-  --border: #1a3a55;
+  --bg: #0a0f1a;
+  --surface: #141e2a;
+  --card: #1a2a3a;
+  --border: #2a4a6a;
   --accent: #3a9fd8;
   --accent2: #e8c560;
   --accent3: #5dd88a;
   --red: #e05555;
-  --text: #b8d4e8;
-  --muted: #406070;
-  --white: #e8f4fa;
+  --text: #c8d8e8;
+  --muted: #6a7a8a;
+  --white: #ffffff;
 }
 
 body {
   background: var(--bg);
   color: var(--text);
-  font-family: 'Source Sans 3', sans-serif;
+  font-family: system-ui, -apple-system, sans-serif;
   min-height: 100vh;
 }
 
 header {
   border-bottom: 1px solid var(--border);
-  background: rgba(6,16,26,.95);
-  backdrop-filter: blur(12px);
-}
-
-.header-inner {
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 12px 24px;
+  background: rgba(10,15,26,0.95);
+  padding: 15px 20px;
   text-align: center;
 }
 
 .clan-title {
-  font-family: 'Orbitron', monospace;
-  font-weight: 900;
   font-size: 1rem;
-  letter-spacing: 0.25em;
+  letter-spacing: 3px;
   color: var(--accent2);
+  font-weight: bold;
 }
 
 .game-title {
-  font-family: 'Rajdhani', sans-serif;
   font-size: 0.7rem;
-  letter-spacing: 0.3em;
+  letter-spacing: 2px;
   color: var(--muted);
-  margin-top: 4px;
+  margin-top: 5px;
 }
 
 .page {
   display: none;
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .page.active {
   display: block;
 }
 
-/* ГОЛОВНА */
-.hero {
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 60px 24px;
-  text-align: center;
-}
-
-.hero-title {
-  font-family: 'Orbitron', monospace;
-  font-size: clamp(2rem, 6vw, 3rem);
-  color: var(--white);
-  margin-bottom: 56px;
-}
-
-.hero-title span {
-  color: var(--accent2);
-}
-
-.cards {
-  display: flex;
-  gap: 24px;
-  justify-content: center;
-  flex-wrap: wrap;
-  max-width: 800px;
-  margin: 0 auto;
-}
-
-.card {
+button {
+  cursor: pointer;
   background: var(--surface);
   border: 1px solid var(--border);
-  padding: 32px 28px;
-  cursor: pointer;
-  transition: all 0.25s;
-  text-align: left;
-  flex: 1;
-  min-width: 250px;
+  color: var(--text);
+  padding: 8px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  transition: all 0.2s;
 }
 
-.card:hover {
+button:hover {
   border-color: var(--accent2);
-  transform: translateY(-4px);
-}
-
-.card-icon {
-  font-size: 2.5rem;
-  margin-bottom: 16px;
-}
-
-.card-title {
-  font-family: 'Rajdhani', sans-serif;
-  font-weight: 700;
-  font-size: 1.3rem;
-  color: var(--white);
-  margin-bottom: 8px;
-}
-
-.card-desc {
-  font-size: 0.85rem;
-  color: var(--muted);
-}
-
-/* ШАПКА ДЛЯ ВНУТРІШНІХ СТОРІНОК */
-.page-header {
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 20px 24px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-bottom: 1px solid var(--border);
-}
-
-.page-header h2 {
-  font-family: 'Orbitron', monospace;
-  font-size: 1.2rem;
   color: var(--accent2);
 }
 
 .back-btn {
   background: transparent;
-  border: 1px solid var(--border);
-  color: var(--text);
-  padding: 6px 20px;
-  cursor: pointer;
+  margin-bottom: 20px;
 }
 
-.back-btn:hover {
+.cards {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 50px;
+}
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  padding: 30px 40px;
+  cursor: pointer;
+  text-align: center;
+  border-radius: 16px;
+  transition: all 0.2s;
+}
+
+.card:hover {
   border-color: var(--accent2);
-  color: var(--accent2);
+  transform: translateY(-3px);
+}
+
+.card-icon {
+  font-size: 3rem;
+  margin-bottom: 15px;
+}
+
+.card-title {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: var(--white);
 }
 
 /* ЛОТЕРЕЯ */
 .lottery-container {
-  max-width: 1000px;
-  margin: 0 auto;
-  padding: 30px 24px;
   display: flex;
   flex-wrap: wrap;
   gap: 40px;
+  justify-content: center;
 }
 
 .wheel-section {
-  flex: 2;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 20px;
-  min-width: 280px;
+  text-align: center;
+  flex: 1;
+  min-width: 300px;
 }
 
 .wheel-wrapper {
   position: relative;
-  width: 100%;
-  max-width: 350px;
+  display: inline-block;
+  margin-bottom: 20px;
 }
 
-canvas#wheelCanvas {
-  width: 100%;
-  height: auto;
-  background: var(--bg2);
+canvas {
+  background: var(--bg);
   border-radius: 50%;
   box-shadow: 0 0 0 3px var(--border);
 }
@@ -202,72 +152,41 @@ canvas#wheelCanvas {
   transform: translateX(-50%);
   width: 0;
   height: 0;
-  border-left: 18px solid transparent;
-  border-right: 18px solid transparent;
-  border-top: 35px solid var(--accent2);
+  border-left: 15px solid transparent;
+  border-right: 15px solid transparent;
+  border-top: 30px solid var(--accent2);
   z-index: 10;
 }
 
-.spin-btn {
-  background: linear-gradient(135deg, var(--accent), #2c7fb8);
-  color: var(--bg);
-  border: none;
-  padding: 12px 48px;
-  font-family: 'Rajdhani', sans-serif;
-  font-weight: 700;
-  font-size: 1rem;
-  letter-spacing: 0.2em;
-  cursor: pointer;
-  border-radius: 40px;
-}
-
-.spin-btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
 .winner-box {
-  display: none;
-  text-align: center;
+  margin-top: 20px;
   padding: 12px 24px;
   border: 2px solid var(--accent2);
   border-radius: 60px;
+  display: none;
 }
 
 .winner-box.show {
   display: block;
 }
 
-.winner-label {
-  font-size: 0.7rem;
-  color: var(--accent2);
-}
-
-.winner-name {
-  font-size: 1.3rem;
-  font-weight: bold;
-  color: var(--white);
-}
-
 .players-section {
   flex: 1;
-  min-width: 250px;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+  min-width: 280px;
 }
 
 .panel {
   background: var(--surface);
   border: 1px solid var(--border);
-  padding: 16px;
+  padding: 20px;
+  border-radius: 12px;
+  margin-bottom: 20px;
 }
 
 .panel-title {
-  font-family: 'Rajdhani', sans-serif;
-  font-weight: 600;
+  font-weight: bold;
   color: var(--accent2);
-  margin-bottom: 12px;
+  margin-bottom: 10px;
   display: flex;
   justify-content: space-between;
 }
@@ -275,21 +194,25 @@ canvas#wheelCanvas {
 textarea {
   width: 100%;
   min-height: 150px;
-  background: var(--bg2);
+  background: var(--bg);
   border: 1px solid var(--border);
-  color: var(--white);
+  color: var(--text);
   padding: 10px;
+  border-radius: 8px;
   font-family: monospace;
+  resize: vertical;
 }
 
 .chip-list {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
+  max-height: 120px;
+  overflow-y: auto;
 }
 
 .chip {
-  background: var(--bg2);
+  background: var(--bg);
   border: 1px solid var(--border);
   padding: 4px 12px;
   border-radius: 20px;
@@ -298,24 +221,21 @@ textarea {
 
 /* ТУРНІР */
 .tournament-container {
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 30px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
 .rules {
-  background: var(--surface);
-  padding: 20px;
-  margin-bottom: 30px;
   display: flex;
   flex-wrap: wrap;
   gap: 15px;
+  background: var(--surface);
+  padding: 15px 20px;
+  border-radius: 12px;
 }
 
 .rule {
-  display: flex;
-  align-items: center;
-  gap: 8px;
   font-size: 0.85rem;
 }
 
@@ -323,20 +243,10 @@ textarea {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 15px;
-  margin-bottom: 30px;
-}
-
-.stage, .prize {
-  background: var(--surface);
-  text-align: center;
-  padding: 12px;
-  border: 1px solid var(--border);
 }
 
 @media (max-width: 600px) {
-  .stages, .prizes {
-    grid-template-columns: repeat(2, 1fr);
-  }
+  .stages, .prizes { grid-template-columns: repeat(2, 1fr); }
 }
 
 .prizes {
@@ -344,43 +254,37 @@ textarea {
 }
 
 @media (max-width: 500px) {
-  .prizes {
-    grid-template-columns: 1fr;
-  }
+  .prizes { grid-template-columns: 1fr; }
+}
+
+.stage, .prize {
+  background: var(--surface);
+  padding: 12px;
+  text-align: center;
+  border-radius: 8px;
 }
 
 .table-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
   flex-wrap: wrap;
   gap: 15px;
-}
-
-.add-btn {
-  background: var(--accent);
-  border: none;
-  padding: 6px 16px;
-  color: var(--bg);
-  font-weight: bold;
-  cursor: pointer;
-}
-
-.table-wrapper {
-  overflow-x: auto;
+  margin: 20px 0 15px;
 }
 
 table {
   width: 100%;
   border-collapse: collapse;
-  min-width: 600px;
+  overflow-x: auto;
+  display: block;
 }
 
 th, td {
-  padding: 12px 8px;
+  padding: 10px 6px;
   border-bottom: 1px solid var(--border);
   text-align: center;
+  font-size: 0.85rem;
 }
 
 th {
@@ -389,30 +293,43 @@ th {
 }
 
 .xp-input {
-  width: 70px;
+  width: 65px;
   background: transparent;
   border: none;
   border-bottom: 1px solid var(--border);
   color: var(--accent3);
   text-align: center;
+  padding: 4px;
+  outline: none;
+}
+
+.xp-input:focus {
+  border-bottom-color: var(--accent);
 }
 
 .delete-btn {
-  background: none;
+  background: transparent;
   border: 1px solid var(--red);
   color: var(--red);
   padding: 2px 8px;
+  border-radius: 4px;
   cursor: pointer;
+  font-size: 0.7rem;
+}
+
+.delete-btn:hover {
+  background: var(--red);
+  color: white;
 }
 
 .rank-badge {
   display: inline-block;
-  width: 30px;
-  height: 30px;
-  line-height: 28px;
+  width: 28px;
+  height: 28px;
+  line-height: 26px;
   border-radius: 50%;
-  text-align: center;
   font-weight: bold;
+  font-size: 0.75rem;
 }
 
 .rank-1 { background: rgba(232,197,96,0.3); border: 1px solid var(--accent2); color: var(--accent2); }
@@ -422,8 +339,10 @@ th {
 .modal {
   display: none;
   position: fixed;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   background: rgba(0,0,0,0.8);
   justify-content: center;
   align-items: center;
@@ -436,80 +355,83 @@ th {
 
 .modal-content {
   background: var(--surface);
-  padding: 30px;
+  padding: 25px;
+  border-radius: 16px;
   width: 90%;
   max-width: 350px;
-  border-radius: 12px;
+  border: 1px solid var(--border);
+}
+
+.modal-content h3 {
+  color: var(--accent2);
+  margin-bottom: 15px;
 }
 
 .modal-content input {
   width: 100%;
   padding: 10px;
-  margin: 15px 0;
-  background: var(--bg2);
+  margin: 10px 0;
+  background: var(--bg);
   border: 1px solid var(--border);
   color: white;
+  border-radius: 8px;
 }
 
 .modal-content button {
   width: 100%;
-  padding: 10px;
   margin-top: 8px;
+}
+
+.clickable-name {
   cursor: pointer;
+  font-weight: 500;
+}
+
+.clickable-name:hover {
+  color: var(--accent2);
+  text-decoration: underline;
 }
 </style>
 </head>
 <body>
 
 <header>
-  <div class="header-inner">
-    <div class="clan-title">⚓ CLAN BLACKSEAUA ⚓</div>
-    <div class="game-title">WORLD OF WARSHIPS LEGENDS</div>
-  </div>
+  <div class="clan-title">⚓ CLAN BLACKSEAUA ⚓</div>
+  <div class="game-title">WORLD OF WARSHIPS LEGENDS</div>
 </header>
 
 <!-- ГОЛОВНА -->
 <div id="homePage" class="page active">
-  <div class="hero">
-    <h1 class="hero-title">Ласкаво просимо, <span>Командире</span></h1>
-    <div class="cards">
-      <div class="card" onclick="showPage('lottery')">
-        <div class="card-icon">🎰</div>
-        <div class="card-title">РОЗІГРАШ</div>
-        <div class="card-desc">Колесо удачі для учасників клану</div>
-      </div>
-      <div class="card" onclick="showPage('tournamentsList')">
-        <div class="card-icon">🏆</div>
-        <div class="card-title">ТУРНІРИ</div>
-        <div class="card-desc">Челенджі та змагання</div>
-      </div>
+  <div class="cards">
+    <div class="card" onclick="showPage('lottery')">
+      <div class="card-icon">🎰</div>
+      <div class="card-title">РОЗІГРАШ</div>
+      <div class="card-desc">Колесо удачі</div>
+    </div>
+    <div class="card" onclick="showPage('tournamentsList')">
+      <div class="card-icon">🏆</div>
+      <div class="card-title">ТУРНІРИ</div>
+      <div class="card-desc">Челенджі клану</div>
     </div>
   </div>
 </div>
 
 <!-- СПИСОК ТУРНІРІВ -->
 <div id="tournamentsListPage" class="page">
-  <div class="page-header">
-    <h2>🏆 ТУРНІРИ</h2>
-    <button class="back-btn" onclick="showPage('home')">← На головну</button>
-  </div>
-  <div class="hero" style="padding-top: 20px;">
-    <div class="cards" style="max-width: 400px;">
-      <div class="card" onclick="openTournament('flexibility')">
-        <div class="card-icon">🏅</div>
-        <div class="card-title">ГНУЧКІСТЬ</div>
-        <div class="card-desc">4 класи, 12 днів</div>
-      </div>
+  <button class="back-btn" onclick="showPage('home')">← На головну</button>
+  <div class="cards">
+    <div class="card" onclick="openTournament()">
+      <div class="card-icon">🏅</div>
+      <div class="card-title">ГНУЧКІСТЬ</div>
+      <div class="card-desc">4 класи, 12 днів, призи</div>
     </div>
   </div>
 </div>
 
-<!-- ТУРНІР ГНУЧКІСТЬ -->
+<!-- ТУРНІР -->
 <div id="tournamentPage" class="page">
-  <div class="page-header">
-    <h2>🏅 ЧЕЛЕНДЖ «ГНУЧКІСТЬ»</h2>
-    <button class="back-btn" onclick="showPage('tournamentsList')">← До списку</button>
-  </div>
+  <button class="back-btn" onclick="showPage('tournamentsList')">← До списку</button>
+  
   <div class="tournament-container">
     <div class="rules">
       <div class="rule">⚓ 4 класи: ЛК, КР, ЕМ, АВ</div>
@@ -518,22 +440,26 @@ th {
       <div class="rule">🚫 Класи не повторюються</div>
       <div class="rule">🏆 Тільки Рандом V+</div>
     </div>
+    
     <div class="stages">
       <div class="stage"><b>ЕТАП 1</b><br>Дні 1-3</div>
       <div class="stage"><b>ЕТАП 2</b><br>Дні 4-6</div>
       <div class="stage"><b>ЕТАП 3</b><br>Дні 7-9</div>
       <div class="stage"><b>ЕТАП 4</b><br>Дні 10-12</div>
     </div>
+    
     <div class="prizes">
       <div class="prize">🥇 1 місце<br>10 000 дублонів</div>
       <div class="prize">🥈 2 місце<br>5 000 дублонів</div>
       <div class="prize">🥉 3 місце<br>2 500 дублонів</div>
     </div>
+    
     <div class="table-header">
       <span>🏆 ТАБЛИЦЯ РЕЗУЛЬТАТІВ</span>
-      <button class="add-btn" onclick="openAddPlayerModal()">+ ДОДАТИ ГРАВЦЯ</button>
+      <button onclick="openAddPlayerModal()">+ Додати гравця</button>
     </div>
-    <div class="table-wrapper">
+    
+    <div style="overflow-x: auto;">
       <table id="tournamentTable">
         <thead>
           <tr><th>#</th><th>Гравець</th><th>⚓ ЛК</th><th>🚢 КР</th><th>🚤 ЕМ</th><th>✈️ АВ</th><th>СУМА</th><th></th></tr>
@@ -546,31 +472,33 @@ th {
 
 <!-- ЛОТЕРЕЯ -->
 <div id="lotteryPage" class="page">
-  <div class="page-header">
-    <h2>🎲 РОЗІГРАШ</h2>
-    <button class="back-btn" onclick="showPage('home')">← На головну</button>
-  </div>
+  <button class="back-btn" onclick="showPage('home')">← На головну</button>
+  
   <div class="lottery-container">
     <div class="wheel-section">
       <div class="wheel-wrapper">
-        <canvas id="wheelCanvas" width="350" height="350"></canvas>
+        <canvas id="wheelCanvas" width="300" height="300"></canvas>
         <div class="pointer"></div>
       </div>
-      <button class="spin-btn" id="spinBtn">КРУТИТИ КОЛЕСО</button>
+      <button id="spinBtn">КРУТИТИ КОЛЕСО</button>
       <div class="winner-box" id="winnerBox">
-        <div class="winner-label">ПЕРЕМОЖЕЦЬ</div>
-        <div class="winner-name" id="winnerName">-</div>
+        <div style="font-size:12px; color:var(--accent2);">ПЕРЕМОЖЕЦЬ</div>
+        <div id="winnerName" style="font-size:20px; font-weight:bold;">-</div>
       </div>
     </div>
+    
     <div class="players-section">
       <div class="panel">
-        <div class="panel-title">УЧАСНИКИ <span id="playersCount">0</span></div>
-        <textarea id="playersTextarea" placeholder="Кожен нікнейм з нового рядка"></textarea>
-        <button onclick="updatePlayersFromTextarea()" style="margin-top:10px; width:100%;">Оновити колесо</button>
+        <div class="panel-title">
+          УЧАСНИКИ
+          <span id="playersCount">0</span>
+        </div>
+        <textarea id="playersInput" placeholder="Кожен нікнейм з нового рядка"></textarea>
+        <button onclick="updateWheel()" style="margin-top:10px; width:100%;">Оновити колесо</button>
       </div>
       <div class="panel">
-        <div class="panel-title">СПИСОК</div>
-        <div id="playersListContainer" class="chip-list"></div>
+        <div class="panel-title">СПИСОК УЧАСНИКІВ</div>
+        <div id="playersList" class="chip-list"></div>
       </div>
     </div>
   </div>
@@ -580,57 +508,40 @@ th {
 <div id="playerModal" class="modal">
   <div class="modal-content">
     <h3>➕ Новий гравець</h3>
-    <input type="text" id="newPlayerNameInput" placeholder="Нікнейм">
+    <input type="text" id="newPlayerName" placeholder="Нікнейм" autocomplete="off">
     <button onclick="addTournamentPlayer()">Додати</button>
-    <button onclick="closePlayerModal()">Скасувати</button>
+    <button onclick="closeModal()">Скасувати</button>
   </div>
 </div>
 
 <script>
-// ========== НАВІГАЦІЯ ==========
-function showPage(pageId) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  if (pageId === 'home') document.getElementById('homePage').classList.add('active');
-  if (pageId === 'lottery') document.getElementById('lotteryPage').classList.add('active');
-  if (pageId === 'tournamentsList') document.getElementById('tournamentsListPage').classList.add('active');
-  if (pageId === 'tournament') document.getElementById('tournamentPage').classList.add('active');
-}
-
-function openTournament(name) {
-  if (name === 'flexibility') {
-    showPage('tournament');
-    renderTournamentTable();
-  }
-}
-
-// ========== ЛОТЕРЕЯ (КОЛЕСО) ==========
+// ========== ГЛОБАЛЬНІ ЗМІННІ ==========
 let lotteryPlayers = [];
 let wheelRotation = 0;
 let isSpinning = false;
-let animationId = null;
+let animFrame = null;
+let tournamentPlayers = [];
 
 const canvas = document.getElementById('wheelCanvas');
 const ctx = canvas.getContext('2d');
-let size = 350;
-let centerX = 175, centerY = 175;
-let wheelRadius = 160;
+let size = 300;
+let center = 150;
+let radius = 135;
 
 const colors = ['#e63946', '#f1c40f', '#2ecc71', '#3498db', '#9b59b6', '#e67e22', '#1abc9c', '#e84393'];
 
-function resizeAndDraw() {
-  const wrapper = document.querySelector('.wheel-wrapper');
-  if (wrapper) {
-    const newSize = Math.min(wrapper.clientWidth, 350);
-    canvas.width = newSize;
-    canvas.height = newSize;
-    size = newSize;
-    centerX = size/2;
-    centerY = size/2;
-    wheelRadius = size/2 - 15;
-  }
-  drawWheel();
+// ========== НАВІГАЦІЯ ==========
+function showPage(pageId) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById(pageId + 'Page').classList.add('active');
 }
 
+function openTournament() {
+  showPage('tournament');
+  renderTournamentTable();
+}
+
+// ========== ЛОТЕРЕЯ ==========
 function drawWheel() {
   if (!ctx) return;
   ctx.clearRect(0, 0, size, size);
@@ -638,13 +549,13 @@ function drawWheel() {
   if (lotteryPlayers.length === 0) {
     ctx.fillStyle = '#1a2a3a';
     ctx.beginPath();
-    ctx.arc(centerX, centerY, wheelRadius, 0, Math.PI*2);
+    ctx.arc(center, center, radius, 0, Math.PI * 2);
     ctx.fill();
     ctx.fillStyle = '#8aa0b0';
-    ctx.font = '14px sans-serif';
+    ctx.font = '12px sans-serif';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.fillText('Додайте гравців', centerX, centerY);
+    ctx.fillText('Додайте гравців', center, center);
     return;
   }
   
@@ -656,33 +567,33 @@ function drawWheel() {
     const end = start + angleStep;
     
     ctx.beginPath();
-    ctx.moveTo(centerX, centerY);
-    ctx.arc(centerX, centerY, wheelRadius, start, end);
+    ctx.moveTo(center, center);
+    ctx.arc(center, center, radius, start, end);
     ctx.closePath();
     
     ctx.fillStyle = colors[i % colors.length];
     ctx.fill();
-    ctx.strokeStyle = '#06101a';
+    ctx.strokeStyle = '#0a0f1a';
     ctx.lineWidth = 1.5;
     ctx.stroke();
     
     ctx.save();
-    ctx.translate(centerX, centerY);
-    ctx.rotate(start + angleStep/2);
+    ctx.translate(center, center);
+    ctx.rotate(start + angleStep / 2);
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     
     let name = lotteryPlayers[i];
-    if (name.length > 12) name = name.slice(0, 10) + '..';
-    ctx.font = `bold ${Math.max(10, 14 - Math.floor(count/3))}px "Rajdhani"`;
+    if (name.length > 10) name = name.slice(0, 8) + '..';
+    ctx.font = `bold ${Math.max(10, 12 - Math.floor(count / 4))}px system-ui`;
     ctx.fillStyle = '#ffffff';
-    ctx.fillText(name, wheelRadius - 25, 5);
+    ctx.fillText(name, radius - 20, 4);
     ctx.restore();
   }
   
   ctx.beginPath();
-  ctx.arc(centerX, centerY, 12, 0, Math.PI*2);
-  ctx.fillStyle = '#06101a';
+  ctx.arc(center, center, 10, 0, Math.PI * 2);
+  ctx.fillStyle = '#0a0f1a';
   ctx.fill();
   ctx.strokeStyle = '#e8c560';
   ctx.lineWidth = 2;
@@ -695,8 +606,7 @@ function getWinner() {
   let pointerAngle = -Math.PI / 2;
   let raw = (pointerAngle - wheelRotation) % (Math.PI * 2);
   if (raw < 0) raw += Math.PI * 2;
-  const idx = Math.floor(raw / angleStep) % lotteryPlayers.length;
-  return lotteryPlayers[idx];
+  return lotteryPlayers[Math.floor(raw / angleStep) % lotteryPlayers.length];
 }
 
 function spinWheel() {
@@ -712,19 +622,19 @@ function spinWheel() {
   document.getElementById('winnerBox').classList.remove('show');
   
   const startRot = wheelRotation;
-  const spins = Math.PI * 2 * (8 + Math.random() * 6);
+  const extraSpins = Math.PI * 2 * (6 + Math.random() * 6);
   const startTime = performance.now();
-  const duration = 2200;
+  const duration = 2000;
   
   function animate(now) {
     const elapsed = now - startTime;
     let t = Math.min(1, elapsed / duration);
     const ease = 1 - Math.pow(1 - t, 3);
-    wheelRotation = startRot + spins * ease;
+    wheelRotation = startRot + extraSpins * ease;
     drawWheel();
     
     if (t < 1) {
-      animationId = requestAnimationFrame(animate);
+      animFrame = requestAnimationFrame(animate);
     } else {
       const winner = getWinner();
       if (winner) {
@@ -733,37 +643,38 @@ function spinWheel() {
       }
       isSpinning = false;
       btn.disabled = false;
-      cancelAnimationFrame(animationId);
+      cancelAnimationFrame(animFrame);
     }
   }
   
-  if (animationId) cancelAnimationFrame(animationId);
-  animationId = requestAnimationFrame(animate);
+  if (animFrame) cancelAnimationFrame(animFrame);
+  animFrame = requestAnimationFrame(animate);
 }
 
-function updatePlayersFromTextarea() {
-  const text = document.getElementById('playersTextarea').value;
+function updateWheel() {
+  const text = document.getElementById('playersInput').value;
   lotteryPlayers = text.split('\n').filter(l => l.trim().length > 0).map(l => l.trim());
   
   document.getElementById('playersCount').innerText = lotteryPlayers.length;
-  const container = document.getElementById('playersListContainer');
+  const container = document.getElementById('playersList');
+  
   if (lotteryPlayers.length === 0) {
     container.innerHTML = '<div class="chip">Немає гравців</div>';
   } else {
     container.innerHTML = lotteryPlayers.map(p => `<div class="chip">${escapeHtml(p)}</div>`).join('');
   }
   
-  localStorage.setItem('lottery_players', JSON.stringify(lotteryPlayers));
+  localStorage.setItem('lotteryData', JSON.stringify(lotteryPlayers));
   drawWheel();
 }
 
-function loadLotteryFromStorage() {
-  const saved = localStorage.getItem('lottery_players');
+function loadLottery() {
+  const saved = localStorage.getItem('lotteryData');
   if (saved) {
     lotteryPlayers = JSON.parse(saved);
-    document.getElementById('playersTextarea').value = lotteryPlayers.join('\n');
+    document.getElementById('playersInput').value = lotteryPlayers.join('\n');
     document.getElementById('playersCount').innerText = lotteryPlayers.length;
-    const container = document.getElementById('playersListContainer');
+    const container = document.getElementById('playersList');
     if (lotteryPlayers.length === 0) {
       container.innerHTML = '<div class="chip">Немає гравців</div>';
     } else {
@@ -774,25 +685,22 @@ function loadLotteryFromStorage() {
 }
 
 // ========== ТУРНІР ==========
-let tournamentPlayers = [];
+function saveTournament() {
+  localStorage.setItem('tournamentData', JSON.stringify(tournamentPlayers));
+}
 
-function loadTournamentFromStorage() {
-  const saved = localStorage.getItem('tournament_flex');
+function loadTournament() {
+  const saved = localStorage.getItem('tournamentData');
   if (saved) {
     tournamentPlayers = JSON.parse(saved);
   } else {
     tournamentPlayers = [];
   }
-  renderTournamentTable();
 }
 
-function saveTournamentToStorage() {
-  localStorage.setItem('tournament_flex', JSON.stringify(tournamentPlayers));
-}
-
-function calculatePlayerScore(player) {
-  if (!player.xp) return 0;
-  return player.xp.reduce((sum, val) => sum + (val ? Math.floor(val / 1000) : 0), 0);
+function calcScore(xpArr) {
+  if (!xpArr) return 0;
+  return xpArr.reduce((sum, val) => sum + (val ? Math.floor(val / 1000) : 0), 0);
 }
 
 function renderTournamentTable() {
@@ -806,7 +714,7 @@ function renderTournamentTable() {
   const playersWithScore = tournamentPlayers.map((p, idx) => ({
     ...p,
     originalIdx: idx,
-    total: calculatePlayerScore(p)
+    total: calcScore(p.xp || [null, null, null, null])
   }));
   
   playersWithScore.sort((a, b) => b.total - a.total);
@@ -814,23 +722,23 @@ function renderTournamentTable() {
   let html = '';
   playersWithScore.forEach((p, rank) => {
     const rankClass = rank === 0 ? 'rank-1' : rank === 1 ? 'rank-2' : rank === 2 ? 'rank-3' : '';
-    const xpArr = p.xp || [null, null, null, null];
+    const xp = p.xp || [null, null, null, null];
     
-    const xpCells = xpArr.map((xp, classIdx) => {
-      if (xp) {
-        return `<td>${xp}<br><small style="font-size:0.65rem;">${Math.floor(xp/1000)}</small></td>`;
+    const cells = xp.map((val, idx) => {
+      if (val) {
+        return `<td>${val}<br><small style="font-size:11px;">${Math.floor(val/1000)}</small></td>`;
       } else {
-        return `<td><input class="xp-input" type="number" placeholder="XP" onchange="updatePlayerXP(${p.originalIdx}, ${classIdx}, this.value)"></td>`;
+        return `<td><input class="xp-input" type="number" placeholder="XP" onchange="updateXP(${p.originalIdx}, ${idx}, this.value)"></td>`;
       }
     }).join('');
     
     html += `
       <tr>
         <td><span class="rank-badge ${rankClass}">${rank+1}</span></td>
-        <td onclick="editPlayerNick(${p.originalIdx})" style="cursor:pointer;">${escapeHtml(p.nick)}</td>
-        ${xpCells}
+        <td class="clickable-name" onclick="editNick(${p.originalIdx})">${escapeHtml(p.nick)}</td>
+        ${cells}
         <td><b>${p.total}</b></td>
-        <td><button class="delete-btn" onclick="deleteTournamentPlayer(${p.originalIdx})">🗑</button></td>
+        <td><button class="delete-btn" onclick="deletePlayer(${p.originalIdx})">🗑</button></td>
       </tr>
     `;
   });
@@ -838,44 +746,44 @@ function renderTournamentTable() {
   tbody.innerHTML = html;
 }
 
-window.updatePlayerXP = function(idx, classIdx, value) {
+function updateXP(idx, classIdx, value) {
   if (!tournamentPlayers[idx]) return;
   if (!tournamentPlayers[idx].xp) tournamentPlayers[idx].xp = [null, null, null, null];
   const num = parseInt(value);
   tournamentPlayers[idx].xp[classIdx] = isNaN(num) ? null : num;
-  saveTournamentToStorage();
+  saveTournament();
   renderTournamentTable();
-};
+}
 
-window.deleteTournamentPlayer = function(idx) {
+function deletePlayer(idx) {
   if (confirm(`Видалити ${tournamentPlayers[idx].nick}?`)) {
     tournamentPlayers.splice(idx, 1);
-    saveTournamentToStorage();
+    saveTournament();
     renderTournamentTable();
   }
-};
+}
 
-window.editPlayerNick = function(idx) {
+function editNick(idx) {
   const newNick = prompt('Новий нікнейм:', tournamentPlayers[idx].nick);
   if (newNick && newNick.trim()) {
     tournamentPlayers[idx].nick = newNick.trim();
-    saveTournamentToStorage();
+    saveTournament();
     renderTournamentTable();
   }
-};
+}
 
-window.openAddPlayerModal = function() {
+function openAddPlayerModal() {
   document.getElementById('playerModal').classList.add('active');
-  document.getElementById('newPlayerNameInput').focus();
-};
+  document.getElementById('newPlayerName').focus();
+}
 
-window.closePlayerModal = function() {
+function closeModal() {
   document.getElementById('playerModal').classList.remove('active');
-  document.getElementById('newPlayerNameInput').value = '';
-};
+  document.getElementById('newPlayerName').value = '';
+}
 
-window.addTournamentPlayer = function() {
-  const name = document.getElementById('newPlayerNameInput').value.trim();
+function addTournamentPlayer() {
+  const name = document.getElementById('newPlayerName').value.trim();
   if (!name) {
     alert('Введіть нікнейм');
     return;
@@ -888,11 +796,12 @@ window.addTournamentPlayer = function() {
     nick: name,
     xp: [null, null, null, null]
   });
-  saveTournamentToStorage();
+  saveTournament();
   renderTournamentTable();
-  closePlayerModal();
-};
+  closeModal();
+}
 
+// ========== ДОПОМІЖНІ ==========
 function escapeHtml(str) {
   if (!str) return '';
   return str.replace(/[&<>]/g, function(m) {
@@ -903,29 +812,37 @@ function escapeHtml(str) {
   });
 }
 
-// ЗАКРИТТЯ МОДАЛКИ
+// ========== ІНІЦІАЛІЗАЦІЯ ==========
+document.getElementById('spinBtn').onclick = spinWheel;
+
+window.addEventListener('load', function() {
+  loadLottery();
+  loadTournament();
+  renderTournamentTable();
+  drawWheel();
+});
+
 document.getElementById('playerModal').addEventListener('click', function(e) {
-  if (e.target === this) closePlayerModal();
+  if (e.target === this) closeModal();
 });
 
 document.addEventListener('keydown', function(e) {
-  if (e.key === 'Escape') closePlayerModal();
+  if (e.key === 'Escape') closeModal();
 });
 
-// ІНІЦІАЛІЗАЦІЯ
-window.addEventListener('load', function() {
-  resizeAndDraw();
-  loadLotteryFromStorage();
-  loadTournamentFromStorage();
-  
-  window.addEventListener('resize', function() {
-    if (document.getElementById('lotteryPage').classList.contains('active')) {
-      resizeAndDraw();
-    }
-  });
-  
-  document.getElementById('spinBtn').onclick = spinWheel;
-});
+// Коригування розміру canvas при завантаженні
+setTimeout(() => {
+  const rect = canvas.parentElement.getBoundingClientRect();
+  const newSize = Math.min(rect.width, 300);
+  if (newSize !== size) {
+    size = newSize;
+    center = size / 2;
+    radius = size / 2 - 15;
+    canvas.width = size;
+    canvas.height = size;
+    drawWheel();
+  }
+}, 100);
 </script>
 </body>
 </html>
