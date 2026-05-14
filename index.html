@@ -17,10 +17,18 @@ body { background:var(--bg); color:var(--text); font-family:'Source Sans 3',sans
   background: radial-gradient(ellipse 100% 50% at 50% 100%, rgba(20,70,120,.22) 0%, transparent 65%),
               radial-gradient(ellipse 50% 40% at 10% 50%, rgba(10,50,90,.14) 0%, transparent 60%); }
 header { position:relative; z-index:10; border-bottom:1px solid var(--border); background:rgba(6,16,26,.95); backdrop-filter:blur(12px); }
-.header-inner { max-width:1100px; margin:0 auto; padding:14px 24px; display:flex; flex-direction:column; align-items:center; gap:4px; }
-.clan-title { font-family:'Orbitron',monospace; font-weight:900; font-size:1.1rem; letter-spacing:.25em; color:var(--accent2); text-transform:uppercase; cursor:pointer; transition:opacity .2s; }
+.header-inner { max-width:1100px; margin:0 auto; padding:14px 24px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; }
+.header-logo { display:flex; flex-direction:column; align-items:center; cursor:pointer; }
+.clan-title { font-family:'Orbitron',monospace; font-weight:900; font-size:1.1rem; letter-spacing:.25em; color:var(--accent2); text-transform:uppercase; transition:opacity .2s; }
 .clan-title:hover { opacity:.75; }
 .game-title { font-family:'Rajdhani',sans-serif; font-size:.68rem; letter-spacing:.3em; color:var(--muted); font-weight:500; text-transform:uppercase; }
+.header-auth { display:flex; align-items:center; gap:10px; }
+.auth-user { font-size:.75rem; color:var(--muted); font-family:'Rajdhani',sans-serif; letter-spacing:.08em; max-width:160px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.auth-user.approved { color:var(--accent3); }
+.auth-btn { font-family:'Rajdhani',sans-serif; font-weight:700; font-size:.72rem; letter-spacing:.15em; text-transform:uppercase; background:transparent; border:1px solid var(--border); color:var(--muted); padding:5px 14px; cursor:pointer; border-radius:4px; transition:all .2s; white-space:nowrap; }
+.auth-btn:hover { border-color:var(--accent2); color:var(--accent2); }
+.auth-btn.primary { background:var(--accent); color:var(--bg); border-color:var(--accent); }
+.auth-btn.primary:hover { opacity:.85; }
 .page { display:none; position:relative; z-index:1; animation:fadeIn .25s ease; }
 .page.active { display:block; }
 @keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
@@ -28,7 +36,7 @@ header { position:relative; z-index:10; border-bottom:1px solid var(--border); b
 .hero-title { font-family:'Orbitron',monospace; font-weight:900; font-size:clamp(1.8rem,5vw,3rem); color:var(--white); letter-spacing:.06em; line-height:1.15; margin-bottom:16px; }
 .hero-title span { color:var(--accent2); }
 .hero-sub { font-size:.95rem; color:var(--muted); letter-spacing:.06em; margin-bottom:52px; }
-.cards { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:20px; max-width:720px; margin:0 auto; }
+.cards { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:20px; max-width:900px; margin:0 auto; }
 .card { background:var(--surface); border:1px solid var(--border); padding:32px 28px; cursor:pointer; transition:all .22s; text-align:left; position:relative; overflow:hidden; }
 .card:hover { border-color:var(--accent2); transform:translateY(-4px); box-shadow:0 14px 32px rgba(0,0,0,.35); }
 .card-icon { font-size:2.4rem; margin-bottom:14px; display:block; }
@@ -86,9 +94,11 @@ textarea::placeholder { color:var(--muted); }
 .prize-unit { font-size:.68rem; color:var(--muted); margin-top:2px; }
 .lb-control { display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:12px; }
 .lb-label { font-family:'Rajdhani',sans-serif; font-weight:700; font-size:.78rem; letter-spacing:.2em; text-transform:uppercase; color:var(--muted); }
-.lb-actions { display:flex; gap:8px; align-items:center; }
+.lb-actions { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
 .add-player-btn { font-family:'Rajdhani',sans-serif; font-weight:700; font-size:.75rem; letter-spacing:.14em; text-transform:uppercase; background:var(--accent); border:none; padding:7px 18px; color:var(--bg); cursor:pointer; border-radius:4px; transition:opacity .2s; }
 .add-player-btn:hover { opacity:.85; }
+.login-prompt { font-size:.78rem; color:var(--muted); font-style:italic; }
+.login-prompt a { color:var(--accent); cursor:pointer; text-decoration:underline; }
 .sync-status { font-family:'Rajdhani',sans-serif; font-size:.68rem; letter-spacing:.1em; color:var(--muted); display:flex; align-items:center; gap:5px; }
 .sync-dot { width:7px; height:7px; border-radius:50%; background:var(--muted); flex-shrink:0; transition:background .3s; }
 .sync-dot.ok { background:var(--accent3); }
@@ -102,35 +112,67 @@ table.lb th { font-family:'Rajdhani',sans-serif; font-size:.68rem; letter-spacin
 table.lb tbody tr { border-bottom:1px solid var(--border); transition:background .15s; }
 table.lb tbody tr:hover { background:rgba(255,255,255,.02); }
 table.lb td { padding:10px; font-size:.88rem; vertical-align:middle; text-align:center; }
-table.lb td.name-cell { text-align:left; font-weight:500; color:var(--white); cursor:pointer; }
-table.lb td.name-cell:hover { color:var(--accent2); }
+table.lb td.name-cell { text-align:left; font-weight:500; color:var(--white); }
+table.lb td.name-cell.editable { cursor:pointer; }
+table.lb td.name-cell.editable:hover { color:var(--accent2); }
 .rank-badge { font-family:'Orbitron',monospace; font-weight:700; font-size:.72rem; width:30px; height:30px; display:inline-flex; align-items:center; justify-content:center; border-radius:50%; }
 .rank-1 { background:rgba(232,197,96,.25); color:var(--accent2); border:1px solid var(--accent2); }
 .rank-2 { background:rgba(180,190,200,.18); color:#b8c8d8; border:1px solid rgba(180,190,200,.4); }
 .rank-3 { background:rgba(180,120,60,.18); color:#d8a060; border:1px solid rgba(180,120,60,.4); }
 .rank-n { background:var(--bg2); color:var(--muted); border:1px solid var(--border); }
-.xp-val { font-family:'Orbitron',monospace; font-size:.75rem; color:var(--accent3); cursor:pointer; }
-.xp-val:hover { color:var(--accent2); text-decoration:underline; }
-.xp-empty { font-size:.72rem; color:var(--muted); cursor:pointer; font-style:italic; }
-.xp-empty:hover { color:var(--accent); }
+.xp-val { font-family:'Orbitron',monospace; font-size:.75rem; color:var(--accent3); }
+.xp-val.editable { cursor:pointer; }
+.xp-val.editable:hover { color:var(--accent2); text-decoration:underline; }
+.xp-empty { font-size:.72rem; color:var(--muted); font-style:italic; }
+.xp-empty.editable { cursor:pointer; }
+.xp-empty.editable:hover { color:var(--accent); }
 .score-total { font-family:'Orbitron',monospace; font-weight:700; font-size:.88rem; color:var(--accent2); }
 .score-total.zero { color:var(--muted); }
 .delete-btn { background:none; border:1px solid rgba(224,85,85,.3); color:var(--red); padding:3px 9px; cursor:pointer; border-radius:4px; font-size:.75rem; transition:all .2s; }
 .delete-btn:hover { background:rgba(224,85,85,.15); border-color:var(--red); }
+
+/* ── RECORDS ── */
+.records-wrap { max-width:1060px; margin:0 auto; padding:28px 24px 50px; }
+.records-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:16px; }
+.record-card { background:var(--surface); border:1px solid var(--border); border-radius:8px; overflow:hidden; transition:border-color .2s; }
+.record-card:hover { border-color:var(--border2); }
+.record-card-header { padding:12px 16px; background:var(--bg2); border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; }
+.record-category { font-family:'Rajdhani',sans-serif; font-weight:700; font-size:.78rem; letter-spacing:.16em; text-transform:uppercase; color:var(--accent2); display:flex; align-items:center; gap:8px; }
+.record-edit-btn { background:none; border:none; color:var(--muted); cursor:pointer; font-size:.75rem; font-family:'Rajdhani',sans-serif; letter-spacing:.1em; transition:color .2s; padding:2px 6px; }
+.record-edit-btn:hover { color:var(--accent); }
+.record-card-body { padding:16px; }
+.record-value { font-family:'Orbitron',monospace; font-weight:900; font-size:1.8rem; color:var(--white); line-height:1; margin-bottom:10px; }
+.record-value span { font-size:.75rem; color:var(--muted); font-weight:400; margin-left:4px; }
+.record-meta { display:flex; flex-direction:column; gap:4px; }
+.record-player { font-size:.85rem; color:var(--text); font-weight:600; }
+.record-ship { font-size:.78rem; color:var(--muted); }
+.record-date { font-size:.7rem; color:var(--muted); margin-top:4px; font-family:'Rajdhani',sans-serif; letter-spacing:.08em; }
+.record-empty { font-size:.82rem; color:var(--muted); font-style:italic; padding:20px 16px; }
+.records-hint { font-size:.72rem; color:var(--muted); margin-top:16px; }
+
+/* MODALS */
 .modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.75); z-index:1000; align-items:center; justify-content:center; backdrop-filter:blur(4px); }
 .modal-overlay.active { display:flex; }
-.modal-box { background:var(--surface2); border:1px solid var(--border2); padding:28px; width:min(400px,92vw); border-radius:8px; animation:fadeUp .22s ease; }
-.modal-title { font-family:'Rajdhani',sans-serif; font-weight:700; font-size:.82rem; letter-spacing:.22em; text-transform:uppercase; color:var(--accent2); margin-bottom:18px; }
+.modal-box { background:var(--surface2); border:1px solid var(--border2); padding:28px; width:min(420px,92vw); border-radius:8px; animation:fadeUp .22s ease; }
+.modal-title { font-family:'Rajdhani',sans-serif; font-weight:700; font-size:.82rem; letter-spacing:.22em; text-transform:uppercase; color:var(--accent2); margin-bottom:6px; }
+.modal-sub { font-size:.75rem; color:var(--muted); margin-bottom:18px; line-height:1.5; }
 .modal-label { font-size:.7rem; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); display:block; margin-bottom:5px; }
-.modal-input { width:100%; background:var(--bg2); border:1px solid var(--border); color:var(--white); font-family:'Source Sans 3',sans-serif; font-size:.9rem; padding:9px 12px; outline:none; border-radius:4px; transition:border-color .2s; margin-bottom:16px; }
+.modal-input { width:100%; background:var(--bg2); border:1px solid var(--border); color:var(--white); font-family:'Source Sans 3',sans-serif; font-size:.9rem; padding:9px 12px; outline:none; border-radius:4px; transition:border-color .2s; margin-bottom:14px; }
 .modal-input:focus { border-color:var(--accent); }
+.modal-select { width:100%; background:var(--bg2); border:1px solid var(--border); color:var(--white); font-family:'Source Sans 3',sans-serif; font-size:.9rem; padding:9px 12px; outline:none; border-radius:4px; transition:border-color .2s; margin-bottom:14px; cursor:pointer; }
+.modal-select:focus { border-color:var(--accent); }
+.modal-error { font-size:.75rem; color:var(--red); margin-bottom:12px; min-height:18px; }
 .modal-actions { display:flex; gap:10px; }
 .btn-primary { flex:1; font-family:'Rajdhani',sans-serif; font-weight:700; font-size:.78rem; letter-spacing:.18em; text-transform:uppercase; background:var(--accent); color:var(--bg); border:none; padding:9px; cursor:pointer; border-radius:4px; transition:opacity .18s; }
 .btn-primary:hover { opacity:.85; }
+.btn-primary:disabled { opacity:.4; cursor:not-allowed; }
 .btn-secondary { font-family:'Rajdhani',sans-serif; font-weight:600; font-size:.78rem; letter-spacing:.14em; text-transform:uppercase; background:transparent; color:var(--muted); border:1px solid var(--border); padding:9px 18px; cursor:pointer; border-radius:4px; transition:all .18s; }
 .btn-secondary:hover { color:var(--text); border-color:var(--border2); }
+.modal-switch { font-size:.75rem; color:var(--muted); margin-top:14px; text-align:center; }
+.modal-switch a { color:var(--accent); cursor:pointer; text-decoration:underline; }
 .xp-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:16px; }
 .xp-field-label { font-size:.7rem; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); display:block; margin-bottom:4px; }
+.pending-banner { background:rgba(232,197,96,.08); border:1px solid rgba(232,197,96,.3); border-radius:6px; padding:12px 16px; margin-bottom:20px; font-size:.82rem; color:var(--accent2); line-height:1.5; }
 ::-webkit-scrollbar { width:4px; height:4px; }
 ::-webkit-scrollbar-thumb { background:var(--border); border-radius:2px; }
 </style>
@@ -139,11 +181,18 @@ table.lb td.name-cell:hover { color:var(--accent2); }
 <div class="bg-atmo"></div>
 <header>
   <div class="header-inner">
-    <div class="clan-title" onclick="backToHome()">⚓ CLAN BLACKSEAUA ⚓</div>
-    <div class="game-title">WORLD OF WARSHIPS LEGENDS</div>
+    <div class="header-logo" onclick="backToHome()">
+      <div class="clan-title">⚓ CLAN BLACKSEAUA ⚓</div>
+      <div class="game-title">WORLD OF WARSHIPS LEGENDS</div>
+    </div>
+    <div class="header-auth" id="headerAuth">
+      <button class="auth-btn primary" onclick="openModal('loginModal')">Увійти</button>
+      <button class="auth-btn" onclick="openModal('registerModal')">Реєстрація</button>
+    </div>
   </div>
 </header>
 
+<!-- HOME -->
 <div id="homePage" class="page active">
   <div class="hero">
     <h1 class="hero-title">Ласкаво просимо,<br><span>Командире</span></h1>
@@ -152,19 +201,26 @@ table.lb td.name-cell:hover { color:var(--accent2); }
       <div class="card" onclick="openLottery()">
         <span class="card-icon">🎲</span>
         <div class="card-title">РОЗІГРАШ</div>
-        <div class="card-desc">Колесо удачі для учасників клану. Додай нікнейми і крути.</div>
+        <div class="card-desc">Колесо удачі для учасників клану.</div>
         <span class="card-arrow">→</span>
       </div>
       <div class="card" onclick="openTournamentsList()">
         <span class="card-icon">🏆</span>
         <div class="card-title">ТУРНІРИ</div>
-        <div class="card-desc">Челенджі та змагання клану з таблицею результатів.</div>
+        <div class="card-desc">Челенджі та змагання клану.</div>
+        <span class="card-arrow">→</span>
+      </div>
+      <div class="card" onclick="openRecords()">
+        <span class="card-icon">🎖️</span>
+        <div class="card-title">РЕКОРДИ</div>
+        <div class="card-desc">Кращі результати гравців клану за всі часи.</div>
         <span class="card-arrow">→</span>
       </div>
     </div>
   </div>
 </div>
 
+<!-- TOURNAMENTS LIST -->
 <div id="tournamentsListPage" class="page">
   <div class="page-header">
     <span class="page-header-title">🏆 ТУРНІРИ</span>
@@ -182,6 +238,7 @@ table.lb td.name-cell:hover { color:var(--accent2); }
   </div>
 </div>
 
+<!-- TOURNAMENT FLEX -->
 <div id="tournamentFlexPage" class="page">
   <div class="page-header">
     <span class="page-header-title">🏅 ЧЕЛЕНДЖ «ГНУЧКІСТЬ»</span>
@@ -212,11 +269,14 @@ table.lb td.name-cell:hover { color:var(--accent2); }
       <div class="prize-card"><span class="prize-medal">🥈</span><div class="prize-place">2 Місце</div><div class="prize-amount">5 000</div><div class="prize-unit">🪙 ДУБЛОНІВ</div></div>
       <div class="prize-card"><span class="prize-medal">🥉</span><div class="prize-place">3 Місце</div><div class="prize-amount">2 500</div><div class="prize-unit">🪙 ДУБЛОНІВ</div></div>
     </div>
+    <div id="pendingBanner" class="pending-banner" style="display:none">
+      ⏳ Твій акаунт очікує підтвердження адміністратора.
+    </div>
     <div class="lb-control">
       <span class="lb-label">🏅 Таблиця результатів</span>
       <div class="lb-actions">
         <div class="sync-status"><div class="sync-dot loading" id="syncDot"></div><span id="syncText">Підключення...</span></div>
-        <button class="add-player-btn" onclick="openAddPlayerModal()">+ Додати гравця</button>
+        <div id="lbActionArea"></div>
       </div>
     </div>
     <div class="table-wrapper">
@@ -227,16 +287,36 @@ table.lb td.name-cell:hover { color:var(--accent2); }
             <th style="text-align:left">Гравець</th>
             <th>⚓ ЛК</th><th>🚢 КР</th><th>🚤 ЕМ</th><th>✈️ АВ</th>
             <th>СУМА</th>
-            <th style="width:44px"></th>
+            <th id="deleteColHeader" style="width:44px;display:none"></th>
           </tr>
         </thead>
         <tbody id="tournamentTbody"></tbody>
       </table>
     </div>
-    <p class="hint" style="margin-top:10px">Клікни на XP або «+ XP» щоб ввести результат. Клікни на ім'я щоб змінити нікнейм. Дані видні всім.</p>
+    <p class="hint" style="margin-top:10px" id="tableHint">Таблиця публічна. Для редагування потрібно увійти.</p>
   </div>
 </div>
 
+<!-- RECORDS -->
+<div id="recordsPage" class="page">
+  <div class="page-header">
+    <span class="page-header-title">🎖️ РЕКОРДИ КЛАНУ</span>
+    <button class="back-btn" onclick="backToHome()">← На головну</button>
+  </div>
+  <div class="records-wrap">
+    <div class="lb-control">
+      <span class="lb-label">Кращі результати за всі часи</span>
+      <div class="lb-actions">
+        <div class="sync-status"><div class="sync-dot loading" id="recSyncDot"></div><span id="recSyncText">Завантаження...</span></div>
+        <div id="recActionArea"></div>
+      </div>
+    </div>
+    <div class="records-grid" id="recordsGrid"></div>
+    <p class="records-hint" id="recHint">Клікни на рекорд щоб оновити результат.</p>
+  </div>
+</div>
+
+<!-- LOTTERY -->
 <div id="lotteryPage" class="page">
   <div class="page-header">
     <span class="page-header-title">🎲 РОЗІГРАШ</span>
@@ -270,6 +350,43 @@ table.lb td.name-cell:hover { color:var(--accent2); }
   </div>
 </div>
 
+<!-- MODAL: LOGIN -->
+<div class="modal-overlay" id="loginModal" onclick="if(event.target===this)closeModal('loginModal')">
+  <div class="modal-box">
+    <div class="modal-title">🔐 Вхід</div>
+    <div class="modal-sub">Введи пошту і пароль</div>
+    <label class="modal-label">Email</label>
+    <input type="email" class="modal-input" id="loginEmail" placeholder="твоя@пошта.com" autocomplete="email">
+    <label class="modal-label">Пароль</label>
+    <input type="password" class="modal-input" id="loginPassword" placeholder="••••••••" autocomplete="current-password">
+    <div class="modal-error" id="loginError"></div>
+    <div class="modal-actions">
+      <button class="btn-primary" id="loginBtn" onclick="doLogin()">Увійти</button>
+      <button class="btn-secondary" onclick="closeModal('loginModal')">Скасувати</button>
+    </div>
+    <div class="modal-switch">Немає акаунту? <a onclick="switchModal('loginModal','registerModal')">Зареєструватись</a></div>
+  </div>
+</div>
+
+<!-- MODAL: REGISTER -->
+<div class="modal-overlay" id="registerModal" onclick="if(event.target===this)closeModal('registerModal')">
+  <div class="modal-box">
+    <div class="modal-title">📝 Реєстрація</div>
+    <div class="modal-sub">Після реєстрації адміністратор підтвердить твій доступ до редагування.</div>
+    <label class="modal-label">Email</label>
+    <input type="email" class="modal-input" id="regEmail" placeholder="твоя@пошта.com" autocomplete="email">
+    <label class="modal-label">Пароль (мінімум 6 символів)</label>
+    <input type="password" class="modal-input" id="regPassword" placeholder="••••••••" autocomplete="new-password">
+    <div class="modal-error" id="regError"></div>
+    <div class="modal-actions">
+      <button class="btn-primary" id="regBtn" onclick="doRegister()">Зареєструватись</button>
+      <button class="btn-secondary" onclick="closeModal('registerModal')">Скасувати</button>
+    </div>
+    <div class="modal-switch">Вже є акаунт? <a onclick="switchModal('registerModal','loginModal')">Увійти</a></div>
+  </div>
+</div>
+
+<!-- MODAL: ADD PLAYER -->
 <div class="modal-overlay" id="addPlayerModal" onclick="if(event.target===this)closeModal('addPlayerModal')">
   <div class="modal-box">
     <div class="modal-title">➕ Додати гравця</div>
@@ -282,6 +399,7 @@ table.lb td.name-cell:hover { color:var(--accent2); }
   </div>
 </div>
 
+<!-- MODAL: EDIT XP -->
 <div class="modal-overlay" id="editXpModal" onclick="if(event.target===this)closeModal('editXpModal')">
   <div class="modal-box">
     <div class="modal-title" id="editXpTitle">✏️ Результати гравця</div>
@@ -298,21 +416,191 @@ table.lb td.name-cell:hover { color:var(--accent2); }
   </div>
 </div>
 
+<!-- MODAL: EDIT RECORD -->
+<div class="modal-overlay" id="editRecordModal" onclick="if(event.target===this)closeModal('editRecordModal')">
+  <div class="modal-box">
+    <div class="modal-title" id="editRecordTitle">🏆 Оновити рекорд</div>
+    <div class="modal-sub" id="editRecordSub"></div>
+    <label class="modal-label">Нікнейм гравця</label>
+    <input type="text" class="modal-input" id="recPlayer" placeholder="Pavlo_Zhyhalov">
+    <label class="modal-label">Корабель</label>
+    <input type="text" class="modal-input" id="recShip" placeholder="напр. Prussen, Yamato...">
+    <label class="modal-label">Результат (число)</label>
+    <input type="number" min="0" class="modal-input" id="recResult" placeholder="напр. 340000">
+    <label class="modal-label">Дата</label>
+    <input type="date" class="modal-input" id="recDate">
+    <div class="modal-error" id="recError"></div>
+    <div class="modal-actions">
+      <button class="btn-primary" onclick="confirmEditRecord()">Зберегти</button>
+      <button class="btn-secondary" onclick="closeModal('editRecordModal')">Скасувати</button>
+    </div>
+  </div>
+</div>
+
 <script>
 const SUPA_URL='https://otwcegfsmxmhiegukkyl.supabase.co';
 const SUPA_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im90d2NlZ2ZzbXhtaGllZ3Vra3lsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg2NTMwOTUsImV4cCI6MjA5NDIyOTA5NX0.FU45yk9GKVjEkuH-pWp5kB8fA_nVy2wpYQc48baxeL0';
 
+/* ── RECORD CATEGORIES ── */
+const RECORD_CATS = [
+  { key:'fires',     label:'Пожари',          icon:'🔥', unit:'шт' },
+  { key:'citadels',  label:'Цитаделі',         icon:'💥', unit:'шт' },
+  { key:'floods',    label:'Затоплення',       icon:'🌊', unit:'шт' },
+  { key:'damage',    label:'Дамаг',            icon:'⚔️', unit:'' },
+  { key:'xp',        label:'Чистий досвід',    icon:'⭐', unit:'XP' },
+  { key:'kills',     label:'Знищено',          icon:'☠️', unit:'шт' },
+  { key:'medals',    label:'Медалі',           icon:'🏅', unit:'шт' },
+];
+
+/* ── AUTH ── */
+let currentUser=null,userApproved=false,accessToken=null;
+
 async function sbFetch(path,opts={}){
-  const headers={'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY,'Content-Type':'application/json'};
+  const headers={'apikey':SUPA_KEY,'Content-Type':'application/json'};
+  headers['Authorization']='Bearer '+(accessToken||SUPA_KEY);
   if(opts.method==='POST')headers['Prefer']='return=representation';
   const res=await fetch(SUPA_URL+path,{...opts,headers:{...headers,...(opts.headers||{})}});
   if(!res.ok){const t=await res.text();throw new Error(t);}
-  const text=await res.text();
-  return text?JSON.parse(text):[];
+  const text=await res.text();return text?JSON.parse(text):[];
 }
 
-const PAGE_MAP={'':'homePage','home':'homePage','lottery':'lotteryPage','tournaments':'tournamentsListPage','flex':'tournamentFlexPage'};
-const HASH_MAP={'homePage':'home','lotteryPage':'lottery','tournamentsListPage':'tournaments','tournamentFlexPage':'flex'};
+async function doLogin(){
+  const email=document.getElementById('loginEmail').value.trim();
+  const pass=document.getElementById('loginPassword').value;
+  const errEl=document.getElementById('loginError');
+  const btn=document.getElementById('loginBtn');
+  errEl.textContent='';
+  if(!email||!pass){errEl.textContent='Введи пошту і пароль';return;}
+  btn.disabled=true;btn.textContent='Вхід...';
+  try{
+    const res=await fetch(SUPA_URL+'/auth/v1/token?grant_type=password',{
+      method:'POST',headers:{'apikey':SUPA_KEY,'Content-Type':'application/json'},
+      body:JSON.stringify({email,password:pass})
+    });
+    const data=await res.json();
+    if(!res.ok)throw new Error(data.error_description||data.msg||'Помилка входу');
+    accessToken=data.access_token;
+    currentUser={email:data.user.email,id:data.user.id};
+    try{localStorage.setItem('sb_token',accessToken);}catch(e){}
+    await checkApproval();
+    closeModal('loginModal');updateAuthUI();
+    if(document.getElementById('tournamentFlexPage').classList.contains('active'))renderTable();
+    if(document.getElementById('recordsPage').classList.contains('active'))renderRecords();
+  }catch(e){errEl.textContent=e.message;}
+  finally{btn.disabled=false;btn.textContent='Увійти';}
+}
+
+async function doRegister(){
+  const email=document.getElementById('regEmail').value.trim();
+  const pass=document.getElementById('regPassword').value;
+  const errEl=document.getElementById('regError');
+  const btn=document.getElementById('regBtn');
+  errEl.textContent='';
+  if(!email||!pass){errEl.textContent='Заповни всі поля';return;}
+  if(pass.length<6){errEl.textContent='Пароль мінімум 6 символів';return;}
+  btn.disabled=true;btn.textContent='Реєстрація...';
+  try{
+    const res=await fetch(SUPA_URL+'/auth/v1/signup',{
+      method:'POST',headers:{'apikey':SUPA_KEY,'Content-Type':'application/json'},
+      body:JSON.stringify({email,password:pass})
+    });
+    const data=await res.json();
+    if(!res.ok)throw new Error(data.error_description||data.msg||'Помилка реєстрації');
+    await fetch(SUPA_URL+'/rest/v1/allowed_users',{
+      method:'POST',
+      headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
+      body:JSON.stringify({email,approved:false})
+    });
+    closeModal('registerModal');
+    alert('✅ Реєстрація успішна!\n\nОчікуй підтвердження адміністратора.\nПісля підтвердження зможеш редагувати.');
+  }catch(e){errEl.textContent=e.message;}
+  finally{btn.disabled=false;btn.textContent='Зареєструватись';}
+}
+
+async function checkApproval(){
+  if(!currentUser){userApproved=false;return;}
+  try{
+    const res=await fetch(`${SUPA_URL}/rest/v1/allowed_users?email=eq.${encodeURIComponent(currentUser.email)}&select=approved`,{
+      headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+accessToken}
+    });
+    const data=await res.json();
+    userApproved=Array.isArray(data)&&data[0]?.approved===true;
+  }catch(e){userApproved=false;}
+}
+
+function doLogout(){
+  currentUser=null;userApproved=false;accessToken=null;
+  try{localStorage.removeItem('sb_token');}catch(e){}
+  updateAuthUI();
+  if(document.getElementById('tournamentFlexPage').classList.contains('active'))renderTable();
+  if(document.getElementById('recordsPage').classList.contains('active'))renderRecords();
+}
+
+async function tryRestoreSession(){
+  try{
+    const token=localStorage.getItem('sb_token');if(!token)return;
+    const res=await fetch(SUPA_URL+'/auth/v1/user',{headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+token}});
+    if(!res.ok){localStorage.removeItem('sb_token');return;}
+    const data=await res.json();
+    accessToken=token;currentUser={email:data.email,id:data.id};
+    await checkApproval();updateAuthUI();
+  }catch(e){}
+}
+
+function updateAuthUI(){
+  const area=document.getElementById('headerAuth');
+  if(currentUser){
+    const cls=userApproved?'approved':'';
+    const status=userApproved?'✓ ':'⏳ ';
+    area.innerHTML=`<span class="auth-user ${cls}" title="${currentUser.email}">${status}${currentUser.email}</span>
+      <button class="auth-btn" onclick="doLogout()">Вийти</button>`;
+  }else{
+    area.innerHTML=`<button class="auth-btn primary" onclick="openModal('loginModal')">Увійти</button>
+      <button class="auth-btn" onclick="openModal('registerModal')">Реєстрація</button>`;
+  }
+  // Tournament
+  const lbArea=document.getElementById('lbActionArea');
+  const pending=document.getElementById('pendingBanner');
+  const hint=document.getElementById('tableHint');
+  const delCol=document.getElementById('deleteColHeader');
+  if(lbArea){
+    if(!currentUser){
+      lbArea.innerHTML=`<span class="login-prompt">Для редагування <a onclick="openModal('loginModal')">увійди</a></span>`;
+      if(pending)pending.style.display='none';
+      if(hint)hint.textContent='Таблиця публічна. Для редагування потрібно увійти.';
+      if(delCol)delCol.style.display='none';
+    }else if(!userApproved){
+      lbArea.innerHTML='';
+      if(pending)pending.style.display='block';
+      if(hint)hint.textContent='Очікуй підтвердження від адміністратора.';
+      if(delCol)delCol.style.display='none';
+    }else{
+      lbArea.innerHTML=`<button class="add-player-btn" onclick="openAddPlayerModal()">+ Додати гравця</button>`;
+      if(pending)pending.style.display='none';
+      if(hint)hint.textContent='Клікни на XP або «+ XP» щоб ввести результат.';
+      if(delCol)delCol.style.display='';
+    }
+  }
+  // Records
+  const recArea=document.getElementById('recActionArea');
+  const recHint=document.getElementById('recHint');
+  if(recArea){
+    if(currentUser&&userApproved){
+      recArea.innerHTML='';
+      if(recHint)recHint.textContent='Клікни на рекорд щоб оновити результат.';
+    }else if(currentUser&&!userApproved){
+      recArea.innerHTML='';
+      if(recHint)recHint.textContent='Очікуй підтвердження адміністратора для редагування.';
+    }else{
+      recArea.innerHTML=`<span class="login-prompt">Для редагування <a onclick="openModal('loginModal')">увійди</a></span>`;
+      if(recHint)recHint.textContent='Таблиця рекордів публічна.';
+    }
+  }
+}
+
+/* ── NAVIGATION ── */
+const PAGE_MAP={'':'homePage','home':'homePage','lottery':'lotteryPage','tournaments':'tournamentsListPage','flex':'tournamentFlexPage','records':'recordsPage'};
+const HASH_MAP={'homePage':'home','lotteryPage':'lottery','tournamentsListPage':'tournaments','tournamentFlexPage':'flex','recordsPage':'records'};
 
 function showPage(id){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
@@ -323,7 +611,8 @@ function showPage(id){
 function backToHome(){showPage('homePage');}
 function openLottery(){showPage('lotteryPage');setTimeout(()=>{setCanvasSize();drawWheel();},40);}
 function openTournamentsList(){showPage('tournamentsListPage');}
-function openTournamentFlex(){showPage('tournamentFlexPage');loadPlayers();}
+function openTournamentFlex(){showPage('tournamentFlexPage');updateAuthUI();loadPlayers();}
+function openRecords(){showPage('recordsPage');updateAuthUI();loadRecords();}
 
 function restorePage(){
   const hash=window.location.hash.replace('#','');
@@ -331,21 +620,21 @@ function restorePage(){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.getElementById(pageId).classList.add('active');
   if(pageId==='lotteryPage')setTimeout(()=>{setCanvasSize();drawWheel();},40);
-  if(pageId==='tournamentFlexPage')loadPlayers();
+  if(pageId==='tournamentFlexPage'){updateAuthUI();loadPlayers();}
+  if(pageId==='recordsPage'){updateAuthUI();loadRecords();}
 }
 
+/* ── WHEEL ── */
 let lp=[],wAngle=0,wSpin=false;
 const cv=document.getElementById('wheelCanvas'),cx=cv.getContext('2d');
 let cW=cv.width,cH=cv.height,cX=cW/2,cY=cH/2,cR=cW/2-8;
 const SC=['#1a4a6e','#1e5c5c','#2a3f6e','#1e4a3a','#3a4a6e','#2a5a72','#1a3a5a','#2e5248','#1e3a6e','#24574a','#1a3a72','#265248','#163a6e','#2a4a3a'];
-
 function setCanvasSize(){
   const f=document.querySelector('.wheel-frame');if(!f)return;
   const sz=Math.min(f.clientWidth,360);
   cv.width=sz;cv.height=sz;cW=sz;cH=sz;cX=sz/2;cY=sz/2;cR=sz/2-8;drawWheel();
 }
 window.addEventListener('resize',()=>{if(document.getElementById('lotteryPage').classList.contains('active'))setCanvasSize();});
-
 function drawWheel(){
   cx.clearRect(0,0,cW,cH);
   if(!lp.length){
@@ -370,13 +659,11 @@ function drawWheel(){
   cx.beginPath();cx.arc(cX,cY,cR,0,Math.PI*2);cx.strokeStyle='#1a3a55';cx.lineWidth=3;cx.stroke();
   cx.beginPath();cx.arc(cX,cY,13,0,Math.PI*2);cx.fillStyle='#06101a';cx.fill();cx.strokeStyle='#3a9fd8';cx.lineWidth=2;cx.stroke();
 }
-
 function calcWinner(){
   const n=lp.length,sl=(Math.PI*2)/n;
   const pos=((-Math.PI/2)-wAngle%(Math.PI*2)+Math.PI*2*10)%(Math.PI*2);
   return Math.floor(pos/sl)%n;
 }
-
 function spinLottery(){
   if(lp.length<2){alert('Додай мінімум 2 учасники!');return;}
   if(wSpin)return;
@@ -403,7 +690,6 @@ function spinLottery(){
     }
   })(t0);
 }
-
 function updateWheel(){
   lp=document.getElementById('playersList').value.split('\n').map(s=>s.trim()).filter(s=>s.length>0);
   document.getElementById('playerCount').textContent=lp.length;
@@ -412,7 +698,6 @@ function updateWheel(){
   drawWheel();
   try{localStorage.setItem('lp',JSON.stringify(lp));}catch(e){}
 }
-
 function loadLottery(){
   try{
     const s=localStorage.getItem('lp');
@@ -420,63 +705,64 @@ function loadLottery(){
   }catch(e){}
 }
 
+/* ── TOURNAMENT ── */
 let td=[],xpIdx=null,pollingStarted=false;
-
 function setSyncStatus(state,text){
   const dot=document.getElementById('syncDot'),txt=document.getElementById('syncText');
-  if(!dot||!txt)return;
-  dot.className='sync-dot '+state;txt.textContent=text;
+  if(!dot||!txt)return;dot.className='sync-dot '+state;txt.textContent=text;
 }
-
 async function loadPlayers(){
   setSyncStatus('loading','Завантаження...');
   try{
-    const data=await sbFetch('/rest/v1/tournament_players?select=*&order=created_at.asc');
-    td=data;renderTable();setSyncStatus('ok','Синхронізовано');
+    const res=await fetch(`${SUPA_URL}/rest/v1/tournament_players?select=*&order=created_at.asc`,{
+      headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY}
+    });
+    td=await res.json();renderTable();setSyncStatus('ok','Синхронізовано');
     if(!pollingStarted){pollingStarted=true;startPolling();}
-  }catch(e){console.error(e);setSyncStatus('err','Помилка з\'єднання');}
+  }catch(e){setSyncStatus('err','Помилка з\'єднання');}
 }
-
 function startPolling(){
   setInterval(async()=>{
     if(!document.getElementById('tournamentFlexPage').classList.contains('active'))return;
     try{
-      const data=await sbFetch('/rest/v1/tournament_players?select=*&order=created_at.asc');
+      const res=await fetch(`${SUPA_URL}/rest/v1/tournament_players?select=*&order=created_at.asc`,{headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY}});
+      const data=await res.json();
       if(JSON.stringify(data)!==JSON.stringify(td)){td=data;renderTable();setSyncStatus('ok','Оновлено');}
     }catch(e){}
   },5000);
 }
-
-function calcScore(p){
-  return[p.xp_bb,p.xp_ca,p.xp_dd,p.xp_cv].reduce((s,v)=>s+(v&&v>0?Math.floor(v/1000):0),0);
-}
-
+function calcScore(p){return[p.xp_bb,p.xp_ca,p.xp_dd,p.xp_cv].reduce((s,v)=>s+(v&&v>0?Math.floor(v/1000):0),0);}
 function renderTable(){
   const tb=document.getElementById('tournamentTbody');
+  const canEdit=currentUser&&userApproved;
   if(!td.length){
-    tb.innerHTML=`<tr><td colspan="8" style="padding:36px;color:var(--muted);font-style:italic;font-size:.85rem;text-align:center">Немає учасників. Натисніть «+ Додати гравця»</td></tr>`;
+    tb.innerHTML=`<tr><td colspan="${canEdit?8:7}" style="padding:36px;color:var(--muted);font-style:italic;font-size:.85rem;text-align:center">Немає учасників${canEdit?' — натисніть «+ Додати гравця»':''}</td></tr>`;
     return;
   }
   const ws=td.map(p=>({...p,sc:calcScore(p)})).sort((a,b)=>b.sc-a.sc);
   const fields=['xp_bb','xp_ca','xp_dd','xp_cv'];
   tb.innerHTML=ws.map((p,r)=>{
     const rc=r===0?'rank-1':r===1?'rank-2':r===2?'rank-3':'rank-n';
-    const xc=fields.map(f=>
-      p[f]&&p[f]>0
-        ?`<td><span class="xp-val" onclick="openXp(${p.id})">${p[f].toLocaleString()}<br><small style="font-size:.6rem;color:var(--muted)">${Math.floor(p[f]/1000)}б</small></span></td>`
-        :`<td><span class="xp-empty" onclick="openXp(${p.id})">+ XP</span></td>`
-    ).join('');
-    return`<tr>
-      <td><span class="rank-badge ${rc}">${r+1}</span></td>
-      <td class="name-cell" onclick="editNick(${p.id})">✏️ ${esc(p.nick)}</td>
-      ${xc}
-      <td><span class="score-total ${p.sc===0?'zero':''}">${p.sc}</span></td>
-      <td><button class="delete-btn" onclick="delP(${p.id})">🗑</button></td>
-    </tr>`;
+    const nameCell=canEdit
+      ?`<td class="name-cell editable" onclick="editNick(${p.id})">✏️ ${esc(p.nick)}</td>`
+      :`<td class="name-cell">${esc(p.nick)}</td>`;
+    const xc=fields.map(f=>{
+      if(canEdit){
+        return p[f]&&p[f]>0
+          ?`<td><span class="xp-val editable" onclick="openXp(${p.id})">${p[f].toLocaleString()}<br><small style="font-size:.6rem;color:var(--muted)">${Math.floor(p[f]/1000)}б</small></span></td>`
+          :`<td><span class="xp-empty editable" onclick="openXp(${p.id})">+ XP</span></td>`;
+      }else{
+        return p[f]&&p[f]>0
+          ?`<td><span class="xp-val">${p[f].toLocaleString()}<br><small style="font-size:.6rem;color:var(--muted)">${Math.floor(p[f]/1000)}б</small></span></td>`
+          :`<td><span class="xp-empty">—</span></td>`;
+      }
+    }).join('');
+    const delCell=canEdit?`<td><button class="delete-btn" onclick="delP(${p.id})">🗑</button></td>`:'';
+    return`<tr><td><span class="rank-badge ${rc}">${r+1}</span></td>${nameCell}${xc}<td><span class="score-total ${p.sc===0?'zero':''}">${p.sc}</span></td>${delCell}</tr>`;
   }).join('');
 }
-
 async function delP(id){
+  if(!userApproved)return;
   const p=td.find(x=>x.id===id);if(!p)return;
   if(!confirm(`Видалити «${p.nick}»?`))return;
   try{
@@ -484,8 +770,8 @@ async function delP(id){
     td=td.filter(x=>x.id!==id);renderTable();setSyncStatus('ok','Збережено');
   }catch(e){alert('Помилка: '+e.message);}
 }
-
 async function editNick(id){
+  if(!userApproved)return;
   const p=td.find(x=>x.id===id);if(!p)return;
   const n=prompt('Новий нікнейм:',p.nick);
   if(!n||!n.trim()||n.trim()===p.nick)return;
@@ -495,12 +781,11 @@ async function editNick(id){
     p.nick=n.trim();renderTable();setSyncStatus('ok','Збережено');
   }catch(e){alert('Помилка: '+e.message);setSyncStatus('err','Помилка');}
 }
-
 function openAddPlayerModal(){
-  document.getElementById('addPlayerModal').classList.add('active');
+  if(!userApproved){openModal('loginModal');return;}
+  openModal('addPlayerModal');
   setTimeout(()=>document.getElementById('newPlayerNick').focus(),50);
 }
-
 async function confirmAddPlayer(){
   const n=document.getElementById('newPlayerNick').value.trim();
   if(!n){document.getElementById('newPlayerNick').focus();return;}
@@ -508,56 +793,170 @@ async function confirmAddPlayer(){
   try{
     setSyncStatus('loading','Збереження...');
     const res=await sbFetch('/rest/v1/tournament_players',{method:'POST',body:JSON.stringify({nick:n})});
-    if(Array.isArray(res)&&res[0])td.push(res[0]);
-    else await loadPlayers();
+    if(Array.isArray(res)&&res[0])td.push(res[0]);else await loadPlayers();
     renderTable();setSyncStatus('ok','Збережено');
     closeModal('addPlayerModal');document.getElementById('newPlayerNick').value='';
-  }catch(e){alert('Помилка: '+e.message);setSyncStatus('err','Помилка');}
+  }catch(e){
+    if(e.message.includes('policy'))alert('❌ Немає дозволу. Акаунт ще не підтверджено.');
+    else alert('Помилка: '+e.message);
+    setSyncStatus('err','Помилка');
+  }
 }
-
 function openXp(id){
-  xpIdx=id;
-  const p=td.find(x=>x.id===id);if(!p)return;
+  if(!userApproved)return;
+  xpIdx=id;const p=td.find(x=>x.id===id);if(!p)return;
   document.getElementById('editXpTitle').textContent=`✏️ ${p.nick} — Результати`;
   document.getElementById('xpField0').value=p.xp_bb||'';
   document.getElementById('xpField1').value=p.xp_ca||'';
   document.getElementById('xpField2').value=p.xp_dd||'';
   document.getElementById('xpField3').value=p.xp_cv||'';
-  document.getElementById('editXpModal').classList.add('active');
-  setTimeout(()=>document.getElementById('xpField0').focus(),50);
+  openModal('editXpModal');setTimeout(()=>document.getElementById('xpField0').focus(),50);
 }
-
 async function confirmEditXp(){
   if(xpIdx===null)return;
   const vals=['xpField0','xpField1','xpField2','xpField3'].map(f=>{
-    const v=parseInt(document.getElementById(f).value);
-    return(!isNaN(v)&&v>0)?v:null;
+    const v=parseInt(document.getElementById(f).value);return(!isNaN(v)&&v>0)?v:null;
   });
   try{
     setSyncStatus('loading','Збереження...');
-    await sbFetch(`/rest/v1/tournament_players?id=eq.${xpIdx}`,{
-      method:'PATCH',
-      body:JSON.stringify({xp_bb:vals[0],xp_ca:vals[1],xp_dd:vals[2],xp_cv:vals[3],updated_at:new Date().toISOString()})
-    });
+    await sbFetch(`/rest/v1/tournament_players?id=eq.${xpIdx}`,{method:'PATCH',body:JSON.stringify({xp_bb:vals[0],xp_ca:vals[1],xp_dd:vals[2],xp_cv:vals[3],updated_at:new Date().toISOString()})});
     const p=td.find(x=>x.id===xpIdx);
     if(p){p.xp_bb=vals[0];p.xp_ca=vals[1];p.xp_dd=vals[2];p.xp_cv=vals[3];}
-    renderTable();setSyncStatus('ok','Збережено');
-    closeModal('editXpModal');xpIdx=null;
-  }catch(e){alert('Помилка збереження: '+e.message);setSyncStatus('err','Помилка');}
+    renderTable();setSyncStatus('ok','Збережено');closeModal('editXpModal');xpIdx=null;
+  }catch(e){
+    if(e.message.includes('policy'))alert('❌ Немає дозволу.');
+    else alert('Помилка: '+e.message);
+    setSyncStatus('err','Помилка');
+  }
 }
 
+/* ── RECORDS ── */
+let recData={},editingCat=null,recPollingStarted=false;
+
+function setRecSyncStatus(state,text){
+  const dot=document.getElementById('recSyncDot'),txt=document.getElementById('recSyncText');
+  if(!dot||!txt)return;dot.className='sync-dot '+state;txt.textContent=text;
+}
+
+async function loadRecords(){
+  setRecSyncStatus('loading','Завантаження...');
+  try{
+    const res=await fetch(`${SUPA_URL}/rest/v1/clan_records?select=*`,{
+      headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY}
+    });
+    const data=await res.json();
+    recData={};
+    data.forEach(r=>{recData[r.category]=r;});
+    renderRecords();setRecSyncStatus('ok','Синхронізовано');
+    if(!recPollingStarted){recPollingStarted=true;startRecPolling();}
+  }catch(e){setRecSyncStatus('err','Помилка з\'єднання');}
+}
+
+function startRecPolling(){
+  setInterval(async()=>{
+    if(!document.getElementById('recordsPage').classList.contains('active'))return;
+    try{
+      const res=await fetch(`${SUPA_URL}/rest/v1/clan_records?select=*`,{headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY}});
+      const data=await res.json();
+      const newData={};data.forEach(r=>{newData[r.category]=r;});
+      if(JSON.stringify(newData)!==JSON.stringify(recData)){recData=newData;renderRecords();setRecSyncStatus('ok','Оновлено');}
+    }catch(e){}
+  },5000);
+}
+
+function formatResult(cat,val){
+  if(cat==='damage')return val.toLocaleString();
+  if(cat==='xp')return val.toLocaleString();
+  return val;
+}
+
+function renderRecords(){
+  const grid=document.getElementById('recordsGrid');
+  const canEdit=currentUser&&userApproved;
+  grid.innerHTML=RECORD_CATS.map(cat=>{
+    const rec=recData[cat.key];
+    const editBtn=canEdit?`<button class="record-edit-btn" onclick="openEditRecord('${cat.key}')">✏️ змінити</button>`:'';
+    const body=rec
+      ?`<div class="record-value">${formatResult(cat.key,rec.result)}<span>${cat.unit}</span></div>
+         <div class="record-meta">
+           <div class="record-player">👤 ${esc(rec.player_nick)}</div>
+           <div class="record-ship">🚢 ${esc(rec.ship)}</div>
+           <div class="record-date">📅 ${rec.date}</div>
+         </div>`
+      :`<div class="record-empty">${canEdit?'Рекорд ще не встановлено. Натисни «змінити»':'Рекорд ще не встановлено'}</div>`;
+    return`<div class="record-card">
+      <div class="record-card-header">
+        <div class="record-category">${cat.icon} ${cat.label}</div>
+        ${editBtn}
+      </div>
+      <div class="record-card-body">${body}</div>
+    </div>`;
+  }).join('');
+}
+
+function openEditRecord(catKey){
+  if(!userApproved)return;
+  editingCat=catKey;
+  const cat=RECORD_CATS.find(c=>c.key===catKey);
+  const rec=recData[catKey];
+  document.getElementById('editRecordTitle').textContent=`${cat.icon} ${cat.label}`;
+  document.getElementById('editRecordSub').textContent=rec?'Оновити рекорд':'Встановити новий рекорд';
+  document.getElementById('recPlayer').value=rec?.player_nick||'';
+  document.getElementById('recShip').value=rec?.ship||'';
+  document.getElementById('recResult').value=rec?.result||'';
+  document.getElementById('recDate').value=rec?.date||new Date().toISOString().split('T')[0];
+  document.getElementById('recError').textContent='';
+  openModal('editRecordModal');
+  setTimeout(()=>document.getElementById('recPlayer').focus(),50);
+}
+
+async function confirmEditRecord(){
+  const player=document.getElementById('recPlayer').value.trim();
+  const ship=document.getElementById('recShip').value.trim();
+  const result=parseInt(document.getElementById('recResult').value);
+  const date=document.getElementById('recDate').value;
+  const errEl=document.getElementById('recError');
+  errEl.textContent='';
+  if(!player||!ship||isNaN(result)||!date){errEl.textContent='Заповни всі поля';return;}
+  const body={category:editingCat,player_nick:player,ship,result,date,updated_at:new Date().toISOString()};
+  try{
+    setRecSyncStatus('loading','Збереження...');
+    const existing=recData[editingCat];
+    if(existing){
+      await sbFetch(`/rest/v1/clan_records?id=eq.${existing.id}`,{method:'PATCH',body:JSON.stringify(body)});
+      recData[editingCat]={...existing,...body};
+    }else{
+      const res=await sbFetch('/rest/v1/clan_records',{method:'POST',body:JSON.stringify(body)});
+      if(Array.isArray(res)&&res[0])recData[editingCat]=res[0];
+    }
+    renderRecords();setRecSyncStatus('ok','Збережено');closeModal('editRecordModal');editingCat=null;
+  }catch(e){
+    if(e.message.includes('policy'))errEl.textContent='❌ Немає дозволу.';
+    else errEl.textContent='Помилка: '+e.message;
+    setRecSyncStatus('err','Помилка');
+  }
+}
+
+/* ── UTILS ── */
+function openModal(id){document.getElementById(id).classList.add('active');}
 function closeModal(id){document.getElementById(id).classList.remove('active');}
+function switchModal(from,to){closeModal(from);openModal(to);}
 function esc(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 
-window.addEventListener('load',()=>{
+/* ── INIT ── */
+window.addEventListener('load',async()=>{
+  await tryRestoreSession();
   restorePage();
   loadLottery();
   document.getElementById('spinButton').addEventListener('click',spinLottery);
   document.addEventListener('keydown',e=>{
-    if(e.key==='Escape'){closeModal('addPlayerModal');closeModal('editXpModal');}
+    if(e.key==='Escape')['loginModal','registerModal','addPlayerModal','editXpModal','editRecordModal'].forEach(closeModal);
     if(e.key==='Enter'){
+      if(document.getElementById('loginModal').classList.contains('active'))doLogin();
+      if(document.getElementById('registerModal').classList.contains('active'))doRegister();
       if(document.getElementById('addPlayerModal').classList.contains('active'))confirmAddPlayer();
       if(document.getElementById('editXpModal').classList.contains('active'))confirmEditXp();
+      if(document.getElementById('editRecordModal').classList.contains('active'))confirmEditRecord();
     }
   });
 });
