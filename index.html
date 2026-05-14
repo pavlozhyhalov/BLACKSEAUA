@@ -23,7 +23,7 @@ header { position:relative; z-index:10; border-bottom:1px solid var(--border); b
 .clan-title:hover { opacity:.75; }
 .game-title { font-family:'Rajdhani',sans-serif; font-size:.68rem; letter-spacing:.3em; color:var(--muted); font-weight:500; text-transform:uppercase; }
 .header-auth { display:flex; align-items:center; gap:10px; }
-.auth-user { font-size:.75rem; color:var(--muted); font-family:'Rajdhani',sans-serif; letter-spacing:.08em; max-width:160px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.auth-user { font-size:.75rem; color:var(--muted); font-family:'Rajdhani',sans-serif; letter-spacing:.08em; max-width:200px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 .auth-user.approved { color:var(--accent3); }
 .auth-btn { font-family:'Rajdhani',sans-serif; font-weight:700; font-size:.72rem; letter-spacing:.15em; text-transform:uppercase; background:transparent; border:1px solid var(--border); color:var(--muted); padding:5px 14px; cursor:pointer; border-radius:4px; transition:all .2s; white-space:nowrap; }
 .auth-btn:hover { border-color:var(--accent2); color:var(--accent2); }
@@ -130,8 +130,6 @@ table.lb td.name-cell.editable:hover { color:var(--accent2); }
 .score-total.zero { color:var(--muted); }
 .delete-btn { background:none; border:1px solid rgba(224,85,85,.3); color:var(--red); padding:3px 9px; cursor:pointer; border-radius:4px; font-size:.75rem; transition:all .2s; }
 .delete-btn:hover { background:rgba(224,85,85,.15); border-color:var(--red); }
-
-/* ── RECORDS ── */
 .records-wrap { max-width:1060px; margin:0 auto; padding:28px 24px 50px; }
 .records-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:16px; }
 .record-card { background:var(--surface); border:1px solid var(--border); border-radius:8px; overflow:hidden; transition:border-color .2s; }
@@ -148,9 +146,21 @@ table.lb td.name-cell.editable:hover { color:var(--accent2); }
 .record-ship { font-size:.78rem; color:var(--muted); }
 .record-date { font-size:.7rem; color:var(--muted); margin-top:4px; font-family:'Rajdhani',sans-serif; letter-spacing:.08em; }
 .record-empty { font-size:.82rem; color:var(--muted); font-style:italic; padding:20px 16px; }
-.records-hint { font-size:.72rem; color:var(--muted); margin-top:16px; }
 
-/* MODALS */
+/* ── RESOURCES ── */
+.resources-wrap { max-width:900px; margin:0 auto; padding:28px 24px 50px; }
+.res-section-title { font-family:'Rajdhani',sans-serif; font-weight:700; font-size:.75rem; letter-spacing:.22em; text-transform:uppercase; color:var(--muted); margin-bottom:12px; margin-top:28px; padding-bottom:6px; border-bottom:1px solid var(--border); }
+.res-section-title:first-child { margin-top:0; }
+.res-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:12px; }
+.res-card { background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:18px 20px; display:flex; align-items:center; gap:16px; text-decoration:none; transition:all .22s; cursor:pointer; }
+.res-card:hover { border-color:var(--accent2); transform:translateY(-2px); box-shadow:0 8px 24px rgba(0,0,0,.3); }
+.res-icon { font-size:2rem; flex-shrink:0; width:44px; text-align:center; }
+.res-info { flex:1; min-width:0; }
+.res-name { font-family:'Rajdhani',sans-serif; font-weight:700; font-size:.92rem; letter-spacing:.1em; text-transform:uppercase; color:var(--white); margin-bottom:3px; }
+.res-desc { font-size:.75rem; color:var(--muted); line-height:1.4; }
+.res-arrow { color:var(--border2); font-size:.9rem; flex-shrink:0; transition:all .2s; }
+.res-card:hover .res-arrow { color:var(--accent2); transform:translateX(3px); }
+
 .modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.75); z-index:1000; align-items:center; justify-content:center; backdrop-filter:blur(4px); }
 .modal-overlay.active { display:flex; }
 .modal-box { background:var(--surface2); border:1px solid var(--border2); padding:28px; width:min(420px,92vw); border-radius:8px; animation:fadeUp .22s ease; }
@@ -159,8 +169,6 @@ table.lb td.name-cell.editable:hover { color:var(--accent2); }
 .modal-label { font-size:.7rem; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); display:block; margin-bottom:5px; }
 .modal-input { width:100%; background:var(--bg2); border:1px solid var(--border); color:var(--white); font-family:'Source Sans 3',sans-serif; font-size:.9rem; padding:9px 12px; outline:none; border-radius:4px; transition:border-color .2s; margin-bottom:14px; }
 .modal-input:focus { border-color:var(--accent); }
-.modal-select { width:100%; background:var(--bg2); border:1px solid var(--border); color:var(--white); font-family:'Source Sans 3',sans-serif; font-size:.9rem; padding:9px 12px; outline:none; border-radius:4px; transition:border-color .2s; margin-bottom:14px; cursor:pointer; }
-.modal-select:focus { border-color:var(--accent); }
 .modal-error { font-size:.75rem; color:var(--red); margin-bottom:12px; min-height:18px; }
 .modal-actions { display:flex; gap:10px; }
 .btn-primary { flex:1; font-family:'Rajdhani',sans-serif; font-weight:700; font-size:.78rem; letter-spacing:.18em; text-transform:uppercase; background:var(--accent); color:var(--bg); border:none; padding:9px; cursor:pointer; border-radius:4px; transition:opacity .18s; }
@@ -216,6 +224,12 @@ table.lb td.name-cell.editable:hover { color:var(--accent2); }
         <div class="card-desc">Кращі результати гравців клану за всі часи.</div>
         <span class="card-arrow">→</span>
       </div>
+      <div class="card" onclick="openResources()">
+        <span class="card-icon">🔗</span>
+        <div class="card-title">КОРИСНЕ</div>
+        <div class="card-desc">Офіційні ресурси, інструменти і посилання.</div>
+        <span class="card-arrow">→</span>
+      </div>
     </div>
   </div>
 </div>
@@ -269,9 +283,7 @@ table.lb td.name-cell.editable:hover { color:var(--accent2); }
       <div class="prize-card"><span class="prize-medal">🥈</span><div class="prize-place">2 Місце</div><div class="prize-amount">5 000</div><div class="prize-unit">🪙 ДУБЛОНІВ</div></div>
       <div class="prize-card"><span class="prize-medal">🥉</span><div class="prize-place">3 Місце</div><div class="prize-amount">2 500</div><div class="prize-unit">🪙 ДУБЛОНІВ</div></div>
     </div>
-    <div id="pendingBanner" class="pending-banner" style="display:none">
-      ⏳ Твій акаунт очікує підтвердження адміністратора.
-    </div>
+    <div id="pendingBanner" class="pending-banner" style="display:none">⏳ Твій акаунт очікує підтвердження адміністратора.</div>
     <div class="lb-control">
       <span class="lb-label">🏅 Таблиця результатів</span>
       <div class="lb-actions">
@@ -312,7 +324,80 @@ table.lb td.name-cell.editable:hover { color:var(--accent2); }
       </div>
     </div>
     <div class="records-grid" id="recordsGrid"></div>
-    <p class="records-hint" id="recHint">Клікни на рекорд щоб оновити результат.</p>
+    <p class="records-hint hint" id="recHint" style="margin-top:16px"></p>
+  </div>
+</div>
+
+<!-- RESOURCES -->
+<div id="resourcesPage" class="page">
+  <div class="page-header">
+    <span class="page-header-title">🔗 КОРИСНЕ</span>
+    <button class="back-btn" onclick="backToHome()">← На головну</button>
+  </div>
+  <div class="resources-wrap">
+    <div class="res-section-title">🌐 Офіційне</div>
+    <div class="res-grid">
+      <div class="res-card" onclick="window.open('https://wowslegends.com','_blank')">
+        <div class="res-icon">🌍</div>
+        <div class="res-info">
+          <div class="res-name">Офіційний сайт</div>
+          <div class="res-desc">Новини, патч-ноути, події та анонси гри</div>
+        </div>
+        <div class="res-arrow">→</div>
+      </div>
+      <div class="res-card" onclick="window.open('https://www.youtube.com/@WorldofWarshipsLegends','_blank')">
+        <div class="res-icon">▶️</div>
+        <div class="res-info">
+          <div class="res-name">YouTube</div>
+          <div class="res-desc">Офіційний канал — відео, огляди, стріми</div>
+        </div>
+        <div class="res-arrow">→</div>
+      </div>
+      <div class="res-card" onclick="window.open('https://www.instagram.com/wows_legends/','_blank')">
+        <div class="res-icon">📸</div>
+        <div class="res-info">
+          <div class="res-name">Instagram</div>
+          <div class="res-desc">Фото, короткі відео та новини від команди</div>
+        </div>
+        <div class="res-arrow">→</div>
+      </div>
+      <div class="res-card" onclick="window.open('https://www.facebook.com/WoWsLegends','_blank')">
+        <div class="res-icon">📘</div>
+        <div class="res-info">
+          <div class="res-name">Facebook</div>
+          <div class="res-desc">Офіційна сторінка — анонси та спільнота</div>
+        </div>
+        <div class="res-arrow">→</div>
+      </div>
+      <div class="res-card" onclick="window.open('https://discord.com/invite/wowslegends','_blank')">
+        <div class="res-icon">💬</div>
+        <div class="res-info">
+          <div class="res-name">Discord</div>
+          <div class="res-desc">Офіційний сервер — чат, підтримка, події</div>
+        </div>
+        <div class="res-arrow">→</div>
+      </div>
+    </div>
+
+    <div class="res-section-title">🔧 Інструменти</div>
+    <div class="res-grid">
+      <div class="res-card" onclick="window.open('https://www.wowsbuilds.com','_blank')">
+        <div class="res-icon">⚙️</div>
+        <div class="res-info">
+          <div class="res-name">WoWS Builds</div>
+          <div class="res-desc">Білди командирів, статистика кораблів, рейтинг гравців</div>
+        </div>
+        <div class="res-arrow">→</div>
+      </div>
+      <div class="res-card" onclick="window.open('https://www.wows-gamer-blog.com/2024/07/wows-legends-bonus-codes.html','_blank')">
+        <div class="res-icon">🎁</div>
+        <div class="res-info">
+          <div class="res-name">Бонус коди</div>
+          <div class="res-desc">Актуальні промокоди для активації безкоштовних нагород</div>
+        </div>
+        <div class="res-arrow">→</div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -419,12 +504,12 @@ table.lb td.name-cell.editable:hover { color:var(--accent2); }
 <!-- MODAL: EDIT RECORD -->
 <div class="modal-overlay" id="editRecordModal" onclick="if(event.target===this)closeModal('editRecordModal')">
   <div class="modal-box">
-    <div class="modal-title" id="editRecordTitle">🏆 Оновити рекорд</div>
+    <div class="modal-title" id="editRecordTitle">🏆 Рекорд</div>
     <div class="modal-sub" id="editRecordSub"></div>
     <label class="modal-label">Нікнейм гравця</label>
     <input type="text" class="modal-input" id="recPlayer" placeholder="Pavlo_Zhyhalov">
     <label class="modal-label">Корабель</label>
-    <input type="text" class="modal-input" id="recShip" placeholder="напр. Prussen, Yamato...">
+    <input type="text" class="modal-input" id="recShip" placeholder="напр. Preussen, Yamato...">
     <label class="modal-label">Результат (число)</label>
     <input type="number" min="0" class="modal-input" id="recResult" placeholder="напр. 340000">
     <label class="modal-label">Дата</label>
@@ -441,18 +526,16 @@ table.lb td.name-cell.editable:hover { color:var(--accent2); }
 const SUPA_URL='https://otwcegfsmxmhiegukkyl.supabase.co';
 const SUPA_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im90d2NlZ2ZzbXhtaGllZ3Vra3lsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg2NTMwOTUsImV4cCI6MjA5NDIyOTA5NX0.FU45yk9GKVjEkuH-pWp5kB8fA_nVy2wpYQc48baxeL0';
 
-/* ── RECORD CATEGORIES ── */
-const RECORD_CATS = [
-  { key:'fires',     label:'Пожари',          icon:'🔥', unit:'шт' },
-  { key:'citadels',  label:'Цитаделі',         icon:'💥', unit:'шт' },
-  { key:'floods',    label:'Затоплення',       icon:'🌊', unit:'шт' },
-  { key:'damage',    label:'Дамаг',            icon:'⚔️', unit:'' },
-  { key:'xp',        label:'Чистий досвід',    icon:'⭐', unit:'XP' },
-  { key:'kills',     label:'Знищено',          icon:'☠️', unit:'шт' },
-  { key:'medals',    label:'Медалі',           icon:'🏅', unit:'шт' },
+const RECORD_CATS=[
+  {key:'fires',label:'Пожари',icon:'🔥',unit:'шт'},
+  {key:'citadels',label:'Цитаделі',icon:'💥',unit:'шт'},
+  {key:'floods',label:'Затоплення',icon:'🌊',unit:'шт'},
+  {key:'damage',label:'Дамаг',icon:'⚔️',unit:''},
+  {key:'xp',label:'Чистий досвід',icon:'⭐',unit:'XP'},
+  {key:'kills',label:'Знищено',icon:'☠️',unit:'шт'},
+  {key:'medals',label:'Медалі',icon:'🏅',unit:'шт'},
 ];
 
-/* ── AUTH ── */
 let currentUser=null,userApproved=false,accessToken=null;
 
 async function sbFetch(path,opts={}){
@@ -509,7 +592,7 @@ async function doRegister(){
     await fetch(SUPA_URL+'/rest/v1/allowed_users',{
       method:'POST',
       headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
-      body:JSON.stringify({email,approved:false})
+      body:JSON.stringify({email:email.toLowerCase(),approved:false})
     });
     closeModal('registerModal');
     alert('✅ Реєстрація успішна!\n\nОчікуй підтвердження адміністратора.\nПісля підтвердження зможеш редагувати.');
@@ -520,8 +603,8 @@ async function doRegister(){
 async function checkApproval(){
   if(!currentUser){userApproved=false;return;}
   try{
-    const res=await fetch(`${SUPA_URL}/rest/v1/allowed_users?email=eq.${encodeURIComponent(currentUser.email)}&select=approved`,{
-      headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+accessToken}
+    const res=await fetch(`${SUPA_URL}/rest/v1/allowed_users?email=eq.${encodeURIComponent(currentUser.email.toLowerCase())}&select=approved`,{
+      headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+(accessToken||SUPA_KEY)}
     });
     const data=await res.json();
     userApproved=Array.isArray(data)&&data[0]?.approved===true;
@@ -558,7 +641,6 @@ function updateAuthUI(){
     area.innerHTML=`<button class="auth-btn primary" onclick="openModal('loginModal')">Увійти</button>
       <button class="auth-btn" onclick="openModal('registerModal')">Реєстрація</button>`;
   }
-  // Tournament
   const lbArea=document.getElementById('lbActionArea');
   const pending=document.getElementById('pendingBanner');
   const hint=document.getElementById('tableHint');
@@ -581,14 +663,13 @@ function updateAuthUI(){
       if(delCol)delCol.style.display='';
     }
   }
-  // Records
   const recArea=document.getElementById('recActionArea');
   const recHint=document.getElementById('recHint');
   if(recArea){
     if(currentUser&&userApproved){
       recArea.innerHTML='';
       if(recHint)recHint.textContent='Клікни на рекорд щоб оновити результат.';
-    }else if(currentUser&&!userApproved){
+    }else if(currentUser){
       recArea.innerHTML='';
       if(recHint)recHint.textContent='Очікуй підтвердження адміністратора для редагування.';
     }else{
@@ -598,9 +679,8 @@ function updateAuthUI(){
   }
 }
 
-/* ── NAVIGATION ── */
-const PAGE_MAP={'':'homePage','home':'homePage','lottery':'lotteryPage','tournaments':'tournamentsListPage','flex':'tournamentFlexPage','records':'recordsPage'};
-const HASH_MAP={'homePage':'home','lotteryPage':'lottery','tournamentsListPage':'tournaments','tournamentFlexPage':'flex','recordsPage':'records'};
+const PAGE_MAP={'':'homePage','home':'homePage','lottery':'lotteryPage','tournaments':'tournamentsListPage','flex':'tournamentFlexPage','records':'recordsPage','resources':'resourcesPage'};
+const HASH_MAP={'homePage':'home','lotteryPage':'lottery','tournamentsListPage':'tournaments','tournamentFlexPage':'flex','recordsPage':'records','resourcesPage':'resources'};
 
 function showPage(id){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
@@ -613,6 +693,7 @@ function openLottery(){showPage('lotteryPage');setTimeout(()=>{setCanvasSize();d
 function openTournamentsList(){showPage('tournamentsListPage');}
 function openTournamentFlex(){showPage('tournamentFlexPage');updateAuthUI();loadPlayers();}
 function openRecords(){showPage('recordsPage');updateAuthUI();loadRecords();}
+function openResources(){showPage('resourcesPage');}
 
 function restorePage(){
   const hash=window.location.hash.replace('#','');
@@ -624,7 +705,6 @@ function restorePage(){
   if(pageId==='recordsPage'){updateAuthUI();loadRecords();}
 }
 
-/* ── WHEEL ── */
 let lp=[],wAngle=0,wSpin=false;
 const cv=document.getElementById('wheelCanvas'),cx=cv.getContext('2d');
 let cW=cv.width,cH=cv.height,cX=cW/2,cY=cH/2,cR=cW/2-8;
@@ -705,7 +785,6 @@ function loadLottery(){
   }catch(e){}
 }
 
-/* ── TOURNAMENT ── */
 let td=[],xpIdx=null,pollingStarted=false;
 function setSyncStatus(state,text){
   const dot=document.getElementById('syncDot'),txt=document.getElementById('syncText');
@@ -714,9 +793,7 @@ function setSyncStatus(state,text){
 async function loadPlayers(){
   setSyncStatus('loading','Завантаження...');
   try{
-    const res=await fetch(`${SUPA_URL}/rest/v1/tournament_players?select=*&order=created_at.asc`,{
-      headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY}
-    });
+    const res=await fetch(`${SUPA_URL}/rest/v1/tournament_players?select=*&order=created_at.asc`,{headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY}});
     td=await res.json();renderTable();setSyncStatus('ok','Синхронізовано');
     if(!pollingStarted){pollingStarted=true;startPolling();}
   }catch(e){setSyncStatus('err','Помилка з\'єднання');}
@@ -743,19 +820,10 @@ function renderTable(){
   const fields=['xp_bb','xp_ca','xp_dd','xp_cv'];
   tb.innerHTML=ws.map((p,r)=>{
     const rc=r===0?'rank-1':r===1?'rank-2':r===2?'rank-3':'rank-n';
-    const nameCell=canEdit
-      ?`<td class="name-cell editable" onclick="editNick(${p.id})">✏️ ${esc(p.nick)}</td>`
-      :`<td class="name-cell">${esc(p.nick)}</td>`;
+    const nameCell=canEdit?`<td class="name-cell editable" onclick="editNick(${p.id})">✏️ ${esc(p.nick)}</td>`:`<td class="name-cell">${esc(p.nick)}</td>`;
     const xc=fields.map(f=>{
-      if(canEdit){
-        return p[f]&&p[f]>0
-          ?`<td><span class="xp-val editable" onclick="openXp(${p.id})">${p[f].toLocaleString()}<br><small style="font-size:.6rem;color:var(--muted)">${Math.floor(p[f]/1000)}б</small></span></td>`
-          :`<td><span class="xp-empty editable" onclick="openXp(${p.id})">+ XP</span></td>`;
-      }else{
-        return p[f]&&p[f]>0
-          ?`<td><span class="xp-val">${p[f].toLocaleString()}<br><small style="font-size:.6rem;color:var(--muted)">${Math.floor(p[f]/1000)}б</small></span></td>`
-          :`<td><span class="xp-empty">—</span></td>`;
-      }
+      if(canEdit)return p[f]&&p[f]>0?`<td><span class="xp-val editable" onclick="openXp(${p.id})">${p[f].toLocaleString()}<br><small style="font-size:.6rem;color:var(--muted)">${Math.floor(p[f]/1000)}б</small></span></td>`:`<td><span class="xp-empty editable" onclick="openXp(${p.id})">+ XP</span></td>`;
+      return p[f]&&p[f]>0?`<td><span class="xp-val">${p[f].toLocaleString()}<br><small style="font-size:.6rem;color:var(--muted)">${Math.floor(p[f]/1000)}б</small></span></td>`:`<td><span class="xp-empty">—</span></td>`;
     }).join('');
     const delCell=canEdit?`<td><button class="delete-btn" onclick="delP(${p.id})">🗑</button></td>`:'';
     return`<tr><td><span class="rank-badge ${rc}">${r+1}</span></td>${nameCell}${xc}<td><span class="score-total ${p.sc===0?'zero':''}">${p.sc}</span></td>${delCell}</tr>`;
@@ -783,8 +851,7 @@ async function editNick(id){
 }
 function openAddPlayerModal(){
   if(!userApproved){openModal('loginModal');return;}
-  openModal('addPlayerModal');
-  setTimeout(()=>document.getElementById('newPlayerNick').focus(),50);
+  openModal('addPlayerModal');setTimeout(()=>document.getElementById('newPlayerNick').focus(),50);
 }
 async function confirmAddPlayer(){
   const n=document.getElementById('newPlayerNick').value.trim();
@@ -830,46 +897,36 @@ async function confirmEditXp(){
   }
 }
 
-/* ── RECORDS ── */
 let recData={},editingCat=null,recPollingStarted=false;
-
 function setRecSyncStatus(state,text){
   const dot=document.getElementById('recSyncDot'),txt=document.getElementById('recSyncText');
   if(!dot||!txt)return;dot.className='sync-dot '+state;txt.textContent=text;
 }
-
 async function loadRecords(){
   setRecSyncStatus('loading','Завантаження...');
   try{
-    const res=await fetch(`${SUPA_URL}/rest/v1/clan_records?select=*`,{
-      headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY}
-    });
+    const res=await fetch(`${SUPA_URL}/rest/v1/clan_records?select=*`,{headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY}});
     const data=await res.json();
-    recData={};
-    data.forEach(r=>{recData[r.category]=r;});
+    recData={};data.forEach(r=>{recData[r.category]=r;});
     renderRecords();setRecSyncStatus('ok','Синхронізовано');
     if(!recPollingStarted){recPollingStarted=true;startRecPolling();}
   }catch(e){setRecSyncStatus('err','Помилка з\'єднання');}
 }
-
 function startRecPolling(){
   setInterval(async()=>{
     if(!document.getElementById('recordsPage').classList.contains('active'))return;
     try{
       const res=await fetch(`${SUPA_URL}/rest/v1/clan_records?select=*`,{headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY}});
       const data=await res.json();
-      const newData={};data.forEach(r=>{newData[r.category]=r;});
-      if(JSON.stringify(newData)!==JSON.stringify(recData)){recData=newData;renderRecords();setRecSyncStatus('ok','Оновлено');}
+      const nd={};data.forEach(r=>{nd[r.category]=r;});
+      if(JSON.stringify(nd)!==JSON.stringify(recData)){recData=nd;renderRecords();setRecSyncStatus('ok','Оновлено');}
     }catch(e){}
   },5000);
 }
-
 function formatResult(cat,val){
-  if(cat==='damage')return val.toLocaleString();
-  if(cat==='xp')return val.toLocaleString();
+  if(cat==='damage'||cat==='xp')return val.toLocaleString();
   return val;
 }
-
 function renderRecords(){
   const grid=document.getElementById('recordsGrid');
   const canEdit=currentUser&&userApproved;
@@ -883,17 +940,13 @@ function renderRecords(){
            <div class="record-ship">🚢 ${esc(rec.ship)}</div>
            <div class="record-date">📅 ${rec.date}</div>
          </div>`
-      :`<div class="record-empty">${canEdit?'Рекорд ще не встановлено. Натисни «змінити»':'Рекорд ще не встановлено'}</div>`;
+      :`<div class="record-empty">${canEdit?'Натисни «змінити» щоб встановити рекорд':'Рекорд ще не встановлено'}</div>`;
     return`<div class="record-card">
-      <div class="record-card-header">
-        <div class="record-category">${cat.icon} ${cat.label}</div>
-        ${editBtn}
-      </div>
+      <div class="record-card-header"><div class="record-category">${cat.icon} ${cat.label}</div>${editBtn}</div>
       <div class="record-card-body">${body}</div>
     </div>`;
   }).join('');
 }
-
 function openEditRecord(catKey){
   if(!userApproved)return;
   editingCat=catKey;
@@ -906,10 +959,8 @@ function openEditRecord(catKey){
   document.getElementById('recResult').value=rec?.result||'';
   document.getElementById('recDate').value=rec?.date||new Date().toISOString().split('T')[0];
   document.getElementById('recError').textContent='';
-  openModal('editRecordModal');
-  setTimeout(()=>document.getElementById('recPlayer').focus(),50);
+  openModal('editRecordModal');setTimeout(()=>document.getElementById('recPlayer').focus(),50);
 }
-
 async function confirmEditRecord(){
   const player=document.getElementById('recPlayer').value.trim();
   const ship=document.getElementById('recShip').value.trim();
@@ -937,13 +988,11 @@ async function confirmEditRecord(){
   }
 }
 
-/* ── UTILS ── */
 function openModal(id){document.getElementById(id).classList.add('active');}
 function closeModal(id){document.getElementById(id).classList.remove('active');}
 function switchModal(from,to){closeModal(from);openModal(to);}
 function esc(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 
-/* ── INIT ── */
 window.addEventListener('load',async()=>{
   await tryRestoreSession();
   restorePage();
