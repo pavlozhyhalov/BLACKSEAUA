@@ -35,7 +35,7 @@ gtag('config', 'G-V2SVEPJSH0');
       </div>
       <div class="header-auth" id="headerAuth">
         <button class="auth-btn primary" onclick="openModal('loginModal')" data-i18n="login">Увійти</button>
-        <button class="auth-btn" onclick="openModal('registerModal')" data-i18n="register">Реєстрація</button>
+        <button class="auth-btn" onclick="openModal('registerModal')" data-i18n="register_short">Реєстр.</button>
       </div>
     </div>
   </div>
@@ -47,7 +47,7 @@ gtag('config', 'G-V2SVEPJSH0');
   <div class="shell">
     <div class="hero">
       <div class="hero-glow"></div>
-      <div class="hero-eyebrow">World of Warships Legends · Clan Hub · UA</div>
+      <div class="hero-eyebrow">World of Warships Legends · Clan Hub</div>
       <div class="hero-title" data-i18n="hero_title">Командний<br>Міст Клану</div>
 
       <div class="instruments">
@@ -56,7 +56,7 @@ gtag('config', 'G-V2SVEPJSH0');
             <span data-i18n="active_event">Актуальна подія</span>
             <span class="ins-live">LIVE</span>
           </div>
-          <div class="ins-val">Гнучкість</div>
+          <div class="ins-val" data-i18n="challenge">Гнучкість</div>
           <div class="ins-sub" data-i18n="stage_days_label">Етап 1 · Дні 1–3</div>
           <div class="ins-countdown" id="heroCountdown">
             <div class="seg"><b>—</b><i data-i18n="days_short">дн</i></div>
@@ -77,32 +77,28 @@ gtag('config', 'G-V2SVEPJSH0');
     </div>
 
     <div class="section">
-      <div class="section-head">
-        <span class="section-title" data-i18n="sections">Розділи</span>
-        <span class="section-meta">Clan · BlackSeaUA</span>
-      </div>
       <div class="cards">
-        <div class="card" onclick="openTournamentsList()">
+        <div class="card" ontouchstart="" onclick="openTournamentsList()">
           <span class="card-num">01</span>
           <div class="card-title" data-i18n="nav_tournaments">Турніри</div>
           <div class="card-desc" data-i18n="nav_tournaments_desc">Поточні та архівні змагання клану.</div>
         </div>
-        <div class="card" onclick="openRecords()">
+        <div class="card" ontouchstart="" onclick="openRecords()">
           <span class="card-num">02</span>
           <div class="card-title" data-i18n="nav_records">Рекорди</div>
           <div class="card-desc" data-i18n="nav_records_desc">Кращі результати гравців клану за всі часи.</div>
         </div>
-        <div class="card" onclick="openLottery()">
+        <div class="card" ontouchstart="" onclick="openLottery()">
           <span class="card-num">03</span>
           <div class="card-title" data-i18n="nav_lottery">Розіграш</div>
           <div class="card-desc" data-i18n="nav_lottery_desc">Колесо удачі для учасників клану.</div>
         </div>
-        <div class="card" onclick="openVoting()">
+        <div class="card" ontouchstart="" onclick="openVoting()">
           <span class="card-num">04</span>
           <div class="card-title" data-i18n="nav_voting">Голосування</div>
           <div class="card-desc" data-i18n="nav_voting_desc">Актуальні питання для голосування.</div>
         </div>
-        <div class="card" onclick="openResources()">
+        <div class="card" ontouchstart="" onclick="openResources()">
           <span class="card-num">05</span>
           <div class="card-title" data-i18n="nav_useful">Корисне</div>
           <div class="card-desc" data-i18n="nav_useful_desc">Офіційні ресурси, інструменти і посилання.</div>
@@ -124,7 +120,7 @@ gtag('config', 'G-V2SVEPJSH0');
     <div class="cards" style="max-width:420px">
       <div class="card" onclick="openTournamentFlex()">
         <span class="card-num">01 · <span data-i18n="active">Активне</span></span>
-        <div class="card-title">Гнучкість</div>
+        <div class="card-title" data-i18n="challenge">Гнучкість</div>
         <div class="card-desc" data-i18n="flex_desc">4 класи, 12 днів, призовий фонд до 10 000 дублонів</div>
       </div>
     </div>
@@ -407,7 +403,7 @@ gtag('config', 'G-V2SVEPJSH0');
 /* ── i18n ── */
 const TRANSLATIONS = {
   uk: {
-    login:'Увійти', register:'Реєстрація', logout:'Вийти',
+    login:'Увійти', register:'Реєстрація', register_short:'Реєстр.', logout:'Вийти',
     login_sub:'Введи пошту і пароль',
     register_sub:'Після реєстрації адміністратор підтвердить твій доступ до редагування.',
     password:'Пароль', password_min:'Пароль (мінімум 6 символів)',
@@ -484,7 +480,7 @@ const TRANSLATIONS = {
     reg_success:'Реєстрація успішна!\n\nОчікуй підтвердження адміністратора.\nПісля підтвердження зможеш редагувати.',
   },
   ru: {
-    login:'Войти', register:'Регистрация', logout:'Выйти',
+    login:'Войти', register:'Регистрация', register_short:'Регистр.', logout:'Выйти',
     login_sub:'Введи почту и пароль',
     register_sub:'После регистрации администратор подтвердит твой доступ к редактированию.',
     password:'Пароль', password_min:'Пароль (минимум 6 символов)',
@@ -561,7 +557,7 @@ const TRANSLATIONS = {
     reg_success:'Регистрация успешна!\n\nОжидай подтверждения администратора.\nПосле подтверждения сможешь редактировать.',
   },
   en: {
-    login:'Sign In', register:'Register', logout:'Sign Out',
+    login:'Sign In', register:'Register', register_short:'Register', logout:'Sign Out',
     login_sub:'Enter your email and password',
     register_sub:'After registration, an admin will confirm your editing access.',
     password:'Password', password_min:'Password (min 6 characters)',
@@ -677,10 +673,10 @@ const SUPA_URL='https://otwcegfsmxmhiegukkyl.supabase.co';
 const SUPA_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im90d2NlZ2ZzbXhtaGllZ3Vra3lsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg2NTMwOTUsImV4cCI6MjA5NDIyOTA5NX0.FU45yk9GKVjEkuH-pWp5kB8fA_nVy2wpYQc48baxeL0';
 
 const STAGES=[
-  {num:1,label:'Етап 1 · Дні 1–3',end:new Date('2026-05-15T23:59:59')},
-  {num:2,label:'Етап 2 · Дні 4–6',end:new Date('2026-05-18T23:59:59')},
-  {num:3,label:'Етап 3 · Дні 7–9',end:new Date('2026-05-21T23:59:59')},
-  {num:4,label:'Етап 4 · Дні 10–12',end:new Date('2026-05-24T23:59:59')},
+  {num:1,label:'Етап 1 · Дні 1–3',end:new Date('2026-05-16T23:59:59')},
+  {num:2,label:'Етап 2 · Дні 4–6',end:new Date('2026-05-19T23:59:59')},
+  {num:3,label:'Етап 3 · Дні 7–9',end:new Date('2026-05-22T23:59:59')},
+  {num:4,label:'Етап 4 · Дні 10–12',end:new Date('2026-05-25T23:59:59')},
 ];
 
 function getCurrentStage(){const now=new Date();return STAGES.find(s=>now<s.end)||null;}
@@ -722,7 +718,7 @@ function updateTimer(){
 }
 
 const RECORD_CATS=[
-  {key:'fires',   label:'Пожари',        unit:'шт'},
+  {key:'fires',   label:'Пожежі',        unit:'шт'},
   {key:'citadels',label:'Цитаделі',      unit:'шт'},
   {key:'floods',  label:'Затоплення',    unit:'шт'},
   {key:'damage',  label:'Дамаг',         unit:''},
