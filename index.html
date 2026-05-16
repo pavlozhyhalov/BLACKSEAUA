@@ -1,5 +1,5 @@
-<!DOCTYPE html>
 
+<!DOCTYPE html>
 <html lang="uk">
 <head>
 <!-- Google tag (gtag.js) -->
@@ -27,9 +27,16 @@ gtag('config', 'G-V2SVEPJSH0');
         <div class="game-title">World of Warships Legends</div>
       </div>
     </div>
-    <div class="header-auth" id="headerAuth">
-      <button class="auth-btn primary" onclick="openModal('loginModal')">Увійти</button>
-      <button class="auth-btn" onclick="openModal('registerModal')">Реєстрація</button>
+    <div class="header-right">
+      <div class="lang-switcher">
+        <button class="lang-btn active" onclick="setLang('uk')">UA</button>
+        <button class="lang-btn" onclick="setLang('ru')">RU</button>
+        <button class="lang-btn" onclick="setLang('en')">EN</button>
+      </div>
+      <div class="header-auth" id="headerAuth">
+        <button class="auth-btn primary" onclick="openModal('loginModal')" data-i18n="login">Увійти</button>
+        <button class="auth-btn" onclick="openModal('registerModal')" data-i18n="register">Реєстрація</button>
+      </div>
     </div>
   </div>
 </header>
@@ -41,88 +48,67 @@ gtag('config', 'G-V2SVEPJSH0');
     <div class="hero">
       <div class="hero-glow"></div>
       <div class="hero-eyebrow">World of Warships Legends · Clan Hub · UA</div>
-      <div class="hero-title">Командний<br>Міст Клану</div>
-      <p class="hero-desc">Український екіпаж у World of Warships Legends. Спільні бої, відкриті турніри, призовий фонд — для тих, хто грає серйозно.</p>
-      <div class="hero-cta">
-        <button class="btn-cta" onclick="openTournamentFlex()">Поточний турнір</button>
-        <button class="btn-cta ghost" onclick="openLottery()">Розіграш</button>
-      </div>
+      <div class="hero-title" data-i18n="hero_title">Командний<br>Міст Клану</div>
+
       <div class="instruments">
-        <div class="instrument" onclick="openTournamentFlex()">
-          <div class="ins-label"><span>01 · Активний турнір</span><span class="ins-live">LIVE</span></div>
-          <div class="ins-val">Гнучкість</div>
-          <div class="ins-sub">Етап 1 · Дні 1–3</div>
-          <div class="ins-countdown" id="heroCountdown">
-            <div class="seg"><b>—</b><i>дн</i></div>
-            <div class="seg"><b>—</b><i>год</i></div>
-            <div class="seg"><b>—</b><i>хв</i></div>
-            <div class="seg"><b>—</b><i>сек</i></div>
+        <div class="instrument event-block" onclick="openTournamentFlex()">
+          <div class="ins-label">
+            <span data-i18n="active_event">Актуальна подія</span>
+            <span class="ins-live">LIVE</span>
           </div>
-        </div>
-        <div class="instrument" onclick="openTournamentFlex()">
-          <div class="ins-label"><span>02 · Лідери</span></div>
+          <div class="ins-val">Гнучкість</div>
+          <div class="ins-sub" data-i18n="stage_days_label">Етап 1 · Дні 1–3</div>
+          <div class="ins-countdown" id="heroCountdown">
+            <div class="seg"><b>—</b><i data-i18n="days_short">дн</i></div>
+            <div class="seg"><b>—</b><i data-i18n="hours_short">год</i></div>
+            <div class="seg"><b>—</b><i data-i18n="mins_short">хв</i></div>
+            <div class="seg"><b>—</b><i data-i18n="secs_short">сек</i></div>
+          </div>
+          <div class="ins-divider"></div>
+          <div class="ins-leaders-label" data-i18n="leaders">Лідери</div>
           <div class="ins-row" id="heroLeaders">
             <div class="ins-player"><span class="rk g">1</span><span class="nm">—</span><span class="sc">—</span></div>
             <div class="ins-player"><span class="rk">2</span><span class="nm">—</span><span class="sc">—</span></div>
             <div class="ins-player"><span class="rk">3</span><span class="nm">—</span><span class="sc">—</span></div>
           </div>
-          <div class="ins-link" style="margin-top:12px">Дивитись таблицю →</div>
-        </div>
-        <div class="instrument" onclick="openRecords()">
-          <div class="ins-label"><span>03 · Останній рекорд</span></div>
-          <div class="ins-val" id="heroRecVal">—</div>
-          <div class="ins-sub" id="heroRecCat">—</div>
-          <div style="margin-top:8px;font-size:13px;color:var(--cream);font-weight:500" id="heroRecPlayer">—</div>
-          <div class="ins-link" style="margin-top:8px">Всі рекорди →</div>
+          <div class="ins-link" style="margin-top:12px" data-i18n="view_table">Дивитись таблицю →</div>
         </div>
       </div>
     </div>
 
-```
-<div class="section">
-  <div class="section-head">
-    <span class="section-title">Розділи</span>
-    <span class="section-meta">Clan · 2024</span>
-  </div>
-  <div class="cards">
-    <div class="card feature" onclick="openTournamentFlex()">
-      <span class="card-num">01 · Активне</span>
-      <span class="card-arrow">↗</span>
-      <div style="flex:1"></div>
-      <div class="card-title">Челендж Гнучкість</div>
-      <div class="card-desc">12 днів. 4 класи кораблів. Призовий фонд до 10 000 дублонів. Бали = XP ÷ 1000.</div>
+    <div class="section">
+      <div class="section-head">
+        <span class="section-title" data-i18n="sections">Розділи</span>
+        <span class="section-meta">Clan · BlackSeaUA</span>
+      </div>
+      <div class="cards">
+        <div class="card" onclick="openTournamentsList()">
+          <span class="card-num">01</span>
+          <div class="card-title" data-i18n="nav_tournaments">Турніри</div>
+          <div class="card-desc" data-i18n="nav_tournaments_desc">Поточні та архівні змагання клану.</div>
+        </div>
+        <div class="card" onclick="openRecords()">
+          <span class="card-num">02</span>
+          <div class="card-title" data-i18n="nav_records">Рекорди</div>
+          <div class="card-desc" data-i18n="nav_records_desc">Кращі результати гравців клану за всі часи.</div>
+        </div>
+        <div class="card" onclick="openLottery()">
+          <span class="card-num">03</span>
+          <div class="card-title" data-i18n="nav_lottery">Розіграш</div>
+          <div class="card-desc" data-i18n="nav_lottery_desc">Колесо удачі для учасників клану.</div>
+        </div>
+        <div class="card" onclick="openVoting()">
+          <span class="card-num">04</span>
+          <div class="card-title" data-i18n="nav_voting">Голосування</div>
+          <div class="card-desc" data-i18n="nav_voting_desc">Актуальні питання для голосування.</div>
+        </div>
+        <div class="card" onclick="openResources()">
+          <span class="card-num">05</span>
+          <div class="card-title" data-i18n="nav_useful">Корисне</div>
+          <div class="card-desc" data-i18n="nav_useful_desc">Офіційні ресурси, інструменти і посилання.</div>
+        </div>
+      </div>
     </div>
-    <div class="card" onclick="openLottery()">
-      <span class="card-num">02</span>
-      <span class="card-arrow">↗</span>
-      <div style="flex:1"></div>
-      <div class="card-title">Розіграш</div>
-      <div class="card-desc">Колесо удачі для учасників клану.</div>
-    </div>
-    <div class="card" onclick="openRecords()">
-      <span class="card-num">03</span>
-      <span class="card-arrow">↗</span>
-      <div style="flex:1"></div>
-      <div class="card-title">Рекорди</div>
-      <div class="card-desc">Кращі результати гравців клану за всі часи.</div>
-    </div>
-    <div class="card" onclick="openTournamentsList()">
-      <span class="card-num">04</span>
-      <span class="card-arrow">↗</span>
-      <div style="flex:1"></div>
-      <div class="card-title">Турніри</div>
-      <div class="card-desc">Поточні та архівні змагання клану.</div>
-    </div>
-    <div class="card" onclick="openResources()">
-      <span class="card-num">05</span>
-      <span class="card-arrow">↗</span>
-      <div style="flex:1"></div>
-      <div class="card-title">Корисне</div>
-      <div class="card-desc">Офіційні ресурси, інструменти і посилання.</div>
-    </div>
-  </div>
-</div>
-```
 
   </div>
 </div>
@@ -132,16 +118,14 @@ gtag('config', 'G-V2SVEPJSH0');
 <div id="tournamentsListPage" class="page">
   <div class="shell">
     <div class="page-head">
-      <div class="page-breadcrumb"><a onclick="backToHome()">Головна</a><span class="sep">/</span>Турніри</div>
-      <div class="page-title">Турніри</div>
+      <div class="page-breadcrumb"><a onclick="backToHome()" data-i18n="home">Головна</a><span class="sep">/</span><span data-i18n="nav_tournaments">Турніри</span></div>
+      <div class="page-title" data-i18n="nav_tournaments">Турніри</div>
     </div>
     <div class="cards" style="max-width:420px">
       <div class="card" onclick="openTournamentFlex()">
-        <span class="card-num">01 · Активне</span>
-        <span class="card-arrow">↗</span>
-        <div style="flex:1"></div>
+        <span class="card-num">01 · <span data-i18n="active">Активне</span></span>
         <div class="card-title">Гнучкість</div>
-        <div class="card-desc">4 класи, 12 днів, призовий фонд до 10 000 дублонів</div>
+        <div class="card-desc" data-i18n="flex_desc">4 класи, 12 днів, призовий фонд до 10 000 дублонів</div>
       </div>
     </div>
   </div>
@@ -152,86 +136,83 @@ gtag('config', 'G-V2SVEPJSH0');
 <div id="tournamentFlexPage" class="page">
   <div class="shell">
     <div class="page-head">
-      <div class="page-breadcrumb"><a onclick="backToHome()">Головна</a><span class="sep">/</span><a onclick="openTournamentsList()">Турніри</a><span class="sep">/</span>Гнучкість</div>
-      <div class="page-title">Челендж «Гнучкість»</div>
-      <p class="page-lede">4 класи кораблів · 4 етапи · 12 днів · Призовий фонд 10 000 дублонів</p>
+      <div class="page-breadcrumb"><a onclick="backToHome()" data-i18n="home">Головна</a><span class="sep">/</span><a onclick="openTournamentsList()" data-i18n="nav_tournaments">Турніри</a><span class="sep">/</span><span data-i18n="challenge">Гнучкість</span></div>
+      <div class="page-title" data-i18n="challenge_title">Челендж «Гнучкість»</div>
+      <p class="page-lede" data-i18n="challenge_lede">4 класи кораблів · 4 етапи · 12 днів · Призовий фонд 10 000 дублонів</p>
     </div>
 
-```
-<div class="rules-box">
-  <div class="rules-box-title">Правила</div>
-  <div class="rules-grid">
-    <div class="rule-item">4 класи: ЛК, КР, ЕМ, АВ</div>
-    <div class="rule-item">12 днів / 4 етапи по 3 дні</div>
-    <div class="rule-item">XP ÷ 1000 (округл. вниз) = бали</div>
-    <div class="rule-item">Класи не повторюються</div>
-    <div class="rule-item">Тільки Рандом, рівень V+</div>
-    <div class="rule-item">Не здав вчасно = 0 балів</div>
-    <div class="rule-item">Скріншот «Командний результат»</div>
-    <div class="rule-item">Виграє найвища сума балів</div>
-  </div>
-</div>
+    <div class="rules-box">
+      <div class="rules-box-title" data-i18n="rules">Правила</div>
+      <div class="rules-list">
+        <div class="rule-item">4 <span data-i18n="rule_classes">класи: ЛК, КР, ЕМ, АВ</span></div>
+        <div class="rule-item">12 <span data-i18n="rule_days">днів / 4 етапи по 3 дні</span></div>
+        <div class="rule-item" data-i18n="rule_xp">XP ÷ 1000 (округл. вниз) = бали</div>
+        <div class="rule-item" data-i18n="rule_no_repeat">Класи не повторюються</div>
+        <div class="rule-item" data-i18n="rule_random">Тільки Рандом, рівень V+</div>
+        <div class="rule-item" data-i18n="rule_late">Не здав вчасно = 0 балів</div>
+        <div class="rule-item" data-i18n="rule_screenshot">Скріншот «Командний результат»</div>
+        <div class="rule-item" data-i18n="rule_win">Виграє найвища сума балів, при рівності — більший сумарний XP</div>
+      </div>
+    </div>
 
-<div class="stages-row" id="stagesRow">
-  <div class="stage-card" id="stage1"><b>Етап 01</b><div class="st-name">Лінкори</div><small>Дні 1–3</small></div>
-  <div class="stage-card" id="stage2"><b>Етап 02</b><div class="st-name">Крейсери</div><small>Дні 4–6</small></div>
-  <div class="stage-card" id="stage3"><b>Етап 03</b><div class="st-name">Есмінці</div><small>Дні 7–9</small></div>
-  <div class="stage-card" id="stage4"><b>Етап 04</b><div class="st-name">Авіаносці</div><small>Дні 10–12</small></div>
-</div>
+    <div class="stages-row" id="stagesRow">
+      <div class="stage-card" id="stage1"><b data-i18n="stage_n" data-n="1">Етап 1</b><small>Дні 1–3</small></div>
+      <div class="stage-card" id="stage2"><b data-i18n="stage_n" data-n="2">Етап 2</b><small>Дні 4–6</small></div>
+      <div class="stage-card" id="stage3"><b data-i18n="stage_n" data-n="3">Етап 3</b><small>Дні 7–9</small></div>
+      <div class="stage-card" id="stage4"><b data-i18n="stage_n" data-n="4">Етап 4</b><small>Дні 10–12</small></div>
+    </div>
 
-<div class="timer-slim" id="timerSlim">
-  <div class="timer-slim-left">
-    <div class="timer-slim-label">До кінця етапу</div>
-    <div class="timer-slim-stage" id="timerStageLabel">—</div>
-  </div>
-  <div class="timer-slim-digits" id="timerDigits">—</div>
-</div>
+    <div class="timer-slim" id="timerSlim">
+      <div class="timer-slim-left">
+        <div class="timer-slim-label" data-i18n="until_end">До кінця етапу</div>
+        <div class="timer-slim-stage" id="timerStageLabel">—</div>
+      </div>
+      <div class="timer-slim-digits" id="timerDigits">—</div>
+    </div>
 
-<div class="prizes-row">
-  <div class="prize-card">
-    <div class="prize-place">1 Місце</div>
-    <div class="prize-amount gold">10 000</div>
-    <div class="prize-unit">Дублонів</div>
-  </div>
-  <div class="prize-card">
-    <div class="prize-place">2 Місце</div>
-    <div class="prize-amount">5 000</div>
-    <div class="prize-unit">Дублонів</div>
-  </div>
-  <div class="prize-card">
-    <div class="prize-place">3 Місце</div>
-    <div class="prize-amount">2 500</div>
-    <div class="prize-unit">Дублонів</div>
-  </div>
-</div>
+    <div class="prizes-row">
+      <div class="prize-card">
+        <div class="prize-place" data-i18n="place_1">1 Місце</div>
+        <div class="prize-amount gold">10 000</div>
+        <div class="prize-unit" data-i18n="doubloons">Дублонів</div>
+      </div>
+      <div class="prize-card">
+        <div class="prize-place" data-i18n="place_2">2 Місце</div>
+        <div class="prize-amount">5 000</div>
+        <div class="prize-unit" data-i18n="doubloons">Дублонів</div>
+      </div>
+      <div class="prize-card">
+        <div class="prize-place" data-i18n="place_3">3 Місце</div>
+        <div class="prize-amount">2 500</div>
+        <div class="prize-unit" data-i18n="doubloons">Дублонів</div>
+      </div>
+    </div>
 
-<div id="pendingBanner" class="pending-banner" style="display:none">Твій акаунт очікує підтвердження адміністратора.</div>
+    <div id="pendingBanner" class="pending-banner" style="display:none" data-i18n="pending_msg">Твій акаунт очікує підтвердження адміністратора.</div>
 
-<div class="lb-control">
-  <span class="lb-label">Таблиця результатів</span>
-  <div class="lb-actions">
-    <div class="sync-status"><div class="sync-dot loading" id="syncDot"></div><span id="syncText">Підключення...</span></div>
-    <div id="lbActionArea"></div>
-  </div>
-</div>
+    <div class="lb-control">
+      <span class="lb-label" data-i18n="results_table">Таблиця результатів</span>
+      <div class="lb-actions">
+        <div class="sync-status"><div class="sync-dot loading" id="syncDot"></div><span id="syncText" data-i18n="connecting">Підключення...</span></div>
+        <div id="lbActionArea"></div>
+      </div>
+    </div>
 
-<div class="table-wrapper">
-  <table class="lb">
-    <thead>
-      <tr>
-        <th style="width:44px">#</th>
-        <th style="text-align:left">Гравець</th>
-        <th>ЛК</th><th>КР</th><th>ЕМ</th><th>АВ</th>
-        <th>Сума</th>
-        <th id="deleteColHeader" style="width:44px;display:none"></th>
-      </tr>
-    </thead>
-    <tbody id="tournamentTbody"></tbody>
-  </table>
-</div>
-<p class="hint" id="tableHint" style="margin-bottom:56px">Таблиця публічна. Для редагування потрібно увійти.</p>
-```
-
+    <div class="table-wrapper">
+      <table class="lb">
+        <thead>
+          <tr>
+            <th style="width:44px">#</th>
+            <th style="text-align:left" data-i18n="player">Гравець</th>
+            <th>ЛК</th><th>КР</th><th>ЕМ</th><th>АВ</th>
+            <th data-i18n="total">Сума</th>
+            <th id="deleteColHeader" style="width:44px;display:none"></th>
+          </tr>
+        </thead>
+        <tbody id="tournamentTbody"></tbody>
+      </table>
+    </div>
+    <p class="hint" id="tableHint" style="margin-bottom:56px" data-i18n="table_hint_public">Таблиця публічна. Для редагування потрібно увійти.</p>
   </div>
 </div>
 
@@ -240,14 +221,14 @@ gtag('config', 'G-V2SVEPJSH0');
 <div id="recordsPage" class="page">
   <div class="shell">
     <div class="page-head">
-      <div class="page-breadcrumb"><a onclick="backToHome()">Головна</a><span class="sep">/</span>Рекорди</div>
-      <div class="page-title">Рекорди Клану</div>
-      <p class="page-lede">Кращі результати учасників за всі часи.</p>
+      <div class="page-breadcrumb"><a onclick="backToHome()" data-i18n="home">Головна</a><span class="sep">/</span><span data-i18n="nav_records">Рекорди</span></div>
+      <div class="page-title" data-i18n="records_title">Рекорди Клану</div>
+      <p class="page-lede" data-i18n="records_lede">Кращі результати учасників за всі часи.</p>
     </div>
     <div class="lb-control" style="margin-bottom:18px">
-      <span class="lb-label">Всі категорії</span>
+      <span class="lb-label" data-i18n="all_categories">Всі категорії</span>
       <div class="lb-actions">
-        <div class="sync-status"><div class="sync-dot loading" id="recSyncDot"></div><span id="recSyncText">Завантаження...</span></div>
+        <div class="sync-status"><div class="sync-dot loading" id="recSyncDot"></div><span id="recSyncText" data-i18n="loading">Завантаження...</span></div>
         <div id="recActionArea"></div>
       </div>
     </div>
@@ -261,21 +242,21 @@ gtag('config', 'G-V2SVEPJSH0');
 <div id="resourcesPage" class="page">
   <div class="shell">
     <div class="page-head">
-      <div class="page-breadcrumb"><a onclick="backToHome()">Головна</a><span class="sep">/</span>Корисне</div>
-      <div class="page-title">Корисне</div>
+      <div class="page-breadcrumb"><a onclick="backToHome()" data-i18n="home">Головна</a><span class="sep">/</span><span data-i18n="nav_useful">Корисне</span></div>
+      <div class="page-title" data-i18n="nav_useful">Корисне</div>
     </div>
-    <div class="res-section-title">Офіційне</div>
+    <div class="res-section-title" data-i18n="official">Офіційне</div>
     <div class="res-grid">
-      <div class="res-card" onclick="window.open('https://wowslegends.com','_blank')"><div class="res-icon">🌍</div><div class="res-info"><div class="res-name">Офіційний сайт</div><div class="res-desc">Новини, патч-ноути, події та анонси гри</div></div><div class="res-arrow">↗</div></div>
-      <div class="res-card" onclick="window.open('https://www.youtube.com/@WorldofWarshipsLegends','_blank')"><div class="res-icon">▶️</div><div class="res-info"><div class="res-name">YouTube</div><div class="res-desc">Офіційний канал — відео, огляди, стріми</div></div><div class="res-arrow">↗</div></div>
-      <div class="res-card" onclick="window.open('https://www.instagram.com/wows_legends/','_blank')"><div class="res-icon">📸</div><div class="res-info"><div class="res-name">Instagram</div><div class="res-desc">Фото, короткі відео та новини від команди</div></div><div class="res-arrow">↗</div></div>
-      <div class="res-card" onclick="window.open('https://www.facebook.com/WoWsLegends','_blank')"><div class="res-icon">📘</div><div class="res-info"><div class="res-name">Facebook</div><div class="res-desc">Офіційна сторінка — анонси та спільнота</div></div><div class="res-arrow">↗</div></div>
-      <div class="res-card" onclick="window.open('https://discord.com/invite/wowslegends','_blank')"><div class="res-icon">💬</div><div class="res-info"><div class="res-name">Discord</div><div class="res-desc">Офіційний сервер — чат, підтримка, події</div></div><div class="res-arrow">↗</div></div>
+      <div class="res-card" onclick="window.open('https://wowslegends.com','_blank')"><div class="res-icon">🌍</div><div class="res-info"><div class="res-name" data-i18n="official_site">Офіційний сайт</div><div class="res-desc" data-i18n="official_site_desc">Новини, патч-ноути, події та анонси гри</div></div><div class="res-arrow">↗</div></div>
+      <div class="res-card" onclick="window.open('https://www.youtube.com/@WorldofWarshipsLegends','_blank')"><div class="res-icon">▶️</div><div class="res-info"><div class="res-name">YouTube</div><div class="res-desc" data-i18n="yt_desc">Офіційний канал — відео, огляди, стріми</div></div><div class="res-arrow">↗</div></div>
+      <div class="res-card" onclick="window.open('https://www.instagram.com/wows_legends/','_blank')"><div class="res-icon">📸</div><div class="res-info"><div class="res-name">Instagram</div><div class="res-desc" data-i18n="ig_desc">Фото, короткі відео та новини від команди</div></div><div class="res-arrow">↗</div></div>
+      <div class="res-card" onclick="window.open('https://www.facebook.com/WoWsLegends','_blank')"><div class="res-icon">📘</div><div class="res-info"><div class="res-name">Facebook</div><div class="res-desc" data-i18n="fb_desc">Офіційна сторінка — анонси та спільнота</div></div><div class="res-arrow">↗</div></div>
+      <div class="res-card" onclick="window.open('https://discord.com/invite/wowslegends','_blank')"><div class="res-icon">💬</div><div class="res-info"><div class="res-name">Discord</div><div class="res-desc" data-i18n="dc_desc">Офіційний сервер — чат, підтримка, події</div></div><div class="res-arrow">↗</div></div>
     </div>
-    <div class="res-section-title">Інструменти</div>
+    <div class="res-section-title" data-i18n="tools">Інструменти</div>
     <div class="res-grid" style="margin-bottom:56px">
-      <div class="res-card" onclick="window.open('https://www.wowsbuilds.com','_blank')"><div class="res-icon">⚙️</div><div class="res-info"><div class="res-name">WoWS Builds</div><div class="res-desc">Білди командирів, статистика кораблів, рейтинг гравців</div></div><div class="res-arrow">↗</div></div>
-      <div class="res-card" onclick="window.open('https://www.wows-gamer-blog.com/2024/07/wows-legends-bonus-codes.html','_blank')"><div class="res-icon">🎁</div><div class="res-info"><div class="res-name">Бонус коди</div><div class="res-desc">Актуальні промокоди для безкоштовних нагород</div></div><div class="res-arrow">↗</div></div>
+      <div class="res-card" onclick="window.open('https://www.wowsbuilds.com','_blank')"><div class="res-icon">⚙️</div><div class="res-info"><div class="res-name">WoWS Builds</div><div class="res-desc" data-i18n="builds_desc">Білди командирів, статистика кораблів, рейтинг гравців</div></div><div class="res-arrow">↗</div></div>
+      <div class="res-card" onclick="window.open('https://www.wows-gamer-blog.com/2024/07/wows-legends-bonus-codes.html','_blank')"><div class="res-icon">🎁</div><div class="res-info"><div class="res-name" data-i18n="bonus_codes">Бонус коди</div><div class="res-desc" data-i18n="bonus_codes_desc">Актуальні промокоди для безкоштовних нагород</div></div><div class="res-arrow">↗</div></div>
     </div>
   </div>
 </div>
@@ -285,8 +266,8 @@ gtag('config', 'G-V2SVEPJSH0');
 <div id="lotteryPage" class="page">
   <div class="shell">
     <div class="page-head">
-      <div class="page-breadcrumb"><a onclick="backToHome()">Головна</a><span class="sep">/</span>Розіграш</div>
-      <div class="page-title">Розіграш</div>
+      <div class="page-breadcrumb"><a onclick="backToHome()" data-i18n="home">Головна</a><span class="sep">/</span><span data-i18n="nav_lottery">Розіграш</span></div>
+      <div class="page-title" data-i18n="nav_lottery">Розіграш</div>
     </div>
     <div class="lottery-layout">
       <div class="wheel-col">
@@ -294,23 +275,39 @@ gtag('config', 'G-V2SVEPJSH0');
           <canvas id="wheelCanvas" width="400" height="400"></canvas>
           <div class="pointer"></div>
         </div>
-        <button class="spin-btn" id="spinButton" onclick="spinLottery()">Крутити колесо</button>
+        <button class="spin-btn" id="spinButton" onclick="spinLottery()" data-i18n="spin">Крутити колесо</button>
         <div class="winner-box" id="winnerBox">
-          <div class="winner-label">Переможець</div>
+          <div class="winner-label" data-i18n="winner">Переможець</div>
           <div class="winner-name" id="winnerName">—</div>
         </div>
       </div>
       <div class="sidebar">
         <div class="panel">
-          <div class="panel-title">Учасники <span class="count-badge" id="playerCount">0</span></div>
+          <div class="panel-title"><span data-i18n="participants">Учасники</span> <span class="count-badge" id="playerCount">0</span></div>
           <textarea id="playersList" placeholder="Кожен нікнейм з нового рядку:&#10;&#10;Admiral_Kraken&#10;NavyStorm99&#10;SeaWolf_UA" oninput="updateWheel()"></textarea>
-          <p class="hint" style="margin-top:6px">Кожен нікнейм — новий рядок</p>
+          <p class="hint" style="margin-top:6px" data-i18n="each_nick_new_line">Кожен нікнейм — новий рядок</p>
         </div>
         <div class="panel">
-          <div class="panel-title">Список</div>
-          <div id="chipContainer" class="chip-list"><span class="empty-msg">Ще немає учасників</span></div>
+          <div class="panel-title" data-i18n="list">Список</div>
+          <div id="chipContainer" class="chip-list"><span class="empty-msg" data-i18n="no_participants">Ще немає учасників</span></div>
         </div>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ VOTING ══ -->
+
+<div id="votingPage" class="page">
+  <div class="shell">
+    <div class="page-head">
+      <div class="page-breadcrumb"><a onclick="backToHome()" data-i18n="home">Головна</a><span class="sep">/</span><span data-i18n="nav_voting">Голосування</span></div>
+      <div class="page-title" data-i18n="nav_voting">Голосування</div>
+    </div>
+    <div class="voting-empty">
+      <div class="voting-empty-icon">🗳</div>
+      <div class="voting-empty-title" data-i18n="no_voting_title">Немає активних голосувань</div>
+      <div class="voting-empty-desc" data-i18n="no_voting_desc">На даний момент відкритих питань для голосування немає. Слідкуй за оновленнями.</div>
     </div>
   </div>
 </div>
@@ -319,82 +316,82 @@ gtag('config', 'G-V2SVEPJSH0');
 
 <div class="modal-overlay" id="loginModal" onclick="if(event.target===this)closeModal('loginModal')">
   <div class="modal-box">
-    <div class="modal-title">Вхід</div>
-    <div class="modal-sub">Введи пошту і пароль</div>
+    <div class="modal-title" data-i18n="login">Вхід</div>
+    <div class="modal-sub" data-i18n="login_sub">Введи пошту і пароль</div>
     <label class="modal-label">Email</label>
     <input type="email" class="modal-input" id="loginEmail" placeholder="твоя@пошта.com" autocomplete="email">
-    <label class="modal-label">Пароль</label>
+    <label class="modal-label" data-i18n="password">Пароль</label>
     <input type="password" class="modal-input" id="loginPassword" placeholder="••••••••" autocomplete="current-password">
     <div class="modal-error" id="loginError"></div>
     <div class="modal-actions">
-      <button class="btn-primary" id="loginBtn" onclick="doLogin()">Увійти</button>
-      <button class="btn-secondary" onclick="closeModal('loginModal')">Скасувати</button>
+      <button class="btn-primary" id="loginBtn" onclick="doLogin()" data-i18n="login">Увійти</button>
+      <button class="btn-secondary" onclick="closeModal('loginModal')" data-i18n="cancel">Скасувати</button>
     </div>
-    <div class="modal-switch">Немає акаунту? <a onclick="switchModal('loginModal','registerModal')">Зареєструватись</a></div>
+    <div class="modal-switch"><span data-i18n="no_account">Немає акаунту?</span> <a onclick="switchModal('loginModal','registerModal')" data-i18n="register_link">Зареєструватись</a></div>
   </div>
 </div>
 
 <div class="modal-overlay" id="registerModal" onclick="if(event.target===this)closeModal('registerModal')">
   <div class="modal-box">
-    <div class="modal-title">Реєстрація</div>
-    <div class="modal-sub">Після реєстрації адміністратор підтвердить твій доступ до редагування.</div>
+    <div class="modal-title" data-i18n="register">Реєстрація</div>
+    <div class="modal-sub" data-i18n="register_sub">Після реєстрації адміністратор підтвердить твій доступ до редагування.</div>
     <label class="modal-label">Email</label>
     <input type="email" class="modal-input" id="regEmail" placeholder="твоя@пошта.com" autocomplete="email">
-    <label class="modal-label">Пароль (мінімум 6 символів)</label>
+    <label class="modal-label" data-i18n="password_min">Пароль (мінімум 6 символів)</label>
     <input type="password" class="modal-input" id="regPassword" placeholder="••••••••" autocomplete="new-password">
     <div class="modal-error" id="regError"></div>
     <div class="modal-actions">
-      <button class="btn-primary" id="regBtn" onclick="doRegister()">Зареєструватись</button>
-      <button class="btn-secondary" onclick="closeModal('registerModal')">Скасувати</button>
+      <button class="btn-primary" id="regBtn" onclick="doRegister()" data-i18n="register">Зареєструватись</button>
+      <button class="btn-secondary" onclick="closeModal('registerModal')" data-i18n="cancel">Скасувати</button>
     </div>
-    <div class="modal-switch">Вже є акаунт? <a onclick="switchModal('registerModal','loginModal')">Увійти</a></div>
+    <div class="modal-switch"><span data-i18n="have_account">Вже є акаунт?</span> <a onclick="switchModal('registerModal','loginModal')" data-i18n="login_link">Увійти</a></div>
   </div>
 </div>
 
 <div class="modal-overlay" id="addPlayerModal" onclick="if(event.target===this)closeModal('addPlayerModal')">
   <div class="modal-box">
-    <div class="modal-title">Додати гравця</div>
-    <label class="modal-label">Нікнейм</label>
+    <div class="modal-title" data-i18n="add_player">Додати гравця</div>
+    <label class="modal-label" data-i18n="nickname">Нікнейм</label>
     <input type="text" class="modal-input" id="newPlayerNick" placeholder="Pavlo_Zhyhalov" autocomplete="off">
     <div class="modal-actions">
-      <button class="btn-primary" onclick="confirmAddPlayer()">Додати</button>
-      <button class="btn-secondary" onclick="closeModal('addPlayerModal')">Скасувати</button>
+      <button class="btn-primary" onclick="confirmAddPlayer()" data-i18n="add">Додати</button>
+      <button class="btn-secondary" onclick="closeModal('addPlayerModal')" data-i18n="cancel">Скасувати</button>
     </div>
   </div>
 </div>
 
 <div class="modal-overlay" id="editXpModal" onclick="if(event.target===this)closeModal('editXpModal')">
   <div class="modal-box">
-    <div class="modal-title" id="editXpTitle">Результати гравця</div>
+    <div class="modal-title" id="editXpTitle" data-i18n="player_results">Результати гравця</div>
     <div class="xp-grid">
-      <div><label class="xp-field-label">Лінкор (XP)</label><input type="number" min="0" class="modal-input" id="xpField0" placeholder="напр. 1876"></div>
-      <div><label class="xp-field-label">Крейсер (XP)</label><input type="number" min="0" class="modal-input" id="xpField1" placeholder="напр. 2345"></div>
-      <div><label class="xp-field-label">Есмінець (XP)</label><input type="number" min="0" class="modal-input" id="xpField2" placeholder="напр. 1500"></div>
-      <div><label class="xp-field-label">Авіаносець (XP)</label><input type="number" min="0" class="modal-input" id="xpField3" placeholder="напр. 2100"></div>
+      <div><label class="xp-field-label" data-i18n="bb_xp">Лінкор (XP)</label><input type="number" min="0" class="modal-input" id="xpField0" placeholder="напр. 1876"></div>
+      <div><label class="xp-field-label" data-i18n="ca_xp">Крейсер (XP)</label><input type="number" min="0" class="modal-input" id="xpField1" placeholder="напр. 2345"></div>
+      <div><label class="xp-field-label" data-i18n="dd_xp">Есмінець (XP)</label><input type="number" min="0" class="modal-input" id="xpField2" placeholder="напр. 1500"></div>
+      <div><label class="xp-field-label" data-i18n="cv_xp">Авіаносець (XP)</label><input type="number" min="0" class="modal-input" id="xpField3" placeholder="напр. 2100"></div>
     </div>
     <div class="modal-actions">
-      <button class="btn-primary" onclick="confirmEditXp()">Зберегти</button>
-      <button class="btn-secondary" onclick="closeModal('editXpModal')">Скасувати</button>
+      <button class="btn-primary" onclick="confirmEditXp()" data-i18n="save">Зберегти</button>
+      <button class="btn-secondary" onclick="closeModal('editXpModal')" data-i18n="cancel">Скасувати</button>
     </div>
   </div>
 </div>
 
 <div class="modal-overlay" id="editRecordModal" onclick="if(event.target===this)closeModal('editRecordModal')">
   <div class="modal-box">
-    <div class="modal-title" id="editRecordTitle">Рекорд</div>
+    <div class="modal-title" id="editRecordTitle" data-i18n="record">Рекорд</div>
     <div class="modal-sub" id="editRecordSub"></div>
-    <label class="modal-label">Нікнейм гравця</label>
+    <label class="modal-label" data-i18n="player_nick">Нікнейм гравця</label>
     <input type="text" class="modal-input" id="recPlayer" placeholder="Pavlo_Zhyhalov">
-    <label class="modal-label">Корабель</label>
+    <label class="modal-label" data-i18n="ship">Корабель</label>
     <input type="text" class="modal-input" id="recShip" placeholder="напр. Preussen, Yamato...">
-    <label class="modal-label">Результат (число)</label>
+    <label class="modal-label" data-i18n="result_number">Результат (число)</label>
     <input type="number" min="0" class="modal-input" id="recResult" placeholder="напр. 340000">
-    <label class="modal-label">Дата</label>
+    <label class="modal-label" data-i18n="date">Дата</label>
     <input type="date" class="modal-input" id="recDate">
     <div class="modal-error" id="recError"></div>
     <div class="modal-actions">
-      <button class="btn-primary" onclick="confirmEditRecord()">Зберегти</button>
-      <button class="btn-secondary" onclick="closeModal('editRecordModal')">Скасувати</button>
+      <button class="btn-primary" onclick="confirmEditRecord()" data-i18n="save">Зберегти</button>
+      <button class="btn-secondary" onclick="closeModal('editRecordModal')" data-i18n="cancel">Скасувати</button>
     </div>
   </div>
 </div>
@@ -402,11 +399,280 @@ gtag('config', 'G-V2SVEPJSH0');
 <footer>
   <div class="footer-inner">
     <div class="foot-brand">BlackSeaUA</div>
-    <div class="foot-meta">World of Warships Legends · Clan · UA · 2024</div>
+    <div class="foot-meta">World of Warships Legends · Clan</div>
   </div>
 </footer>
 
 <script>
+/* ── i18n ── */
+const TRANSLATIONS = {
+  uk: {
+    login:'Увійти', register:'Реєстрація', logout:'Вийти',
+    login_sub:'Введи пошту і пароль',
+    register_sub:'Після реєстрації адміністратор підтвердить твій доступ до редагування.',
+    password:'Пароль', password_min:'Пароль (мінімум 6 символів)',
+    cancel:'Скасувати', save:'Зберегти', add:'Додати',
+    no_account:'Немає акаунту?', register_link:'Зареєструватись',
+    have_account:'Вже є акаунт?', login_link:'Увійти',
+    home:'Головна', sections:'Розділи',
+    nav_tournaments:'Турніри', nav_tournaments_desc:'Поточні та архівні змагання клану.',
+    nav_records:'Рекорди', nav_records_desc:'Кращі результати гравців клану за всі часи.',
+    nav_lottery:'Розіграш', nav_lottery_desc:'Колесо удачі для учасників клану.',
+    nav_voting:'Голосування', nav_voting_desc:'Актуальні питання для голосування.',
+    nav_useful:'Корисне', nav_useful_desc:'Офіційні ресурси, інструменти і посилання.',
+    active_event:'Актуальна подія', active:'Активне',
+    leaders:'Лідери', view_table:'Дивитись таблицю →',
+    days_short:'дн', hours_short:'год', mins_short:'хв', secs_short:'сек',
+    hero_title:'Командний\nМіст Клану',
+    challenge:'Гнучкість', challenge_title:'Челендж «Гнучкість»',
+    challenge_lede:'4 класи кораблів · 4 етапи · 12 днів · Призовий фонд 10 000 дублонів',
+    flex_desc:'4 класи, 12 днів, призовий фонд до 10 000 дублонів',
+    rules:'Правила',
+    rule_classes:'класи: ЛК, КР, ЕМ, АВ', rule_days:'днів / 4 етапи по 3 дні',
+    rule_xp:'XP ÷ 1000 (округл. вниз) = бали', rule_no_repeat:'Класи не повторюються',
+    rule_random:'Тільки Рандом, рівень V+', rule_late:'Не здав вчасно = 0 балів',
+    rule_screenshot:'Скріншот «Командний результат»',
+    rule_win:'Виграє найвища сума балів, при рівності — більший сумарний XP',
+    stage_n:'Етап', until_end:'До кінця етапу',
+    place_1:'1 Місце', place_2:'2 Місце', place_3:'3 Місце', doubloons:'Дублонів',
+    pending_msg:'Твій акаунт очікує підтвердження адміністратора.',
+    results_table:'Таблиця результатів', connecting:'Підключення...',
+    player:'Гравець', total:'Сума',
+    table_hint_public:'Таблиця публічна. Для редагування потрібно увійти.',
+    records_title:'Рекорди Клану', records_lede:'Кращі результати учасників за всі часи.',
+    all_categories:'Всі категорії', loading:'Завантаження...',
+    spin:'Крутити колесо', winner:'Переможець',
+    participants:'Учасники', each_nick_new_line:'Кожен нікнейм — новий рядок',
+    list:'Список', no_participants:'Ще немає учасників',
+    no_voting_title:'Немає активних голосувань',
+    no_voting_desc:'На даний момент відкритих питань для голосування немає. Слідкуй за оновленнями.',
+    official:'Офіційне', tools:'Інструменти',
+    official_site:'Офіційний сайт', official_site_desc:'Новини, патч-ноути, події та анонси гри',
+    yt_desc:'Офіційний канал — відео, огляди, стріми',
+    ig_desc:'Фото, короткі відео та новини від команди',
+    fb_desc:'Офіційна сторінка — анонси та спільнота',
+    dc_desc:'Офіційний сервер — чат, підтримка, події',
+    builds_desc:'Білди командирів, статистика кораблів, рейтинг гравців',
+    bonus_codes:'Бонус коди', bonus_codes_desc:'Актуальні промокоди для безкоштовних нагород',
+    add_player:'Додати гравця', nickname:'Нікнейм',
+    player_results:'Результати гравця',
+    bb_xp:'Лінкор (XP)', ca_xp:'Крейсер (XP)', dd_xp:'Есмінець (XP)', cv_xp:'Авіаносець (XP)',
+    record:'Рекорд', player_nick:'Нікнейм гравця', ship:'Корабель',
+    result_number:'Результат (число)', date:'Дата',
+    stage_days_label:'Етап 1 · Дні 1–3',
+    edit_record_new:'Встановити новий рекорд', edit_record_update:'Оновити рекорд',
+    no_permission:'Немає дозволу. Акаунт ще не підтверджено.',
+    error_prefix:'Помилка:',
+    tournament_done:'Турнір завершено',
+    login_required:'Для редагування ', login_link_inline:'увійди',
+    pending_admin:'Очікуй підтвердження від адміністратора.',
+    add_player_btn:'+ Додати гравця',
+    click_xp_hint:'Клікни на XP або «+ XP» щоб ввести результат.',
+    records_public:'Таблиця рекордів публічна.',
+    click_record_hint:'Клікни на рекорд щоб оновити результат.',
+    pending_admin_rec:'Очікуй підтвердження адміністратора для редагування.',
+    no_players:'Немає учасників',
+    add_player_hint:' — натисніть «+ Додати гравця»',
+    new_nick_prompt:'Новий нікнейм:',
+    nick_exists:'Такий нікнейм вже є!',
+    saving:'Збереження...', saved:'Збережено', sync_ok:'Синхронізовано',
+    conn_error:'Помилка з\'єднання', updated:'Оновлено',
+    min_2_players:'Додай мінімум 2 учасники!',
+    confirm_delete:'Видалити «', confirm_delete2:'»?',
+    fill_all:'Заповни всі поля', fill_email_pass:'Введи пошту і пароль',
+    pass_min6:'Пароль мінімум 6 символів',
+    reg_success:'Реєстрація успішна!\n\nОчікуй підтвердження адміністратора.\nПісля підтвердження зможеш редагувати.',
+  },
+  ru: {
+    login:'Войти', register:'Регистрация', logout:'Выйти',
+    login_sub:'Введи почту и пароль',
+    register_sub:'После регистрации администратор подтвердит твой доступ к редактированию.',
+    password:'Пароль', password_min:'Пароль (минимум 6 символов)',
+    cancel:'Отмена', save:'Сохранить', add:'Добавить',
+    no_account:'Нет аккаунта?', register_link:'Зарегистрироваться',
+    have_account:'Уже есть аккаунт?', login_link:'Войти',
+    home:'Главная', sections:'Разделы',
+    nav_tournaments:'Турниры', nav_tournaments_desc:'Текущие и архивные соревнования клана.',
+    nav_records:'Рекорды', nav_records_desc:'Лучшие результаты игроков клана за всё время.',
+    nav_lottery:'Розыгрыш', nav_lottery_desc:'Колесо удачи для участников клана.',
+    nav_voting:'Голосование', nav_voting_desc:'Актуальные вопросы для голосования.',
+    nav_useful:'Полезное', nav_useful_desc:'Официальные ресурсы, инструменты и ссылки.',
+    active_event:'Актуальное событие', active:'Активное',
+    leaders:'Лидеры', view_table:'Смотреть таблицу →',
+    days_short:'дн', hours_short:'ч', mins_short:'мин', secs_short:'сек',
+    hero_title:'Командный\nМостик Клана',
+    challenge:'Гибкость', challenge_title:'Челлендж «Гибкость»',
+    challenge_lede:'4 класса кораблей · 4 этапа · 12 дней · Призовой фонд 10 000 дублонов',
+    flex_desc:'4 класса, 12 дней, призовой фонд до 10 000 дублонов',
+    rules:'Правила',
+    rule_classes:'классы: ЛК, КР, ЭМ, АВ', rule_days:'дней / 4 этапа по 3 дня',
+    rule_xp:'XP ÷ 1000 (округл. вниз) = очки', rule_no_repeat:'Классы не повторяются',
+    rule_random:'Только Рандом, уровень V+', rule_late:'Не сдал вовремя = 0 очков',
+    rule_screenshot:'Скриншот «Командный результат»',
+    rule_win:'Побеждает наибольшая сумма очков, при равенстве — больший суммарный XP',
+    stage_n:'Этап', until_end:'До конца этапа',
+    place_1:'1 Место', place_2:'2 Место', place_3:'3 Место', doubloons:'Дублонов',
+    pending_msg:'Твой аккаунт ожидает подтверждения администратора.',
+    results_table:'Таблица результатов', connecting:'Подключение...',
+    player:'Игрок', total:'Сумма',
+    table_hint_public:'Таблица публичная. Для редактирования нужно войти.',
+    records_title:'Рекорды Клана', records_lede:'Лучшие результаты участников за всё время.',
+    all_categories:'Все категории', loading:'Загрузка...',
+    spin:'Крутить колесо', winner:'Победитель',
+    participants:'Участники', each_nick_new_line:'Каждый ник — новая строка',
+    list:'Список', no_participants:'Ещё нет участников',
+    no_voting_title:'Нет активных голосований',
+    no_voting_desc:'На данный момент открытых вопросов для голосования нет. Следи за обновлениями.',
+    official:'Официальное', tools:'Инструменты',
+    official_site:'Официальный сайт', official_site_desc:'Новости, патч-ноуты, события и анонсы игры',
+    yt_desc:'Официальный канал — видео, обзоры, стримы',
+    ig_desc:'Фото, короткие видео и новости от команды',
+    fb_desc:'Официальная страница — анонсы и сообщество',
+    dc_desc:'Официальный сервер — чат, поддержка, события',
+    builds_desc:'Билды командиров, статистика кораблей, рейтинг игроков',
+    bonus_codes:'Бонус коды', bonus_codes_desc:'Актуальные промокоды для бесплатных наград',
+    add_player:'Добавить игрока', nickname:'Никнейм',
+    player_results:'Результаты игрока',
+    bb_xp:'Линкор (XP)', ca_xp:'Крейсер (XP)', dd_xp:'Эсминец (XP)', cv_xp:'Авианосец (XP)',
+    record:'Рекорд', player_nick:'Никнейм игрока', ship:'Корабль',
+    result_number:'Результат (число)', date:'Дата',
+    stage_days_label:'Этап 1 · Дни 1–3',
+    edit_record_new:'Установить новый рекорд', edit_record_update:'Обновить рекорд',
+    no_permission:'Нет разрешения. Аккаунт ещё не подтверждён.',
+    error_prefix:'Ошибка:',
+    tournament_done:'Турнир завершён',
+    login_required:'Для редактирования ', login_link_inline:'войди',
+    pending_admin:'Ожидай подтверждения от администратора.',
+    add_player_btn:'+ Добавить игрока',
+    click_xp_hint:'Кликни на XP или «+ XP» чтобы ввести результат.',
+    records_public:'Таблица рекордов публичная.',
+    click_record_hint:'Кликни на рекорд чтобы обновить результат.',
+    pending_admin_rec:'Ожидай подтверждения администратора для редактирования.',
+    no_players:'Нет участников',
+    add_player_hint:' — нажмите «+ Добавить игрока»',
+    new_nick_prompt:'Новый никнейм:',
+    nick_exists:'Такой никнейм уже есть!',
+    saving:'Сохранение...', saved:'Сохранено', sync_ok:'Синхронизировано',
+    conn_error:'Ошибка соединения', updated:'Обновлено',
+    min_2_players:'Добавь минимум 2 участника!',
+    confirm_delete:'Удалить «', confirm_delete2:'»?',
+    fill_all:'Заполни все поля', fill_email_pass:'Введи почту и пароль',
+    pass_min6:'Пароль минимум 6 символов',
+    reg_success:'Регистрация успешна!\n\nОжидай подтверждения администратора.\nПосле подтверждения сможешь редактировать.',
+  },
+  en: {
+    login:'Sign In', register:'Register', logout:'Sign Out',
+    login_sub:'Enter your email and password',
+    register_sub:'After registration, an admin will confirm your editing access.',
+    password:'Password', password_min:'Password (min 6 characters)',
+    cancel:'Cancel', save:'Save', add:'Add',
+    no_account:'No account?', register_link:'Register',
+    have_account:'Already have an account?', login_link:'Sign In',
+    home:'Home', sections:'Sections',
+    nav_tournaments:'Tournaments', nav_tournaments_desc:'Current and archived clan competitions.',
+    nav_records:'Records', nav_records_desc:'Best player results of all time.',
+    nav_lottery:'Lottery', nav_lottery_desc:'Wheel of fortune for clan members.',
+    nav_voting:'Voting', nav_voting_desc:'Current questions open for voting.',
+    nav_useful:'Resources', nav_useful_desc:'Official resources, tools and links.',
+    active_event:'Active Event', active:'Active',
+    leaders:'Leaders', view_table:'View full table →',
+    days_short:'d', hours_short:'h', mins_short:'m', secs_short:'s',
+    hero_title:'Clan\nCommand Bridge',
+    challenge:'Flexibility', challenge_title:'Challenge «Flexibility»',
+    challenge_lede:'4 ship classes · 4 stages · 12 days · Prize pool 10,000 Doubloons',
+    flex_desc:'4 classes, 12 days, prize pool up to 10,000 doubloons',
+    rules:'Rules',
+    rule_classes:'classes: BB, CA, DD, CV', rule_days:'days / 4 stages of 3 days',
+    rule_xp:'XP ÷ 1000 (floor) = points', rule_no_repeat:'No repeat classes',
+    rule_random:'Random only, Tier V+', rule_late:'Late submission = 0 points',
+    rule_screenshot:'Screenshot «Team Score»',
+    rule_win:'Highest total points wins; ties broken by total XP across all stages',
+    stage_n:'Stage', until_end:'Stage ends in',
+    place_1:'1st Place', place_2:'2nd Place', place_3:'3rd Place', doubloons:'Doubloons',
+    pending_msg:'Your account is awaiting admin approval.',
+    results_table:'Leaderboard', connecting:'Connecting...',
+    player:'Player', total:'Total',
+    table_hint_public:'Table is public. Sign in to edit.',
+    records_title:'Clan Records', records_lede:'Best results of all time.',
+    all_categories:'All Categories', loading:'Loading...',
+    spin:'Spin the wheel', winner:'Winner',
+    participants:'Participants', each_nick_new_line:'One nickname per line',
+    list:'List', no_participants:'No participants yet',
+    no_voting_title:'No Active Votes',
+    no_voting_desc:'There are no open questions for voting at this time. Check back later.',
+    official:'Official', tools:'Tools',
+    official_site:'Official Website', official_site_desc:'News, patch notes, events and announcements',
+    yt_desc:'Official channel — videos, reviews, streams',
+    ig_desc:'Photos, short videos and news from the team',
+    fb_desc:'Official page — announcements and community',
+    dc_desc:'Official server — chat, support, events',
+    builds_desc:'Commander builds, ship stats, player ratings',
+    bonus_codes:'Bonus Codes', bonus_codes_desc:'Active promo codes for free rewards',
+    add_player:'Add Player', nickname:'Nickname',
+    player_results:'Player Results',
+    bb_xp:'Battleship (XP)', ca_xp:'Cruiser (XP)', dd_xp:'Destroyer (XP)', cv_xp:'Carrier (XP)',
+    record:'Record', player_nick:'Player Nickname', ship:'Ship',
+    result_number:'Result (number)', date:'Date',
+    stage_days_label:'Stage 1 · Days 1–3',
+    edit_record_new:'Set new record', edit_record_update:'Update record',
+    no_permission:'No permission. Account not yet approved.',
+    error_prefix:'Error:',
+    tournament_done:'Tournament ended',
+    login_required:'To edit, ', login_link_inline:'sign in',
+    pending_admin:'Awaiting admin approval.',
+    add_player_btn:'+ Add Player',
+    click_xp_hint:'Click XP or «+ XP» to enter result.',
+    records_public:'Records table is public.',
+    click_record_hint:'Click a record to update it.',
+    pending_admin_rec:'Awaiting admin approval to edit.',
+    no_players:'No participants',
+    add_player_hint:' — click «+ Add Player»',
+    new_nick_prompt:'New nickname:',
+    nick_exists:'This nickname already exists!',
+    saving:'Saving...', saved:'Saved', sync_ok:'Synced',
+    conn_error:'Connection error', updated:'Updated',
+    min_2_players:'Add at least 2 participants!',
+    confirm_delete:'Delete «', confirm_delete2:'»?',
+    fill_all:'Fill in all fields', fill_email_pass:'Enter email and password',
+    pass_min6:'Password must be at least 6 characters',
+    reg_success:'Registration successful!\n\nAwait admin confirmation.\nAfter approval you can edit.',
+  }
+};
+
+let currentLang = 'uk';
+
+function t(key) {
+  return (TRANSLATIONS[currentLang] && TRANSLATIONS[currentLang][key]) || TRANSLATIONS['uk'][key] || key;
+}
+
+function setLang(lang) {
+  currentLang = lang;
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector(`.lang-btn[onclick="setLang('${lang}')"]`).classList.add('active');
+  applyTranslations();
+  updateAuthUI();
+}
+
+function applyTranslations() {
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (key === 'stage_n') {
+      const n = el.getAttribute('data-n');
+      el.textContent = t('stage_n') + ' ' + n;
+    } else if (key === 'hero_title') {
+      el.innerHTML = t('hero_title').replace('\n', '<br>');
+    } else {
+      el.textContent = t(key);
+    }
+  });
+  // Update hero countdown labels
+  document.querySelectorAll('.seg i').forEach((el, i) => {
+    const keys = ['days_short','hours_short','mins_short','secs_short'];
+    if (keys[i]) el.textContent = t(keys[i]);
+  });
+}
+
+/* ── SUPABASE ── */
 const SUPA_URL='https://otwcegfsmxmhiegukkyl.supabase.co';
 const SUPA_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im90d2NlZ2ZzbXhtaGllZ3Vra3lsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg2NTMwOTUsImV4cCI6MjA5NDIyOTA5NX0.FU45yk9GKVjEkuH-pWp5kB8fA_nVy2wpYQc48baxeL0';
 
@@ -428,12 +694,11 @@ function updateTimer(){
     const el=document.getElementById('stage'+s.num);
     if(el)el.classList.toggle('active-stage',stage&&stage.num===s.num);
   });
-  // Update hero countdown
   const hc=document.getElementById('heroCountdown');
   if(!stage){
-    if(stageLabel)stageLabel.textContent='Турнір завершено';
+    if(stageLabel)stageLabel.textContent=t('tournament_done');
     if(digits)digits.innerHTML='—';
-    if(hc)hc.innerHTML='<div class="seg"><b>—</b><i>дн</i></div><div class="seg"><b>—</b><i>год</i></div><div class="seg"><b>—</b><i>хв</i></div><div class="seg"><b>—</b><i>сек</i></div>';
+    if(hc)hc.innerHTML=`<div class="seg"><b>—</b><i>${t('days_short')}</i></div><div class="seg"><b>—</b><i>${t('hours_short')}</i></div><div class="seg"><b>—</b><i>${t('mins_short')}</i></div><div class="seg"><b>—</b><i>${t('secs_short')}</i></div>`;
     return;
   }
   const diff=stage.end-new Date();
@@ -442,16 +707,18 @@ function updateTimer(){
   const hours=Math.floor((diff%86400000)/3600000);
   const mins=Math.floor((diff%3600000)/60000);
   const secs=Math.floor((diff%60000)/1000);
-  if(stageLabel)stageLabel.textContent=stage.label;
+  // stage label: use localized stage name
+  const stageName=`${t('stage_n')} ${stage.num} · ${['Дні','Дни','Days'][['uk','ru','en'].indexOf(currentLang)]||'Дні'} ${['1–3','4–6','7–9','10–12'][stage.num-1]}`;
+  if(stageLabel)stageLabel.textContent=stageName;
   if(digits){
     const parts=[];
-    if(days>0)parts.push(`<span>${days}</span>д`);
-    parts.push(`<span>${pad(hours)}</span>г`);
-    parts.push(`<span>${pad(mins)}</span>хв`);
-    parts.push(`<span>${pad(secs)}</span>с`);
+    if(days>0)parts.push(`<span>${days}</span>${t('days_short')}`);
+    parts.push(`<span>${pad(hours)}</span>${t('hours_short')}`);
+    parts.push(`<span>${pad(mins)}</span>${t('mins_short')}`);
+    parts.push(`<span>${pad(secs)}</span>${t('secs_short')}`);
     digits.innerHTML=parts.join(' ');
   }
-  if(hc)hc.innerHTML=`<div class="seg"><b>${days}</b><i>дн</i></div><div class="seg"><b>${pad(hours)}</b><i>год</i></div><div class="seg"><b>${pad(mins)}</b><i>хв</i></div><div class="seg"><b>${pad(secs)}</b><i>сек</i></div>`;
+  if(hc)hc.innerHTML=`<div class="seg"><b>${days}</b><i>${t('days_short')}</i></div><div class="seg"><b>${pad(hours)}</b><i>${t('hours_short')}</i></div><div class="seg"><b>${pad(mins)}</b><i>${t('mins_short')}</i></div><div class="seg"><b>${pad(secs)}</b><i>${t('secs_short')}</i></div>`;
 }
 
 const RECORD_CATS=[
@@ -473,7 +740,7 @@ async function sbFetch(path,opts={}){
   headers['Authorization']='Bearer '+(accessToken||SUPA_KEY);
   if(opts.method==='POST')headers['Prefer']='return=representation';
   const res=await fetch(SUPA_URL+path,{...opts,headers:{...headers,...(opts.headers||{})}});
-  if(!res.ok){const t=await res.text();throw new Error(t);}
+  if(!res.ok){const tx=await res.text();throw new Error(tx);}
   const text=await res.text();return text?JSON.parse(text):[];
 }
 
@@ -483,15 +750,15 @@ async function doLogin(){
   const errEl=document.getElementById('loginError');
   const btn=document.getElementById('loginBtn');
   errEl.textContent='';
-  if(!email||!pass){errEl.textContent='Введи пошту і пароль';return;}
-  btn.disabled=true;btn.textContent='Вхід...';
+  if(!email||!pass){errEl.textContent=t('fill_email_pass');return;}
+  btn.disabled=true;btn.textContent=t('login')+'...';
   try{
     const res=await fetch(SUPA_URL+'/auth/v1/token?grant_type=password',{
       method:'POST',headers:{'apikey':SUPA_KEY,'Content-Type':'application/json'},
       body:JSON.stringify({email,password:pass})
     });
     const data=await res.json();
-    if(!res.ok)throw new Error(data.error_description||data.msg||'Помилка входу');
+    if(!res.ok)throw new Error(data.error_description||data.msg||t('error_prefix'));
     accessToken=data.access_token;
     currentUser={email:data.user.email,id:data.user.id};
     try{localStorage.setItem('sb_token',accessToken);}catch(e){}
@@ -500,7 +767,7 @@ async function doLogin(){
     if(document.getElementById('tournamentFlexPage').classList.contains('active'))renderTable();
     if(document.getElementById('recordsPage').classList.contains('active'))renderRecords();
   }catch(e){errEl.textContent=e.message;}
-  finally{btn.disabled=false;btn.textContent='Увійти';}
+  finally{btn.disabled=false;btn.textContent=t('login');}
 }
 
 async function doRegister(){
@@ -509,25 +776,25 @@ async function doRegister(){
   const errEl=document.getElementById('regError');
   const btn=document.getElementById('regBtn');
   errEl.textContent='';
-  if(!email||!pass){errEl.textContent='Заповни всі поля';return;}
-  if(pass.length<6){errEl.textContent='Пароль мінімум 6 символів';return;}
-  btn.disabled=true;btn.textContent='Реєстрація...';
+  if(!email||!pass){errEl.textContent=t('fill_all');return;}
+  if(pass.length<6){errEl.textContent=t('pass_min6');return;}
+  btn.disabled=true;btn.textContent=t('register')+'...';
   try{
     const res=await fetch(SUPA_URL+'/auth/v1/signup',{
       method:'POST',headers:{'apikey':SUPA_KEY,'Content-Type':'application/json'},
       body:JSON.stringify({email,password:pass})
     });
     const data=await res.json();
-    if(!res.ok)throw new Error(data.error_description||data.msg||'Помилка реєстрації');
+    if(!res.ok)throw new Error(data.error_description||data.msg||t('error_prefix'));
     await fetch(SUPA_URL+'/rest/v1/allowed_users',{
       method:'POST',
       headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
       body:JSON.stringify({email:email.toLowerCase(),approved:false})
     });
     closeModal('registerModal');
-    alert('Реєстрація успішна!\n\nОчікуй підтвердження адміністратора.\nПісля підтвердження зможеш редагувати.');
+    alert(t('reg_success'));
   }catch(e){errEl.textContent=e.message;}
-  finally{btn.disabled=false;btn.textContent='Зареєструватись';}
+  finally{btn.disabled=false;btn.textContent=t('register');}
 }
 
 async function checkApproval(){
@@ -565,11 +832,13 @@ function updateAuthUI(){
   if(currentUser){
     const cls=userApproved?'approved':'';
     const status=userApproved?'✓ ':'⏳ ';
-    area.innerHTML=`<span class="auth-user ${cls}" title="${currentUser.email}">${status}${currentUser.email}</span>
-      <button class="auth-btn" onclick="doLogout()">Вийти</button>`;
+    // Show truncated email to avoid layout shift on mobile
+    const emailDisplay=currentUser.email.length>22?currentUser.email.slice(0,20)+'…':currentUser.email;
+    area.innerHTML=`<span class="auth-user ${cls}" title="${currentUser.email}">${status}${emailDisplay}</span>
+      <button class="auth-btn" onclick="doLogout()">${t('logout')}</button>`;
   }else{
-    area.innerHTML=`<button class="auth-btn primary" onclick="openModal('loginModal')">Увійти</button>
-      <button class="auth-btn" onclick="openModal('registerModal')">Реєстрація</button>`;
+    area.innerHTML=`<button class="auth-btn primary" onclick="openModal('loginModal')">${t('login')}</button>
+      <button class="auth-btn" onclick="openModal('registerModal')">${t('register')}</button>`;
   }
   const lbArea=document.getElementById('lbActionArea');
   const pending=document.getElementById('pendingBanner');
@@ -577,19 +846,19 @@ function updateAuthUI(){
   const delCol=document.getElementById('deleteColHeader');
   if(lbArea){
     if(!currentUser){
-      lbArea.innerHTML=`<span class="login-prompt">Для редагування <a onclick="openModal('loginModal')">увійди</a></span>`;
+      lbArea.innerHTML=`<span class="login-prompt">${t('login_required')}<a onclick="openModal('loginModal')">${t('login_link_inline')}</a></span>`;
       if(pending)pending.style.display='none';
-      if(hint)hint.textContent='Таблиця публічна. Для редагування потрібно увійти.';
+      if(hint)hint.textContent=t('table_hint_public');
       if(delCol)delCol.style.display='none';
     }else if(!userApproved){
       lbArea.innerHTML='';
       if(pending)pending.style.display='block';
-      if(hint)hint.textContent='Очікуй підтвердження від адміністратора.';
+      if(hint)hint.textContent=t('pending_admin');
       if(delCol)delCol.style.display='none';
     }else{
-      lbArea.innerHTML=`<button class="add-player-btn" onclick="openAddPlayerModal()">+ Додати гравця</button>`;
+      lbArea.innerHTML=`<button class="add-player-btn" onclick="openAddPlayerModal()">${t('add_player_btn')}</button>`;
       if(pending)pending.style.display='none';
-      if(hint)hint.textContent='Клікни на XP або «+ XP» щоб ввести результат.';
+      if(hint)hint.textContent=t('click_xp_hint');
       if(delCol)delCol.style.display='';
     }
   }
@@ -598,19 +867,19 @@ function updateAuthUI(){
   if(recArea){
     if(currentUser&&userApproved){
       recArea.innerHTML='';
-      if(recHint)recHint.textContent='Клікни на рекорд щоб оновити результат.';
+      if(recHint)recHint.textContent=t('click_record_hint');
     }else if(currentUser){
       recArea.innerHTML='';
-      if(recHint)recHint.textContent='Очікуй підтвердження адміністратора для редагування.';
+      if(recHint)recHint.textContent=t('pending_admin_rec');
     }else{
-      recArea.innerHTML=`<span class="login-prompt">Для редагування <a onclick="openModal('loginModal')">увійди</a></span>`;
-      if(recHint)recHint.textContent='Таблиця рекордів публічна.';
+      recArea.innerHTML=`<span class="login-prompt">${t('login_required')}<a onclick="openModal('loginModal')">${t('login_link_inline')}</a></span>`;
+      if(recHint)recHint.textContent=t('records_public');
     }
   }
 }
 
-const PAGE_MAP={'':'homePage','home':'homePage','lottery':'lotteryPage','tournaments':'tournamentsListPage','flex':'tournamentFlexPage','records':'recordsPage','resources':'resourcesPage'};
-const HASH_MAP={'homePage':'home','lotteryPage':'lottery','tournamentsListPage':'tournaments','tournamentFlexPage':'flex','recordsPage':'records','resourcesPage':'resources'};
+const PAGE_MAP={'':'homePage','home':'homePage','lottery':'lotteryPage','tournaments':'tournamentsListPage','flex':'tournamentFlexPage','records':'recordsPage','resources':'resourcesPage','voting':'votingPage'};
+const HASH_MAP={'homePage':'home','lotteryPage':'lottery','tournamentsListPage':'tournaments','tournamentFlexPage':'flex','recordsPage':'records','resourcesPage':'resources','votingPage':'voting'};
 
 function showPage(id){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
@@ -624,6 +893,7 @@ function openTournamentsList(){showPage('tournamentsListPage');}
 function openTournamentFlex(){showPage('tournamentFlexPage');updateAuthUI();loadPlayers();updateTimer();}
 function openRecords(){showPage('recordsPage');updateAuthUI();loadRecords();}
 function openResources(){showPage('resourcesPage');}
+function openVoting(){showPage('votingPage');}
 
 function restorePage(){
   const hash=window.location.hash.replace('#','');
@@ -654,7 +924,7 @@ function drawWheel(){
     cx.beginPath();cx.arc(cX,cY,cR,0,Math.PI*2);cx.fillStyle='#0b1822';cx.fill();
     cx.strokeStyle='#172e42';cx.lineWidth=2;cx.stroke();
     cx.fillStyle='#3d6078';cx.font='300 13px "DM Sans",sans-serif';
-    cx.textAlign='center';cx.textBaseline='middle';cx.fillText('Додайте учасників →',cX,cY);return;
+    cx.textAlign='center';cx.textBaseline='middle';cx.fillText(t('no_participants')+' →',cX,cY);return;
   }
   const n=lp.length,sl=(Math.PI*2)/n;
   for(let i=0;i<n;i++){
@@ -680,7 +950,7 @@ function calcWinner(){
 }
 
 function spinLottery(){
-  if(lp.length<2){alert('Додай мінімум 2 учасники!');return;}
+  if(lp.length<2){alert(t('min_2_players'));return;}
   if(wSpin)return;
   wSpin=true;document.getElementById('spinButton').disabled=true;
   document.getElementById('winnerBox').classList.remove('show');
@@ -693,9 +963,9 @@ function spinLottery(){
   const sa=wAngle,dur=4000+Math.random()*1200,t0=performance.now();
   function ease(t){return 1-Math.pow(1-t,4);}
   (function fr(now){
-    const t=Math.min((now-t0)/dur,1);
-    wAngle=sa+total*ease(t);drawWheel();
-    if(t<1){requestAnimationFrame(fr);}
+    const tm=Math.min((now-t0)/dur,1);
+    wAngle=sa+total*ease(tm);drawWheel();
+    if(tm<1){requestAnimationFrame(fr);}
     else{
       const w=lp[calcWinner()];
       document.getElementById('winnerName').textContent=w;
@@ -710,7 +980,7 @@ function updateWheel(){
   lp=document.getElementById('playersList').value.split('\n').map(s=>s.trim()).filter(s=>s.length>0);
   document.getElementById('playerCount').textContent=lp.length;
   const cc=document.getElementById('chipContainer');
-  cc.innerHTML=lp.length===0?'<span class="empty-msg">Ще немає учасників</span>':lp.map(p=>`<span class="chip">${esc(p)}</span>`).join('');
+  cc.innerHTML=lp.length===0?`<span class="empty-msg">${t('no_participants')}</span>`:lp.map(p=>`<span class="chip">${esc(p)}</span>`).join('');
   drawWheel();
   try{localStorage.setItem('lp',JSON.stringify(lp));}catch(e){}
 }
@@ -731,13 +1001,13 @@ function setSyncStatus(state,text){
 }
 
 async function loadPlayers(){
-  setSyncStatus('loading','Завантаження...');
+  setSyncStatus('loading',t('connecting'));
   try{
     const res=await fetch(`${SUPA_URL}/rest/v1/tournament_players?select=*&order=created_at.asc`,{headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY}});
-    td=await res.json();renderTable();setSyncStatus('ok','Синхронізовано');
+    td=await res.json();renderTable();setSyncStatus('ok',t('sync_ok'));
     updateHeroLeaders();
     if(!pollingStarted){pollingStarted=true;startPolling();}
-  }catch(e){setSyncStatus('err','Помилка з\'єднання');}
+  }catch(e){setSyncStatus('err',t('conn_error'));}
 }
 
 function startPolling(){
@@ -746,18 +1016,25 @@ function startPolling(){
     try{
       const res=await fetch(`${SUPA_URL}/rest/v1/tournament_players?select=*&order=created_at.asc`,{headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY}});
       const data=await res.json();
-      if(JSON.stringify(data)!==JSON.stringify(td)){td=data;renderTable();setSyncStatus('ok','Оновлено');}
+      if(JSON.stringify(data)!==JSON.stringify(td)){td=data;renderTable();setSyncStatus('ok',t('updated'));}
     }catch(e){}
   },5000);
 }
 
+/* п.4: лідерство — спочатку по балах, при рівності — по сумарному XP */
 function calcScore(p){return[p.xp_bb,p.xp_ca,p.xp_dd,p.xp_cv].reduce((s,v)=>s+(v&&v>0?Math.floor(v/1000):0),0);}
+function calcTotalXP(p){return[p.xp_bb,p.xp_ca,p.xp_dd,p.xp_cv].reduce((s,v)=>s+(v&&v>0?v:0),0);}
+
+function sortPlayers(arr){
+  return arr.map(p=>({...p,sc:calcScore(p),totalXP:calcTotalXP(p)}))
+    .sort((a,b)=>b.sc-a.sc||b.totalXP-a.totalXP);
+}
 
 function updateHeroLeaders(){
-  const ws=td.map(p=>({...p,sc:calcScore(p)})).sort((a,b)=>b.sc-a.sc).slice(0,3);
+  const ws=sortPlayers(td).slice(0,3);
   const hl=document.getElementById('heroLeaders');
   if(!hl)return;
-  if(!ws.length){hl.innerHTML='<div class="ins-player"><span class="rk">—</span><span class="nm" style="color:var(--muted)">Немає даних</span></div>';return;}
+  if(!ws.length){hl.innerHTML=`<div class="ins-player"><span class="rk">—</span><span class="nm" style="color:var(--muted)">Немає даних</span></div>`;return;}
   hl.innerHTML=ws.map((p,i)=>`<div class="ins-player"><span class="rk${i===0?' g':''}">${i+1}</span><span class="nm">${esc(p.nick)}</span><span class="sc">${p.sc} б</span></div>`).join('');
 }
 
@@ -765,10 +1042,10 @@ function renderTable(){
   const tb=document.getElementById('tournamentTbody');
   const canEdit=currentUser&&userApproved;
   if(!td.length){
-    tb.innerHTML=`<tr><td colspan="${canEdit?8:7}" style="padding:40px;color:var(--muted);font-size:12px;text-align:center;font-style:italic">Немає учасників${canEdit?' — натисніть «+ Додати гравця»':''}</td></tr>`;
+    tb.innerHTML=`<tr><td colspan="${canEdit?8:7}" style="padding:40px;color:var(--muted);font-size:13px;text-align:center;font-style:italic">${t('no_players')}${canEdit?t('add_player_hint'):''}</td></tr>`;
     return;
   }
-  const ws=td.map(p=>({...p,sc:calcScore(p)})).sort((a,b)=>b.sc-a.sc);
+  const ws=sortPlayers(td);
   const fields=['xp_bb','xp_ca','xp_dd','xp_cv'];
   tb.innerHTML=ws.map((p,r)=>{
     const rc=r===0?'rank-1':r===1?'rank-2':r===2?'rank-3':'rank-n';
@@ -785,23 +1062,23 @@ function renderTable(){
 async function delP(id){
   if(!userApproved)return;
   const p=td.find(x=>x.id===id);if(!p)return;
-  if(!confirm(`Видалити «${p.nick}»?`))return;
+  if(!confirm(`${t('confirm_delete')}${p.nick}${t('confirm_delete2')}`))return;
   try{
     await sbFetch(`/rest/v1/tournament_players?id=eq.${id}`,{method:'DELETE'});
-    td=td.filter(x=>x.id!==id);renderTable();setSyncStatus('ok','Збережено');
-  }catch(e){alert('Помилка: '+e.message);}
+    td=td.filter(x=>x.id!==id);renderTable();setSyncStatus('ok',t('saved'));
+  }catch(e){alert(t('error_prefix')+' '+e.message);}
 }
 
 async function editNick(id){
   if(!userApproved)return;
   const p=td.find(x=>x.id===id);if(!p)return;
-  const n=prompt('Новий нікнейм:',p.nick);
+  const n=prompt(t('new_nick_prompt'),p.nick);
   if(!n||!n.trim()||n.trim()===p.nick)return;
   try{
-    setSyncStatus('loading','Збереження...');
+    setSyncStatus('loading',t('saving'));
     await sbFetch(`/rest/v1/tournament_players?id=eq.${id}`,{method:'PATCH',body:JSON.stringify({nick:n.trim(),updated_at:new Date().toISOString()})});
-    p.nick=n.trim();renderTable();setSyncStatus('ok','Збережено');
-  }catch(e){alert('Помилка: '+e.message);setSyncStatus('err','Помилка');}
+    p.nick=n.trim();renderTable();setSyncStatus('ok',t('saved'));
+  }catch(e){alert(t('error_prefix')+' '+e.message);setSyncStatus('err',t('error_prefix'));}
 }
 
 function openAddPlayerModal(){
@@ -812,24 +1089,24 @@ function openAddPlayerModal(){
 async function confirmAddPlayer(){
   const n=document.getElementById('newPlayerNick').value.trim();
   if(!n){document.getElementById('newPlayerNick').focus();return;}
-  if(td.some(p=>p.nick.toLowerCase()===n.toLowerCase())){alert('Такий нікнейм вже є!');return;}
+  if(td.some(p=>p.nick.toLowerCase()===n.toLowerCase())){alert(t('nick_exists'));return;}
   try{
-    setSyncStatus('loading','Збереження...');
+    setSyncStatus('loading',t('saving'));
     const res=await sbFetch('/rest/v1/tournament_players',{method:'POST',body:JSON.stringify({nick:n})});
     if(Array.isArray(res)&&res[0])td.push(res[0]);else await loadPlayers();
-    renderTable();setSyncStatus('ok','Збережено');
+    renderTable();setSyncStatus('ok',t('saved'));
     closeModal('addPlayerModal');document.getElementById('newPlayerNick').value='';
   }catch(e){
-    if(e.message.includes('policy'))alert('Немає дозволу. Акаунт ще не підтверджено.');
-    else alert('Помилка: '+e.message);
-    setSyncStatus('err','Помилка');
+    if(e.message.includes('policy'))alert(t('no_permission'));
+    else alert(t('error_prefix')+' '+e.message);
+    setSyncStatus('err',t('error_prefix'));
   }
 }
 
 function openXp(id){
   if(!userApproved)return;
   xpIdx=id;const p=td.find(x=>x.id===id);if(!p)return;
-  document.getElementById('editXpTitle').textContent=`${p.nick} — Результати`;
+  document.getElementById('editXpTitle').textContent=`${p.nick} — ${t('player_results')}`;
   document.getElementById('xpField0').value=p.xp_bb||'';
   document.getElementById('xpField1').value=p.xp_ca||'';
   document.getElementById('xpField2').value=p.xp_dd||'';
@@ -843,15 +1120,15 @@ async function confirmEditXp(){
     const v=parseInt(document.getElementById(f).value);return(!isNaN(v)&&v>0)?v:null;
   });
   try{
-    setSyncStatus('loading','Збереження...');
+    setSyncStatus('loading',t('saving'));
     await sbFetch(`/rest/v1/tournament_players?id=eq.${xpIdx}`,{method:'PATCH',body:JSON.stringify({xp_bb:vals[0],xp_ca:vals[1],xp_dd:vals[2],xp_cv:vals[3],updated_at:new Date().toISOString()})});
     const p=td.find(x=>x.id===xpIdx);
     if(p){p.xp_bb=vals[0];p.xp_ca=vals[1];p.xp_dd=vals[2];p.xp_cv=vals[3];}
-    renderTable();setSyncStatus('ok','Збережено');closeModal('editXpModal');xpIdx=null;
+    renderTable();setSyncStatus('ok',t('saved'));closeModal('editXpModal');xpIdx=null;
   }catch(e){
-    if(e.message.includes('policy'))alert('Немає дозволу.');
-    else alert('Помилка: '+e.message);
-    setSyncStatus('err','Помилка');
+    if(e.message.includes('policy'))alert(t('no_permission'));
+    else alert(t('error_prefix')+' '+e.message);
+    setSyncStatus('err',t('error_prefix'));
   }
 }
 
@@ -864,33 +1141,14 @@ function setRecSyncStatus(state,text){
 }
 
 async function loadRecords(){
-  setRecSyncStatus('loading','Завантаження...');
+  setRecSyncStatus('loading',t('loading'));
   try{
     const res=await fetch(`${SUPA_URL}/rest/v1/clan_records?select=*`,{headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY}});
     const data=await res.json();
     recData={};data.forEach(r=>{recData[r.category]=r;});
-    renderRecords();setRecSyncStatus('ok','Синхронізовано');
-    updateHeroRecord();
+    renderRecords();setRecSyncStatus('ok',t('sync_ok'));
     if(!recPollingStarted){recPollingStarted=true;startRecPolling();}
-  }catch(e){setRecSyncStatus('err','Помилка з\'єднання');}
-}
-
-function updateHeroRecord(){
-  let best=null;
-  RECORD_CATS.forEach(c=>{
-    const rec=recData[c.key];
-    if(!rec)return;
-    if(!best||rec.date>best.rec.date)best={cat:c,rec};
-  });
-  const rv=document.getElementById('heroRecVal');
-  const rc=document.getElementById('heroRecCat');
-  const rp=document.getElementById('heroRecPlayer');
-  if(best&&rv&&rc&&rp){
-    const val=best.cat.key==='damage'?Math.round(best.rec.result/1000)+'k':best.rec.result;
-    rv.textContent=val+(best.cat.unit?' '+best.cat.unit:'');
-    rc.textContent=best.cat.label+' · '+best.rec.ship;
-    rp.textContent=best.rec.player_nick;
-  }
+  }catch(e){setRecSyncStatus('err',t('conn_error'));}
 }
 
 function startRecPolling(){
@@ -900,7 +1158,7 @@ function startRecPolling(){
       const res=await fetch(`${SUPA_URL}/rest/v1/clan_records?select=*`,{headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY}});
       const data=await res.json();
       const nd={};data.forEach(r=>{nd[r.category]=r;});
-      if(JSON.stringify(nd)!==JSON.stringify(recData)){recData=nd;renderRecords();setRecSyncStatus('ok','Оновлено');}
+      if(JSON.stringify(nd)!==JSON.stringify(recData)){recData=nd;renderRecords();setRecSyncStatus('ok',t('updated'));}
     }catch(e){}
   },5000);
 }
@@ -915,7 +1173,7 @@ function renderRecords(){
   const canEdit=currentUser&&userApproved;
   grid.innerHTML=RECORD_CATS.map(cat=>{
     const rec=recData[cat.key];
-    const editBtn=canEdit?`<button class="record-edit-btn" onclick="openEditRecord('${cat.key}')">Змінити</button>`:'';
+    const editBtn=canEdit?`<button class="record-edit-btn" onclick="openEditRecord('${cat.key}')">${t('save').replace('Зберегти','Змінити').replace('Save','Edit').replace('Сохранить','Изменить')}</button>`:'';
     const body=rec
       ?`<div class="record-value">${formatResult(cat.key,rec.result)}<span>${cat.unit}</span></div>
         <div class="record-meta">
@@ -937,7 +1195,7 @@ function openEditRecord(catKey){
   const cat=RECORD_CATS.find(c=>c.key===catKey);
   const rec=recData[catKey];
   document.getElementById('editRecordTitle').textContent=cat.label;
-  document.getElementById('editRecordSub').textContent=rec?'Оновити рекорд':'Встановити новий рекорд';
+  document.getElementById('editRecordSub').textContent=rec?t('edit_record_update'):t('edit_record_new');
   document.getElementById('recPlayer').value=rec?.player_nick||'';
   document.getElementById('recShip').value=rec?.ship||'';
   document.getElementById('recResult').value=rec?.result||'';
@@ -953,10 +1211,10 @@ async function confirmEditRecord(){
   const date=document.getElementById('recDate').value;
   const errEl=document.getElementById('recError');
   errEl.textContent='';
-  if(!player||!ship||isNaN(result)||!date){errEl.textContent='Заповни всі поля';return;}
+  if(!player||!ship||isNaN(result)||!date){errEl.textContent=t('fill_all');return;}
   const body={category:editingCat,player_nick:player,ship,result,date,updated_at:new Date().toISOString()};
   try{
-    setRecSyncStatus('loading','Збереження...');
+    setRecSyncStatus('loading',t('saving'));
     const existing=recData[editingCat];
     if(existing){
       await sbFetch(`/rest/v1/clan_records?id=eq.${existing.id}`,{method:'PATCH',body:JSON.stringify(body)});
@@ -965,11 +1223,11 @@ async function confirmEditRecord(){
       const res=await sbFetch('/rest/v1/clan_records',{method:'POST',body:JSON.stringify(body)});
       if(Array.isArray(res)&&res[0])recData[editingCat]=res[0];
     }
-    renderRecords();setRecSyncStatus('ok','Збережено');closeModal('editRecordModal');editingCat=null;
+    renderRecords();setRecSyncStatus('ok',t('saved'));closeModal('editRecordModal');editingCat=null;
   }catch(e){
-    if(e.message.includes('policy'))errEl.textContent='Немає дозволу.';
-    else errEl.textContent='Помилка: '+e.message;
-    setRecSyncStatus('err','Помилка');
+    if(e.message.includes('policy'))errEl.textContent=t('no_permission');
+    else errEl.textContent=t('error_prefix')+' '+e.message;
+    setRecSyncStatus('err',t('error_prefix'));
   }
 }
 
@@ -977,7 +1235,6 @@ async function confirmEditRecord(){
 function openModal(id){document.getElementById(id).classList.add('active');}
 function closeModal(id){document.getElementById(id).classList.remove('active');}
 function switchModal(from,to){closeModal(from);openModal(to);}
-
 document.addEventListener('keydown',e=>{if(e.key==='Escape')document.querySelectorAll('.modal-overlay.active').forEach(m=>m.classList.remove('active'));});
 
 /* ── INIT ── */
@@ -985,17 +1242,13 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape')document.querySelect
   restorePage();
   await tryRestoreSession();
   updateAuthUI();
+  applyTranslations();
   setInterval(updateTimer,1000);
   updateTimer();
   loadLottery();
-  // Pre-load data for home page instruments
   try{
     const res=await fetch(`${SUPA_URL}/rest/v1/tournament_players?select=*&order=created_at.asc`,{headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY}});
     td=await res.json();updateHeroLeaders();
-  }catch(e){}
-  try{
-    const res=await fetch(`${SUPA_URL}/rest/v1/clan_records?select=*`,{headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY}});
-    const data=await res.json();recData={};data.forEach(r=>{recData[r.category]=r;});updateHeroRecord();
   }catch(e){}
 })();
 </script>
