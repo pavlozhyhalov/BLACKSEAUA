@@ -641,7 +641,7 @@ const TRANSLATIONS = {
   }
 };
 
-let currentLang = 'uk';
+let currentLang = localStorage.getItem('lang') || 'uk';
 
 function t(key) {
   return (TRANSLATIONS[currentLang] && TRANSLATIONS[currentLang][key]) || TRANSLATIONS['uk'][key] || key;
@@ -663,6 +663,7 @@ const LANG_META={
 
 function setLang(lang) {
   currentLang = lang;
+  try{localStorage.setItem('lang',lang);}catch(e){}
   document.getElementById('langDropdown').classList.remove('open');
   const flag=document.getElementById('langFlag');
   flag.className='flag-badge '+LANG_META[lang].flagClass;
@@ -672,6 +673,17 @@ function setLang(lang) {
   });
   applyTranslations();
   updateAuthUI();
+}
+
+function restoreLangUI(){
+  const lang=currentLang;
+  const flag=document.getElementById('langFlag');
+  if(flag)flag.className='flag-badge '+LANG_META[lang].flagClass;
+  const code=document.getElementById('langCode');
+  if(code)code.textContent=LANG_META[lang].code;
+  document.querySelectorAll('.lang-option').forEach((el,i)=>{
+    el.classList.toggle('active',['uk','ru','en'][i]===lang);
+  });
 }
 
 function applyTranslations() {
@@ -855,10 +867,10 @@ function updateAuthUI(){
   const area=document.getElementById('headerAuth');
   if(currentUser){
     const cls=userApproved?'approved':'';
-    const status=userApproved?'✓ ':'⏳ ';
-    const emailDisplay=currentUser.email.split('@')[0].slice(0,12);
-    area.innerHTML=`<span class="auth-user ${cls}" title="${currentUser.email}">${status}${emailDisplay}</span>
-      <button class="auth-btn" onclick="doLogout()">${t('logout')}</button>`;
+    const status=userApproved?'✓':'⏳';
+    const emailDisplay=currentUser.email.split('@')[0].slice(0,9);
+    area.innerHTML=`<span class="auth-user ${cls}" title="${currentUser.email}">${status} ${emailDisplay}</span>
+      <button class="auth-btn logout-btn" onclick="doLogout()">${t('logout')}</button>`;
   }else{
     area.innerHTML=`<button class="auth-btn primary" onclick="openModal('loginModal')">${t('login')}</button>
       <button class="auth-btn register-btn" onclick="openModal('registerModal')">${t('register_short')}</button>`;
@@ -1329,6 +1341,7 @@ function updateFlipCountdown(){
   restorePage();
   await tryRestoreSession();
   updateAuthUI();
+  restoreLangUI();
   applyTranslations();
   setInterval(updateTimer,1000);
   setInterval(updateFlipCountdown,1000);
