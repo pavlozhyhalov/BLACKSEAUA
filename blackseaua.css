@@ -138,7 +138,42 @@ header {
   min-width: 0;
 }
 
-/* Випадаючий список мови */
+/* Прапорці мов */
+.flag-badge {
+  display: inline-block;
+  width: 16px;
+  height: 11px;
+  border-radius: 1px;
+  flex-shrink: 0;
+  vertical-align: middle;
+}
+.flag-uk {
+  background: linear-gradient(to bottom, #005BBB 50%, #FFD500 50%);
+}
+.flag-ru {
+  background: linear-gradient(to bottom, #fff 33%, #003DA5 33%, #003DA5 66%, #CC0000 66%);
+}
+.flag-en {
+  background: #012169;
+  position: relative;
+  overflow: hidden;
+}
+.flag-en::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(to bottom right, transparent 43%, #fff 43%, #fff 57%, transparent 57%),
+    linear-gradient(to bottom left, transparent 43%, #fff 43%, #fff 57%, transparent 57%);
+}
+.flag-en::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(to bottom, transparent 40%, #CC0000 40%, #CC0000 60%, transparent 60%),
+    linear-gradient(to right, transparent 40%, #CC0000 40%, #CC0000 60%, transparent 60%);
+}
 .lang-dropdown {
   position: relative;
   flex-shrink: 0;
