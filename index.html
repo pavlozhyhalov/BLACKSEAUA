@@ -1235,6 +1235,58 @@ function closeModal(id){document.getElementById(id).classList.remove('active');}
 function switchModal(from,to){closeModal(from);openModal(to);}
 document.addEventListener('keydown',e=>{if(e.key==='Escape')document.querySelectorAll('.modal-overlay.active').forEach(m=>m.classList.remove('active'));});
 
+/* ── SCROLL REVEAL ── */
+function initReveal(){
+  // Блок актуальної події
+  const eb=document.querySelector('.instrument.event-block');
+  if(eb)setTimeout(()=>eb.classList.add('visible'),120);
+
+  // Картки розділів — з'являються по черзі
+  const cards=document.querySelectorAll('#homePage .card');
+  const observer=new IntersectionObserver((entries)=>{
+    entries.forEach(entry=>{
+      if(entry.isIntersecting){
+        const card=entry.target;
+        const idx=Array.from(cards).indexOf(card);
+        setTimeout(()=>card.classList.add('visible'), idx*80);
+        observer.unobserve(card);
+      }
+    });
+  },{threshold:0.1});
+  cards.forEach(c=>observer.observe(c));
+}
+
+/* ── FLIP TIMER ── */
+const prevVals={};
+function flipDigit(el,newVal){
+  if(el.textContent===String(newVal))return;
+  el.classList.add('flip-out');
+  setTimeout(()=>{
+    el.textContent=newVal;
+    el.classList.remove('flip-out');
+    el.classList.add('flip-in');
+    requestAnimationFrame(()=>requestAnimationFrame(()=>el.classList.remove('flip-in')));
+  },90);
+}
+
+function updateFlipCountdown(){
+  const stage=getCurrentStage();
+  if(!stage)return;
+  const diff=stage.end-new Date();
+  if(diff<=0)return;
+  const days=Math.floor(diff/86400000);
+  const hours=Math.floor((diff%86400000)/3600000);
+  const mins=Math.floor((diff%3600000)/60000);
+  const secs=Math.floor((diff%60000)/1000);
+  const segs=document.querySelectorAll('#heroCountdown .seg b');
+  if(segs.length===4){
+    flipDigit(segs[0],days);
+    flipDigit(segs[1],pad(hours));
+    flipDigit(segs[2],pad(mins));
+    flipDigit(segs[3],pad(secs));
+  }
+}
+
 /* ── INIT ── */
 (async()=>{
   restorePage();
@@ -1242,7 +1294,9 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape')document.querySelect
   updateAuthUI();
   applyTranslations();
   setInterval(updateTimer,1000);
+  setInterval(updateFlipCountdown,1000);
   updateTimer();
+  setTimeout(initReveal,50);
   loadLottery();
   try{
     const res=await fetch(`${SUPA_URL}/rest/v1/tournament_players?select=*&order=created_at.asc`,{headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY}});
