@@ -29,14 +29,14 @@ gtag('config', 'G-V2SVEPJSH0');
     <div class="header-right">
       <div class="lang-dropdown" id="langDropdown">
         <div class="lang-selected" onclick="toggleLangMenu()">
-          <span id="langFlag">🇺🇦</span>
+          <span class="flag-badge flag-uk" id="langFlag"></span>
           <span id="langCode">UA</span>
           <span class="lang-arrow">▾</span>
         </div>
         <div class="lang-menu">
-          <div class="lang-option active" onclick="setLang('uk')">🇺🇦 Українська</div>
-          <div class="lang-option" onclick="setLang('ru')">🇷🇺 Русский</div>
-          <div class="lang-option" onclick="setLang('en')">🇬🇧 English</div>
+          <div class="lang-option active" onclick="setLang('uk')"><span class="flag-badge flag-uk"></span> Українська</div>
+          <div class="lang-option" onclick="setLang('ru')"><span class="flag-badge flag-ru"></span> Русский</div>
+          <div class="lang-option" onclick="setLang('en')"><span class="flag-badge flag-en"></span> English</div>
         </div>
       </div>
       <div class="header-auth" id="headerAuth">
@@ -655,12 +655,17 @@ document.addEventListener('click',e=>{
   if(dd&&!dd.contains(e.target))dd.classList.remove('open');
 });
 
-const LANG_META={uk:{flag:'🇺🇦',code:'UA'},ru:{flag:'🇷🇺',code:'RU'},en:{flag:'🇬🇧',code:'EN'}};
+const LANG_META={
+  uk:{flagClass:'flag-uk',code:'UA'},
+  ru:{flagClass:'flag-ru',code:'RU'},
+  en:{flagClass:'flag-en',code:'EN'}
+};
 
 function setLang(lang) {
   currentLang = lang;
   document.getElementById('langDropdown').classList.remove('open');
-  document.getElementById('langFlag').textContent=LANG_META[lang].flag;
+  const flag=document.getElementById('langFlag');
+  flag.className='flag-badge '+LANG_META[lang].flagClass;
   document.getElementById('langCode').textContent=LANG_META[lang].code;
   document.querySelectorAll('.lang-option').forEach((el,i)=>{
     el.classList.toggle('active',['uk','ru','en'][i]===lang);
@@ -851,8 +856,7 @@ function updateAuthUI(){
   if(currentUser){
     const cls=userApproved?'approved':'';
     const status=userApproved?'✓ ':'⏳ ';
-    // Show truncated email to avoid layout shift on mobile
-    const emailDisplay=currentUser.email.length>22?currentUser.email.slice(0,20)+'…':currentUser.email;
+    const emailDisplay=currentUser.email.split('@')[0].slice(0,12);
     area.innerHTML=`<span class="auth-user ${cls}" title="${currentUser.email}">${status}${emailDisplay}</span>
       <button class="auth-btn" onclick="doLogout()">${t('logout')}</button>`;
   }else{
