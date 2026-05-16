@@ -127,7 +127,7 @@ header {
   margin-left: auto;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   min-width: 0;
   flex-shrink: 0;
 }
@@ -138,27 +138,63 @@ header {
   min-width: 0;
 }
 
-/* п.18: перемикач мови */
-.lang-switcher {
-  display: flex;
-  gap: 2px;
+/* Випадаючий список мови */
+.lang-dropdown {
+  position: relative;
   flex-shrink: 0;
 }
-.lang-btn {
+.lang-selected {
   font-family: var(--f-mono);
-  font-size: 9.5px;
-  letter-spacing: .14em;
-  text-transform: uppercase;
+  font-size: 11px;
+  letter-spacing: .1em;
   background: transparent;
-  border: 1px solid transparent;
-  color: var(--muted);
-  padding: 4px 7px;
+  border: 1px solid var(--border);
+  color: var(--cream);
+  padding: 5px 8px;
   cursor: pointer;
   border-radius: var(--r);
-  transition: all .15s;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+  transition: border-color .15s;
+  user-select: none;
 }
-.lang-btn:hover { color: var(--cream); border-color: var(--border); }
-.lang-btn.active { color: var(--accent); border-color: var(--accent); background: var(--accent-bg); }
+.lang-selected:hover { border-color: var(--accent); }
+.lang-selected .lang-arrow {
+  font-size: 8px;
+  color: var(--muted);
+  transition: transform .2s;
+}
+.lang-dropdown.open .lang-arrow { transform: rotate(180deg); }
+.lang-menu {
+  display: none;
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  border-radius: var(--r);
+  overflow: hidden;
+  z-index: 200;
+  min-width: 110px;
+  box-shadow: 0 8px 24px rgba(0,0,0,.4);
+}
+.lang-dropdown.open .lang-menu { display: block; }
+.lang-option {
+  font-family: var(--f-mono);
+  font-size: 11px;
+  letter-spacing: .08em;
+  color: var(--text);
+  padding: 9px 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: background .12s, color .12s;
+}
+.lang-option:hover { background: var(--surface); color: var(--cream); }
+.lang-option.active { color: var(--accent); }
 
 /* п.9: auth-user обрізається, не розпихає шапку */
 .auth-user {
@@ -380,13 +416,13 @@ header {
 /* п.16: підйом при hover на ПК */
 .card:hover {
   background: var(--surface2);
-  box-shadow: inset 0 0 0 1px var(--border2), 0 -2px 0 0 var(--accent);
+  box-shadow: 0 0 0 1px var(--accent);
   z-index: 1;
 }
 /* п.16: активний стан на мобільному */
 .card:active {
   background: var(--surface2);
-  box-shadow: inset 0 0 0 1px var(--border2);
+  box-shadow: 0 0 0 1px var(--accent);
 }
 .card-num {
   font-family: var(--f-mono);
@@ -1137,10 +1173,8 @@ footer {
 @media (max-width: 640px) {
   .header-inner { height: 50px; padding: 0 12px; gap: 8px; }
   .game-title { display: none; }
-  .lang-switcher { gap: 1px; }
-  .lang-btn { padding: 3px 5px; font-size: 9px; }
-  .auth-btn { padding: 5px 9px; font-size: 10px; }
-  .auth-user { max-width: 90px; font-size: 10px; }
+  .auth-btn { padding: 5px 10px; font-size: 10px; letter-spacing: .08em; }
+  .auth-user { max-width: 80px; font-size: 10px; }
   .hero { padding: 40px 0 36px; }
   .hero-title { font-size: 28px; }
   .section { padding: 32px 0; }
