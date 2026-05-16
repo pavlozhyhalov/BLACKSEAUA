@@ -261,6 +261,7 @@ header {
   flex-shrink: 0;
 }
 .auth-btn:hover { border-color: var(--border2); color: var(--cream); }
+.auth-btn.logout-btn { padding: 5px 8px; font-size: 9.5px; letter-spacing: .08em; }
 .auth-btn.primary { border-color: var(--accent); color: var(--accent); }
 .auth-btn.primary:hover { background: var(--accent-bg); }
 
@@ -918,8 +919,7 @@ table.lb td.name-cell.editable:hover { color: var(--accent); }
   margin-bottom: 3px;
 }
 .res-desc { font-size: 13px; color: var(--muted); line-height: 1.5; }
-.res-arrow { color: var(--border2); font-size: 13px; flex-shrink: 0; transition: all .18s; }
-.res-card:hover .res-arrow { color: var(--accent); transform: translate(2px, -2px); }
+.res-arrow { display: none; }
 
 /* ── LOTTERY ── */
 .lottery-layout {
