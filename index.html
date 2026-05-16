@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="uk">
 <head>
@@ -673,10 +672,10 @@ const SUPA_URL='https://otwcegfsmxmhiegukkyl.supabase.co';
 const SUPA_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im90d2NlZ2ZzbXhtaGllZ3Vra3lsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg2NTMwOTUsImV4cCI6MjA5NDIyOTA5NX0.FU45yk9GKVjEkuH-pWp5kB8fA_nVy2wpYQc48baxeL0';
 
 const STAGES=[
-  {num:1,label:'Етап 1 · Дні 1–3',end:new Date('2026-05-16T20:59:59Z')},
-  {num:2,label:'Етап 2 · Дні 4–6',end:new Date('2026-05-19T20:59:59Z')},
-  {num:3,label:'Етап 3 · Дні 7–9',end:new Date('2026-05-22T20:59:59Z')},
-  {num:4,label:'Етап 4 · Дні 10–12',end:new Date('2026-05-25T20:59:59Z')},
+  {num:1,label:'Етап 1 · Дні 1–3',end:new Date('2026-05-15T20:59:59Z')},
+  {num:2,label:'Етап 2 · Дні 4–6',end:new Date('2026-05-18T20:59:59Z')},
+  {num:3,label:'Етап 3 · Дні 7–9',end:new Date('2026-05-21T20:59:59Z')},
+  {num:4,label:'Етап 4 · Дні 10–12',end:new Date('2026-05-24T20:59:59Z')},
 ];
 
 function getCurrentStage(){const now=new Date();return STAGES.find(s=>now<s.end)||null;}
