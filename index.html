@@ -857,7 +857,7 @@ function updateAuthUI(){
       <button class="auth-btn" onclick="doLogout()">${t('logout')}</button>`;
   }else{
     area.innerHTML=`<button class="auth-btn primary" onclick="openModal('loginModal')">${t('login')}</button>
-      <button class="auth-btn" onclick="openModal('registerModal')">${t('register')}</button>`;
+      <button class="auth-btn register-btn" onclick="openModal('registerModal')">${t('register_short')}</button>`;
   }
   const lbArea=document.getElementById('lbActionArea');
   const pending=document.getElementById('pendingBanner');
