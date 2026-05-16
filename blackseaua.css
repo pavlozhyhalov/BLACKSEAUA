@@ -1171,10 +1171,11 @@ footer {
 
 /* ── RESPONSIVE ── */
 @media (max-width: 640px) {
-  .header-inner { height: 50px; padding: 0 12px; gap: 8px; }
+  .header-inner { height: 50px; padding: 0 10px; gap: 6px; }
   .game-title { display: none; }
-  .auth-btn { padding: 5px 10px; font-size: 10px; letter-spacing: .08em; }
-  .auth-user { max-width: 80px; font-size: 10px; }
+  .auth-btn { padding: 5px 8px; font-size: 10px; letter-spacing: .06em; }
+  .auth-btn.register-btn { display: none; }
+  .auth-user { max-width: 75px; font-size: 10px; }
   .hero { padding: 40px 0 36px; }
   .hero-title { font-size: 28px; }
   .section { padding: 32px 0; }
