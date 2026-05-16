@@ -29,13 +29,17 @@ body {
   background: var(--bg);
   color: var(--text);
   font-family: var(--f-body);
-  font-weight: 400;          /* п.14: чіткіший базовий шрифт */
-  font-size: 15px;           /* п.14: більший базовий розмір */
-  line-height: 1.6;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 1.65;
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
   overflow-x: hidden;
+  scrollbar-gutter: stable;
   -webkit-font-smoothing: antialiased;
 }
+footer { margin-top: auto; }
 
 /* subtle grid atmosphere */
 body::before {
@@ -190,7 +194,7 @@ header {
 .auth-btn.primary:hover { background: var(--accent-bg); }
 
 /* ── PAGE TRANSITIONS ── */
-.page { display: none; position: relative; z-index: 1; animation: pageIn .2s ease; }
+.page { display: none; position: relative; z-index: 1; animation: pageIn .2s ease; min-height: calc(100vh - 54px - 73px); }
 .page.active { display: block; }
 @keyframes pageIn { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:translateY(0); } }
 
@@ -201,13 +205,7 @@ header {
   position: relative;
   overflow: hidden;
 }
-.hero-glow {
-  position: absolute;
-  top: 0; right: 0;
-  width: 60%; height: 100%;
-  background: radial-gradient(ellipse 60% 60% at 80% 30%, rgba(184,146,62,.06), transparent 70%);
-  pointer-events: none;
-}
+.hero-glow { display: none; }
 .hero-eyebrow {
   font-family: var(--f-mono);
   font-size: 10px;
@@ -288,7 +286,7 @@ header {
   letter-spacing: -.02em;
   line-height: 1.1;
 }
-.ins-sub { font-size: 13px; color: var(--muted); margin-top: 4px; }
+.ins-sub { font-size: 14px; color: var(--muted); margin-top: 4px; }
 /* п.3: розділювач між таймером і лідерами */
 .ins-divider {
   border: none;
@@ -306,7 +304,7 @@ header {
 .ins-row { display: flex; flex-direction: column; gap: 8px; }
 .ins-player {
   display: flex; align-items: center; gap: 10px;
-  font-size: 14px;   /* п.14 */
+  font-size: 15px;
 }
 .ins-player .rk {
   font-family: var(--f-mono);
@@ -406,9 +404,9 @@ header {
   margin-top: 6px;    /* п.17: менше від номера до назви */
 }
 .card-desc {
-  font-size: 13px;    /* п.14 */
+  font-size: 14px;
   color: var(--muted);
-  line-height: 1.55;
+  line-height: 1.6;
   margin-top: 2px;
 }
 
@@ -441,7 +439,7 @@ header {
   text-transform: uppercase;
   line-height: .95;
 }
-.page-lede { margin-top: 12px; font-size: 14px; color: var(--text); max-width: 62ch; line-height: 1.65; }
+.page-lede { margin-top: 12px; font-size: 15px; color: var(--text); max-width: 62ch; line-height: 1.7; }
 
 /* ── TOURNAMENT: STAGES ── */
 .stages-row {
@@ -544,10 +542,10 @@ header {
   flex-direction: column;
 }
 .rule-item {
-  font-size: 14px;   /* п.14 */
+  font-size: 15px;
   color: var(--text);
-  line-height: 1.6;
-  padding: 10px 0;
+  line-height: 1.65;
+  padding: 11px 0;
   border-bottom: 1px solid var(--border);
   display: flex;
   align-items: flex-start;
@@ -686,7 +684,7 @@ table.lb th {
 table.lb tbody tr { border-bottom: 1px solid var(--border); transition: background .12s; }
 table.lb tbody tr:last-child { border-bottom: none; }
 table.lb tbody tr:hover { background: rgba(255,255,255,.02); }
-table.lb td { padding: 13px 14px; font-size: 14px; vertical-align: middle; text-align: center; }
+table.lb td { padding: 13px 14px; font-size: 15px; vertical-align: middle; text-align: center; }
 table.lb td.name-cell { text-align: left; font-weight: 400; color: var(--cream); }
 table.lb td.name-cell.editable { cursor: pointer; }
 table.lb td.name-cell.editable:hover { color: var(--accent); }
@@ -709,7 +707,7 @@ table.lb td.name-cell.editable:hover { color: var(--accent); }
 .xp-val { font-family: var(--f-mono); font-size: 13px; color: var(--text); }
 .xp-val.editable { cursor: pointer; }
 .xp-val.editable:hover { color: var(--accent); }
-.xp-empty { font-size: 13px; color: var(--muted); }
+.xp-empty { font-size: 13px; color: var(--muted); white-space: nowrap; }
 .xp-empty.editable { cursor: pointer; }
 .xp-empty.editable:hover { color: var(--accent); }
 .score-total {
@@ -793,8 +791,8 @@ table.lb td.name-cell.editable:hover { color: var(--accent); }
   vertical-align: middle;
 }
 .record-meta { display: flex; flex-direction: column; gap: 4px; }
-.record-player { font-size: 14px; color: var(--cream); font-weight: 500; }
-.record-ship { font-size: 13px; color: var(--text); }
+.record-player { font-size: 15px; color: var(--cream); font-weight: 500; }
+.record-ship { font-size: 14px; color: var(--text); }
 .record-date { font-family: var(--f-mono); font-size: 11px; color: var(--muted); letter-spacing: .1em; margin-top: 4px; }
 .record-empty { font-size: 13px; color: var(--muted); font-style: italic; padding: 10px 0; }
 
@@ -848,7 +846,7 @@ table.lb td.name-cell.editable:hover { color: var(--accent); }
   text-transform: uppercase;
   margin-bottom: 3px;
 }
-.res-desc { font-size: 12px; color: var(--muted); line-height: 1.45; }
+.res-desc { font-size: 13px; color: var(--muted); line-height: 1.5; }
 .res-arrow { color: var(--border2); font-size: 13px; flex-shrink: 0; transition: all .18s; }
 .res-card:hover .res-arrow { color: var(--accent); transform: translate(2px, -2px); }
 
@@ -1108,7 +1106,6 @@ footer {
   padding: 24px 0;
   position: relative;
   z-index: 1;
-  margin-top: 0;  /* п.1: прибрати зайвий відступ */
 }
 .footer-inner {
   max-width: var(--maxw);
@@ -1139,7 +1136,7 @@ footer {
 /* ── RESPONSIVE ── */
 @media (max-width: 640px) {
   .header-inner { height: 50px; padding: 0 12px; gap: 8px; }
-  .game-title { display: none; }   /* п.9: приховати підзаголовок щоб заощадити місце */
+  .game-title { display: none; }
   .lang-switcher { gap: 1px; }
   .lang-btn { padding: 3px 5px; font-size: 9px; }
   .auth-btn { padding: 5px 9px; font-size: 10px; }
@@ -1152,6 +1149,8 @@ footer {
   .timer-slim { flex-direction: column; align-items: flex-start; }
   .card { min-height: 100px; }
   .instrument.event-block { padding: 18px 20px; }
+  table.lb td { padding: 10px 8px; font-size: 13px; }
+  table.lb th { padding: 10px 8px; }
 }
 
 @media (max-width: 400px) {
