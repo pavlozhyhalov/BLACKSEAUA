@@ -1157,4 +1157,62 @@ footer {
   .auth-user { max-width: 70px; }
   .lang-btn { padding: 3px 4px; }
 }
-/* v2 */
+
+/* ── ANIMATIONS ── */
+
+/* 1. Scroll reveal для карток */
+.card {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity .45s ease, transform .45s ease, background .15s, box-shadow .18s;
+}
+.card.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* 2. Поява блоку актуальної події */
+.instrument.event-block {
+  opacity: 0;
+  transform: translateX(-18px);
+  transition: opacity .5s ease, transform .5s ease, background .15s, box-shadow .2s;
+}
+.instrument.event-block.visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* 3. Flip таймер */
+.seg b {
+  display: block;
+  font-family: var(--f-mono);
+  font-size: 22px;
+  color: var(--accent);
+  line-height: 1;
+  transition: transform .18s ease, opacity .18s ease;
+}
+.seg b.flip-out {
+  transform: translateY(-8px);
+  opacity: 0;
+}
+.seg b.flip-in {
+  transform: translateY(8px);
+  opacity: 0;
+}
+
+/* 4. Пульсація активного етапу */
+@keyframes stagePulse {
+  0%, 100% { border-left-color: var(--accent); }
+  50% { border-left-color: rgba(184,146,62,.3); }
+}
+.stage-card.active-stage {
+  animation: stagePulse 2s ease-in-out infinite;
+}
+
+/* prefers-reduced-motion — вимикаємо все для тих хто не хоче */
+@media (prefers-reduced-motion: reduce) {
+  .card { opacity: 1; transform: none; transition: background .15s, box-shadow .18s; }
+  .instrument.event-block { opacity: 1; transform: none; transition: background .15s, box-shadow .2s; }
+  .seg b { transition: none; }
+  .stage-card.active-stage { animation: none; }
+}
