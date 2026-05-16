@@ -904,11 +904,20 @@ function updateAuthUI(){
 const PAGE_MAP={'':'homePage','home':'homePage','lottery':'lotteryPage','tournaments':'tournamentsListPage','flex':'tournamentFlexPage','records':'recordsPage','resources':'resourcesPage','voting':'votingPage'};
 const HASH_MAP={'homePage':'home','lotteryPage':'lottery','tournamentsListPage':'tournaments','tournamentFlexPage':'flex','recordsPage':'records','resourcesPage':'resources','votingPage':'voting'};
 
+function revealCards(){
+  document.querySelectorAll('.page.active .card').forEach((card,idx)=>{
+    if(!card.classList.contains('visible')){
+      setTimeout(()=>card.classList.add('visible'),100+idx*80);
+    }
+  });
+}
+
 function showPage(id){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   window.location.hash=HASH_MAP[id]||'home';
   window.scrollTo(0,0);
+  setTimeout(revealCards,50);
 }
 function backToHome(){showPage('homePage');}
 function openLottery(){showPage('lotteryPage');setTimeout(()=>{setCanvasSize();drawWheel();},40);}
@@ -1265,14 +1274,12 @@ function initReveal(){
   const eb=document.querySelector('.instrument.event-block');
   if(eb)setTimeout(()=>eb.classList.add('visible'),150);
 
-  const cards=document.querySelectorAll('#homePage .card');
+  const cards=document.querySelectorAll('.card');
   cards.forEach((card,idx)=>{
     const rect=card.getBoundingClientRect();
     if(rect.top<window.innerHeight){
-      // Вже видима — анімуємо з затримкою
       setTimeout(()=>card.classList.add('visible'),200+idx*100);
     } else {
-      // Поза екраном — анімуємо при скролі
       const observer=new IntersectionObserver((entries)=>{
         entries.forEach(entry=>{
           if(entry.isIntersecting){
