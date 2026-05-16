@@ -1,1218 +1,1330 @@
-/* ── RESET ── */
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-V2SVEPJSH0"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-V2SVEPJSH0');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>BLACKSEAUA · WORLD OF WARSHIPS LEGENDS</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Syne+Mono&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="blackseaua.css">
+</head>
+<body>
 
-/* ── TOKENS ── */
-:root {
-  --bg:       #07101a;
-  --bg2:      #0b1822;
-  --surface:  #0e1f2e;
-  --surface2: #122436;
-  --border:   #172e42;
-  --border2:  #1e3d57;
-  --accent:   #b8923e;
-  --accent-bg:#1a140a;
-  --green:    #4d9068;
-  --red:      #c45050;
-  --text:     #a8c4d8;   /* п.15: підвищена контрастність */
-  --muted:    #567a94;   /* п.15: світліший muted */
-  --cream:    #e8f4ff;   /* п.15: яскравіший cream */
+<header>
+  <div class="header-inner">
+    <div class="header-logo" onclick="backToHome()">
+      <div class="logo-mark">BS</div>
+      <div>
+        <div class="clan-title">BLACKSEAUA</div>
+        <div class="game-title">World of Warships Legends</div>
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="lang-dropdown" id="langDropdown">
+        <div class="lang-selected" onclick="toggleLangMenu()">
+          <span id="langFlag">🇺🇦</span>
+          <span id="langCode">UA</span>
+          <span class="lang-arrow">▾</span>
+        </div>
+        <div class="lang-menu">
+          <div class="lang-option active" onclick="setLang('uk')">🇺🇦 Українська</div>
+          <div class="lang-option" onclick="setLang('ru')">🇷🇺 Русский</div>
+          <div class="lang-option" onclick="setLang('en')">🇬🇧 English</div>
+        </div>
+      </div>
+      <div class="header-auth" id="headerAuth">
+        <button class="auth-btn primary" onclick="openModal('loginModal')" data-i18n="login">Увійти</button>
+        <button class="auth-btn" onclick="openModal('registerModal')" data-i18n="register_short">Реєстр.</button>
+      </div>
+    </div>
+  </div>
+</header>
 
-  --f-head: 'Syne', sans-serif;
-  --f-body: 'DM Sans', sans-serif;
-  --f-mono: 'Syne Mono', monospace;
-  --maxw: 1080px;
-  --r: 3px;
-}
+<!-- ══ HOME ══ -->
 
-/* ── BASE ── */
-body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: var(--f-body);
-  font-weight: 400;
-  font-size: 16px;
-  line-height: 1.65;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  overflow-x: hidden;
-  scrollbar-gutter: stable;
-  -webkit-font-smoothing: antialiased;
-}
-footer { margin-top: auto; }
+<div id="homePage" class="page active">
+  <div class="shell">
+    <div class="hero">
+      <div class="hero-glow"></div>
+      <div class="hero-eyebrow">World of Warships Legends · Clan Hub</div>
+      <div class="hero-title" data-i18n="hero_title">Командний<br>Міст Клану</div>
 
-/* subtle grid atmosphere */
-body::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 0;
-  background-image:
-    linear-gradient(rgba(255,255,255,.008) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,.008) 1px, transparent 1px);
-  background-size: 56px 56px;
-}
+      <div class="instruments">
+        <div class="instrument event-block" onclick="openTournamentFlex()">
+          <div class="ins-label">
+            <span data-i18n="active_event">Актуальна подія</span>
+            <span class="ins-live">LIVE</span>
+          </div>
+          <div class="ins-val" data-i18n="challenge">Гнучкість</div>
+          <div class="ins-sub" id="heroStageLabel">—</div>
+          <div class="ins-countdown" id="heroCountdown">
+            <div class="seg"><b>—</b><i data-i18n="days_short">дн</i></div>
+            <div class="seg"><b>—</b><i data-i18n="hours_short">год</i></div>
+            <div class="seg"><b>—</b><i data-i18n="mins_short">хв</i></div>
+            <div class="seg"><b>—</b><i data-i18n="secs_short">сек</i></div>
+          </div>
+          <div class="ins-divider"></div>
+          <div class="ins-leaders-label" data-i18n="leaders">Лідери</div>
+          <div class="ins-row" id="heroLeaders">
+            <div class="ins-player"><span class="rk g">1</span><span class="nm">—</span><span class="sc">—</span></div>
+            <div class="ins-player"><span class="rk">2</span><span class="nm">—</span><span class="sc">—</span></div>
+            <div class="ins-player"><span class="rk">3</span><span class="nm">—</span><span class="sc">—</span></div>
+          </div>
+          <div class="ins-link" style="margin-top:12px" data-i18n="view_table">Дивитись таблицю →</div>
+        </div>
+      </div>
+    </div>
 
-/* ── SCROLLBAR ── */
-::-webkit-scrollbar { width: 4px; height: 4px; }
-::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
-::-webkit-scrollbar-thumb:hover { background: var(--border2); }
+    <div class="section">
+      <div class="cards">
+        <div class="card" ontouchstart="" onclick="openTournamentsList()">
+          <span class="card-num">01</span>
+          <div class="card-title" data-i18n="nav_tournaments">Турніри</div>
+          <div class="card-desc" data-i18n="nav_tournaments_desc">Поточні та архівні змагання клану.</div>
+        </div>
+        <div class="card" ontouchstart="" onclick="openRecords()">
+          <span class="card-num">02</span>
+          <div class="card-title" data-i18n="nav_records">Рекорди</div>
+          <div class="card-desc" data-i18n="nav_records_desc">Кращі результати гравців клану за всі часи.</div>
+        </div>
+        <div class="card" ontouchstart="" onclick="openLottery()">
+          <span class="card-num">03</span>
+          <div class="card-title" data-i18n="nav_lottery">Розіграш</div>
+          <div class="card-desc" data-i18n="nav_lottery_desc">Колесо удачі для учасників клану.</div>
+        </div>
+        <div class="card" ontouchstart="" onclick="openVoting()">
+          <span class="card-num">04</span>
+          <div class="card-title" data-i18n="nav_voting">Голосування</div>
+          <div class="card-desc" data-i18n="nav_voting_desc">Актуальні питання для голосування.</div>
+        </div>
+        <div class="card" ontouchstart="" onclick="openResources()">
+          <span class="card-num">05</span>
+          <div class="card-title" data-i18n="nav_useful">Корисне</div>
+          <div class="card-desc" data-i18n="nav_useful_desc">Офіційні ресурси, інструменти і посилання.</div>
+        </div>
+      </div>
+    </div>
 
-/* ── LAYOUT ── */
-.shell { max-width: var(--maxw); margin: 0 auto; padding: 0 24px; position: relative; z-index: 1; }
+  </div>
+</div>
 
-/* ── HEADER ── */
-header {
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  background: rgba(7, 16, 26, .96);
-  backdrop-filter: blur(14px);
-  border-bottom: 1px solid var(--border);
-}
-.header-inner {
-  max-width: var(--maxw);
-  margin: 0 auto;
-  padding: 0 16px;
-  height: 54px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  min-width: 0;
-}
-.header-logo {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  cursor: pointer;
-  flex-shrink: 0;
-  text-decoration: none;
-  min-width: 0;
-}
-.logo-mark {
-  width: 30px; height: 30px;
-  border: 1px solid var(--border2);
-  border-radius: var(--r);
-  display: flex; align-items: center; justify-content: center;
-  font-family: var(--f-mono);
-  font-size: 10px;
-  color: var(--accent);
-  letter-spacing: .04em;
-  flex-shrink: 0;
-}
-.clan-title {
-  font-family: var(--f-head);
-  font-weight: 800;
-  font-size: 13px;
-  letter-spacing: .12em;
-  color: var(--cream);
-  text-transform: uppercase;
-  transition: color .18s;
-  white-space: nowrap;
-}
-.header-logo:hover .clan-title { color: var(--accent); }
-.game-title {
-  font-family: var(--f-mono);
-  font-size: 9px;
-  letter-spacing: .22em;
-  color: var(--muted);
-  text-transform: uppercase;
-  margin-top: 1px;
-  white-space: nowrap;
-}
+<!-- ══ TOURNAMENTS LIST ══ -->
 
-/* п.9: права частина шапки — не розпихає шапку */
-.header-right {
-  margin-left: auto;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  min-width: 0;
-  flex-shrink: 0;
-}
-.header-auth {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  min-width: 0;
-}
+<div id="tournamentsListPage" class="page">
+  <div class="shell">
+    <div class="page-head">
+      <div class="page-breadcrumb"><a onclick="backToHome()" data-i18n="home">Головна</a><span class="sep">/</span><span data-i18n="nav_tournaments">Турніри</span></div>
+      <div class="page-title" data-i18n="nav_tournaments">Турніри</div>
+    </div>
+    <div class="cards" style="max-width:420px">
+      <div class="card" onclick="openTournamentFlex()">
+        <span class="card-num">01 · <span data-i18n="active">Активне</span></span>
+        <div class="card-title" data-i18n="challenge">Гнучкість</div>
+        <div class="card-desc" data-i18n="flex_desc">4 класи, 12 днів, призовий фонд до 10 000 дублонів</div>
+      </div>
+    </div>
+  </div>
+</div>
 
-/* п.18: перемикач мови */
-.lang-switcher {
-  display: flex;
-  gap: 2px;
-  flex-shrink: 0;
-}
-.lang-btn {
-  font-family: var(--f-mono);
-  font-size: 9.5px;
-  letter-spacing: .14em;
-  text-transform: uppercase;
-  background: transparent;
-  border: 1px solid transparent;
-  color: var(--muted);
-  padding: 4px 7px;
-  cursor: pointer;
-  border-radius: var(--r);
-  transition: all .15s;
-}
-.lang-btn:hover { color: var(--cream); border-color: var(--border); }
-.lang-btn.active { color: var(--accent); border-color: var(--accent); background: var(--accent-bg); }
+<!-- ══ TOURNAMENT FLEX ══ -->
 
-/* п.9: auth-user обрізається, не розпихає шапку */
-.auth-user {
-  font-family: var(--f-mono);
-  font-size: 11px;
-  color: var(--muted);
-  letter-spacing: .04em;
-  max-width: 140px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  flex-shrink: 1;
-  min-width: 0;
-}
-.auth-user.approved { color: var(--green); }
-.auth-btn {
-  font-family: var(--f-mono);
-  font-size: 10.5px;
-  letter-spacing: .12em;
-  text-transform: uppercase;
-  background: transparent;
-  border: 1px solid var(--border);
-  color: var(--muted);
-  padding: 6px 12px;
-  cursor: pointer;
-  border-radius: var(--r);
-  transition: all .18s;
-  white-space: nowrap;
-  flex-shrink: 0;
-}
-.auth-btn:hover { border-color: var(--border2); color: var(--cream); }
-.auth-btn.primary { border-color: var(--accent); color: var(--accent); }
-.auth-btn.primary:hover { background: var(--accent-bg); }
+<div id="tournamentFlexPage" class="page">
+  <div class="shell">
+    <div class="page-head">
+      <div class="page-breadcrumb"><a onclick="backToHome()" data-i18n="home">Головна</a><span class="sep">/</span><a onclick="openTournamentsList()" data-i18n="nav_tournaments">Турніри</a><span class="sep">/</span><span data-i18n="challenge">Гнучкість</span></div>
+      <div class="page-title" data-i18n="challenge_title">Челендж «Гнучкість»</div>
+      <p class="page-lede" data-i18n="challenge_lede">4 класи кораблів · 4 етапи · 12 днів · Призовий фонд 10 000 дублонів</p>
+    </div>
 
-/* ── PAGE TRANSITIONS ── */
-.page { display: none; position: relative; z-index: 1; animation: pageIn .2s ease; min-height: calc(100vh - 54px - 73px); }
-.page.active { display: block; }
-@keyframes pageIn { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:translateY(0); } }
+    <div class="rules-box">
+      <div class="rules-box-title" data-i18n="rules">Правила</div>
+      <div class="rules-list">
+        <div class="rule-item">4 <span data-i18n="rule_classes">класи: ЛК, КР, ЕМ, АВ</span></div>
+        <div class="rule-item">12 <span data-i18n="rule_days">днів / 4 етапи по 3 дні</span></div>
+        <div class="rule-item" data-i18n="rule_xp">XP ÷ 1000 (округл. вниз) = бали</div>
+        <div class="rule-item" data-i18n="rule_no_repeat">Класи не повторюються</div>
+        <div class="rule-item" data-i18n="rule_random">Тільки Рандом, рівень V+</div>
+        <div class="rule-item" data-i18n="rule_late">Не здав вчасно = 0 балів</div>
+        <div class="rule-item" data-i18n="rule_screenshot">Скріншот «Командний результат»</div>
+        <div class="rule-item" data-i18n="rule_win">Виграє найвища сума балів, при рівності — більший сумарний XP</div>
+      </div>
+    </div>
 
-/* ── HOME: HERO ── */
-.hero {
-  padding: 64px 0 52px;
-  border-bottom: 1px solid var(--border);
-  position: relative;
-  overflow: hidden;
-}
-.hero-glow { display: none; }
-.hero-eyebrow {
-  font-family: var(--f-mono);
-  font-size: 10px;
-  letter-spacing: .24em;
-  text-transform: uppercase;
-  color: var(--muted);
-  margin-bottom: 20px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-.hero-eyebrow::before {
-  content: '';
-  display: inline-block;
-  width: 5px; height: 5px;
-  border-radius: 50%;
-  background: var(--green);
-}
-.hero-title {
-  font-family: var(--f-head);
-  font-weight: 800;
-  font-size: clamp(34px, 5.5vw, 62px);  /* п.14 */
-  letter-spacing: -.025em;
-  line-height: 1.15;
-  color: var(--cream);
-  text-transform: uppercase;
-  margin-bottom: 40px;
-}
+    <div class="stages-row" id="stagesRow">
+      <div class="stage-card" id="stage1"><b data-i18n="stage_n" data-n="1">Етап 1</b><small>Дні 1–3</small></div>
+      <div class="stage-card" id="stage2"><b data-i18n="stage_n" data-n="2">Етап 2</b><small>Дні 4–6</small></div>
+      <div class="stage-card" id="stage3"><b data-i18n="stage_n" data-n="3">Етап 3</b><small>Дні 7–9</small></div>
+      <div class="stage-card" id="stage4"><b data-i18n="stage_n" data-n="4">Етап 4</b><small>Дні 10–12</small></div>
+    </div>
 
-/* ── INSTRUMENTS (merged event block) ── */
-.instruments {
-  display: block;
-}
-.instrument.event-block {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-left: 2px solid var(--accent);
-  border-radius: var(--r);
-  padding: 24px 28px;
-  cursor: pointer;
-  transition: background .15s, box-shadow .2s, transform .2s;
-  max-width: 520px;
-}
-.instrument.event-block:hover {
-  background: var(--surface2);
-  box-shadow: 0 4px 24px rgba(0,0,0,.35), 0 0 0 1px var(--border2);
-  transform: translateY(-2px);
-}
-/* п.16: touch active state for mobile */
-.instrument.event-block:active {
-  transform: translateY(0);
-  box-shadow: none;
-}
-.ins-label {
-  font-family: var(--f-mono);
-  font-size: 10px;
-  letter-spacing: .2em;
-  text-transform: uppercase;
-  color: var(--muted);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 12px;
-}
-.ins-live {
-  display: flex; align-items: center; gap: 5px;
-  font-family: var(--f-mono);
-  font-size: 9px;
-  letter-spacing: .16em;
-  color: var(--green);
-}
-.ins-live::before { content:''; width:5px; height:5px; border-radius:50%; background:var(--green); animation: pulse .9s infinite; }
-.ins-val {
-  font-family: var(--f-head);
-  font-size: 26px;       /* п.14 */
-  font-weight: 700;
-  color: var(--cream);
-  letter-spacing: -.02em;
-  line-height: 1.1;
-}
-.ins-sub { font-size: 14px; color: var(--muted); margin-top: 4px; }
-/* п.3: розділювач між таймером і лідерами */
-.ins-divider {
-  border: none;
-  border-top: 1px solid var(--border);
-  margin: 18px 0;
-}
-.ins-leaders-label {
-  font-family: var(--f-mono);
-  font-size: 9.5px;
-  letter-spacing: .2em;
-  text-transform: uppercase;
-  color: var(--muted);
-  margin-bottom: 10px;
-}
-.ins-row { display: flex; flex-direction: column; gap: 8px; }
-.ins-player {
-  display: flex; align-items: center; gap: 10px;
-  font-size: 15px;
-}
-.ins-player .rk {
-  font-family: var(--f-mono);
-  font-size: 11px;
-  color: var(--muted);
-  width: 16px;
-}
-.ins-player .rk.g { color: var(--accent); }
-.ins-player .nm { color: var(--cream); font-weight: 500; }
-.ins-player .sc { margin-left: auto; font-family: var(--f-mono); font-size: 12px; color: var(--text); }
-.ins-countdown {
-  display: flex; gap: 16px; margin-top: 12px;
-}
-.seg { text-align: center; }
-.seg b { display:block; font-family:var(--f-mono); font-size:22px; color:var(--accent); line-height:1; }
-.seg i { font-family:var(--f-mono); font-size:9px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); font-style:normal; }
-.ins-link {
-  font-family: var(--f-mono);
-  font-size: 10px;
-  letter-spacing: .12em;
-  text-transform: uppercase;
-  color: var(--muted);
-}
+    <div class="timer-slim" id="timerSlim">
+      <div class="timer-slim-left">
+        <div class="timer-slim-label" data-i18n="until_end">До кінця етапу</div>
+        <div class="timer-slim-stage" id="timerStageLabel">—</div>
+      </div>
+      <div class="timer-slim-digits" id="timerDigits">—</div>
+    </div>
 
-/* ── HOME NAV GRID ── */
-.section { padding: 48px 0; }
-.section-head {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 12px;
-  padding-bottom: 14px;
-  border-bottom: 1px solid var(--border);
-  margin-bottom: 22px;
-}
-.section-title {
-  font-family: var(--f-head);
-  font-size: 16px;   /* п.14 */
-  font-weight: 700;
-  letter-spacing: -.01em;
-  text-transform: uppercase;
-  color: var(--cream);
-}
-.section-meta {
-  font-family: var(--f-mono);
-  font-size: 10px;
-  letter-spacing: .18em;
-  text-transform: uppercase;
-  color: var(--muted);
-}
-.cards {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1px;
-  background: var(--border);
-  border: 1px solid var(--border);
-  border-radius: var(--r);
-  overflow: hidden;
-}
+    <div class="prizes-row">
+      <div class="prize-card">
+        <div class="prize-place" data-i18n="place_1">1 Місце</div>
+        <div class="prize-amount gold">10 000</div>
+        <div class="prize-unit" data-i18n="doubloons">Дублонів</div>
+      </div>
+      <div class="prize-card">
+        <div class="prize-place" data-i18n="place_2">2 Місце</div>
+        <div class="prize-amount">5 000</div>
+        <div class="prize-unit" data-i18n="doubloons">Дублонів</div>
+      </div>
+      <div class="prize-card">
+        <div class="prize-place" data-i18n="place_3">3 Місце</div>
+        <div class="prize-amount">2 500</div>
+        <div class="prize-unit" data-i18n="doubloons">Дублонів</div>
+      </div>
+    </div>
 
-/* п.16 + п.17: картки без стрілок, з hover-ефектом підйому */
-.card {
-  background: var(--surface);
-  padding: 22px 20px;   /* п.17: менший відступ зверху */
-  cursor: pointer;
-  transition: background .15s, box-shadow .18s, transform .18s;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;              /* п.17: менший gap між num і title */
-  min-height: 130px;
-  position: relative;
-}
-/* п.16: підйом при hover на ПК */
-.card:hover {
-  background: var(--surface2);
-  box-shadow: inset 0 0 0 1px var(--border2), 0 -2px 0 0 var(--accent);
-  z-index: 1;
-}
-/* п.16: активний стан на мобільному */
-.card:active {
-  background: var(--surface2);
-  box-shadow: inset 0 0 0 1px var(--border2);
-}
-.card-num {
-  font-family: var(--f-mono);
-  font-size: 10px;
-  letter-spacing: .2em;
-  color: var(--accent);   /* п.15: акцентний колір для номера */
-}
-.card-title {
-  font-family: var(--f-head);
-  font-size: 17px;    /* п.14 */
-  font-weight: 700;
-  color: var(--cream);
-  text-transform: uppercase;
-  letter-spacing: -.01em;
-  margin-top: 6px;    /* п.17: менше від номера до назви */
-}
-.card-desc {
-  font-size: 14px;
-  color: var(--muted);
-  line-height: 1.6;
-  margin-top: 2px;
-}
+    <div id="pendingBanner" class="pending-banner" style="display:none" data-i18n="pending_msg">Твій акаунт очікує підтвердження адміністратора.</div>
 
-/* ── PAGE HEADER ── */
-.page-head {
-  padding: 36px 0 22px;
-  border-bottom: 1px solid var(--border);
-  margin-bottom: 32px;
-}
-.page-breadcrumb {
-  font-family: var(--f-mono);
-  font-size: 10px;   /* п.14 */
-  letter-spacing: .18em;
-  text-transform: uppercase;
-  color: var(--muted);
-  margin-bottom: 12px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.page-breadcrumb .sep { color: var(--border2); }
-.page-breadcrumb a { color: var(--muted); cursor: pointer; transition: color .15s; }
-.page-breadcrumb a:hover { color: var(--accent); }
-.page-title {
-  font-family: var(--f-head);
-  font-size: clamp(28px, 4vw, 44px);   /* п.14 */
-  font-weight: 800;
-  letter-spacing: -.025em;
-  color: var(--cream);
-  text-transform: uppercase;
-  line-height: .95;
-}
-.page-lede { margin-top: 12px; font-size: 15px; color: var(--text); max-width: 62ch; line-height: 1.7; }
+    <div class="lb-control">
+      <span class="lb-label" data-i18n="results_table">Таблиця результатів</span>
+      <div class="lb-actions">
+        <div class="sync-status"><div class="sync-dot loading" id="syncDot"></div><span id="syncText" data-i18n="connecting">Підключення...</span></div>
+        <div id="lbActionArea"></div>
+      </div>
+    </div>
 
-/* ── TOURNAMENT: STAGES ── */
-.stages-row {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 1px;
-  background: var(--border);
-  border: 1px solid var(--border);
-  border-radius: var(--r);
-  overflow: hidden;
-  margin-bottom: 20px;
-}
-@media (max-width: 560px) { .stages-row { grid-template-columns: repeat(2, 1fr); } }
-.stage-card {
-  background: var(--surface);
-  padding: 16px 18px;
-  transition: background .15s;
-  min-height: 80px;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-.stage-card b {
-  font-family: var(--f-mono);
-  font-weight: 600;
-  font-size: 11px;   /* п.14 */
-  letter-spacing: .14em;
-  color: var(--muted);
-  text-transform: uppercase;
-}
-.stage-card small {
-  font-family: var(--f-mono);
-  font-size: 11px;   /* п.14 */
-  color: var(--muted);
-  margin-top: auto;
-}
-.stage-card.active-stage {
-  background: linear-gradient(135deg, rgba(184,146,62,.08), var(--surface));
-  border-left: 2px solid var(--accent);
-}
-.stage-card.active-stage b { color: var(--accent); }
+    <div class="table-wrapper">
+      <table class="lb">
+        <thead>
+          <tr>
+            <th style="width:44px">#</th>
+            <th style="text-align:left" data-i18n="player">Гравець</th>
+            <th>ЛК</th><th>КР</th><th>ЕМ</th><th>АВ</th>
+            <th data-i18n="total">Сума</th>
+            <th id="deleteColHeader" style="width:44px;display:none"></th>
+          </tr>
+        </thead>
+        <tbody id="tournamentTbody"></tbody>
+      </table>
+    </div>
+    <p class="hint" id="tableHint" style="margin-bottom:56px" data-i18n="table_hint_public">Таблиця публічна. Для редагування потрібно увійти.</p>
+  </div>
+</div>
 
-/* ── TIMER ── */
-.timer-slim {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-left: 2px solid var(--accent);
-  border-radius: var(--r);
-  padding: 14px 22px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-bottom: 20px;
-}
-.timer-slim-left { display: flex; flex-direction: column; gap: 4px; }
-.timer-slim-label {
-  font-family: var(--f-mono);
-  font-size: 10px;   /* п.14 */
-  letter-spacing: .2em;
-  text-transform: uppercase;
-  color: var(--muted);
-}
-.timer-slim-stage {
-  font-family: var(--f-head);
-  font-size: 15px;   /* п.14 */
-  font-weight: 600;
-  color: var(--cream);
-}
-.timer-slim-digits {
-  font-family: var(--f-mono);
-  font-size: 18px;   /* п.14 */
-  color: var(--cream);
-  letter-spacing: .04em;
-}
-.timer-slim-digits span { color: var(--accent); }
+<!-- ══ RECORDS ══ -->
 
-/* ── RULES BOX — п.5 ── */
-.rules-box {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--r);
-  padding: 20px 24px;
-  margin-bottom: 20px;
-}
-.rules-box-title {
-  font-family: var(--f-mono);
-  font-size: 11px;   /* п.14 */
-  letter-spacing: .2em;
-  text-transform: uppercase;
-  color: var(--muted);
-  margin-bottom: 16px;
-  padding-bottom: 12px;
-  border-bottom: 1px solid var(--border);
-}
-/* п.5: список правил замість grid — з розділовими лініями */
-.rules-list {
-  display: flex;
-  flex-direction: column;
-}
-.rule-item {
-  font-size: 15px;
-  color: var(--text);
-  line-height: 1.65;
-  padding: 11px 0;
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-}
-.rule-item:last-child { border-bottom: none; padding-bottom: 0; }
-.rule-item::before {
-  content: '—';
-  color: var(--accent);
-  font-family: var(--f-mono);
-  font-size: 11px;
-  flex-shrink: 0;
-  margin-top: 2px;
-}
+<div id="recordsPage" class="page">
+  <div class="shell">
+    <div class="page-head">
+      <div class="page-breadcrumb"><a onclick="backToHome()" data-i18n="home">Головна</a><span class="sep">/</span><span data-i18n="nav_records">Рекорди</span></div>
+      <div class="page-title" data-i18n="records_title">Рекорди Клану</div>
+      <p class="page-lede" data-i18n="records_lede">Кращі результати учасників за всі часи.</p>
+    </div>
+    <div class="lb-control" style="margin-bottom:18px">
+      <span class="lb-label" data-i18n="all_categories">Всі категорії</span>
+      <div class="lb-actions">
+        <div class="sync-status"><div class="sync-dot loading" id="recSyncDot"></div><span id="recSyncText" data-i18n="loading">Завантаження...</span></div>
+        <div id="recActionArea"></div>
+      </div>
+    </div>
+    <div class="records-grid" id="recordsGrid"></div>
+    <p class="hint" id="recHint" style="margin-top:14px;margin-bottom:56px"></p>
+  </div>
+</div>
 
-/* ── PRIZES ── */
-.prizes-row {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1px;
-  background: var(--border);
-  border: 1px solid var(--border);
-  border-radius: var(--r);
-  overflow: hidden;
-  margin-bottom: 24px;
-}
-@media (max-width: 460px) { .prizes-row { grid-template-columns: 1fr; } }
-.prize-card {
-  background: var(--surface);
-  text-align: center;
-  padding: 20px 14px;
-}
-.prize-place {
-  font-family: var(--f-mono);
-  font-size: 10px;   /* п.14 */
-  letter-spacing: .2em;
-  text-transform: uppercase;
-  color: var(--muted);
-  margin-bottom: 8px;
-}
-.prize-amount {
-  font-family: var(--f-head);
-  font-weight: 800;
-  font-size: 24px;   /* п.14 */
-  color: var(--cream);
-  letter-spacing: -.02em;
-}
-.prize-amount.gold { color: var(--accent); }
-.prize-unit {
-  font-family: var(--f-mono);
-  font-size: 10px;
-  letter-spacing: .16em;
-  text-transform: uppercase;
-  color: var(--muted);
-  margin-top: 4px;
-}
+<!-- ══ RESOURCES ══ -->
 
-/* ── LEADERBOARD ── */
-.lb-control {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 14px;
-  flex-wrap: wrap;
-  gap: 12px;
-}
-.lb-label {
-  font-family: var(--f-mono);
-  font-size: 11px;   /* п.14 */
-  letter-spacing: .2em;
-  text-transform: uppercase;
-  color: var(--muted);
-}
-.lb-actions { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
-.add-player-btn {
-  font-family: var(--f-mono);
-  font-size: 10px;
-  letter-spacing: .14em;
-  text-transform: uppercase;
-  background: transparent;
-  border: 1px solid var(--accent);
-  color: var(--accent);
-  padding: 6px 16px;
-  cursor: pointer;
-  border-radius: var(--r);
-  transition: all .18s;
-}
-.add-player-btn:hover { background: var(--accent-bg); }
-.login-prompt { font-size: 13px; color: var(--muted); }
-.login-prompt a { color: var(--accent); cursor: pointer; }
-.sync-status {
-  font-family: var(--f-mono);
-  font-size: 10px;
-  letter-spacing: .1em;
-  color: var(--muted);
-  display: flex; align-items: center; gap: 6px;
-}
-.sync-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--muted); flex-shrink: 0; transition: background .3s; }
-.sync-dot.ok { background: var(--green); }
-.sync-dot.err { background: var(--red); }
-.sync-dot.loading { background: var(--accent); animation: pulse .9s infinite; }
-@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
+<div id="resourcesPage" class="page">
+  <div class="shell">
+    <div class="page-head">
+      <div class="page-breadcrumb"><a onclick="backToHome()" data-i18n="home">Головна</a><span class="sep">/</span><span data-i18n="nav_useful">Корисне</span></div>
+      <div class="page-title" data-i18n="nav_useful">Корисне</div>
+    </div>
+    <div class="res-section-title" data-i18n="official">Офіційне</div>
+    <div class="res-grid">
+      <div class="res-card" onclick="window.open('https://wowslegends.com','_blank')"><div class="res-icon">🌍</div><div class="res-info"><div class="res-name" data-i18n="official_site">Офіційний сайт</div><div class="res-desc" data-i18n="official_site_desc">Новини, патч-ноути, події та анонси гри</div></div><div class="res-arrow">↗</div></div>
+      <div class="res-card" onclick="window.open('https://www.youtube.com/@WorldofWarshipsLegends','_blank')"><div class="res-icon">▶️</div><div class="res-info"><div class="res-name">YouTube</div><div class="res-desc" data-i18n="yt_desc">Офіційний канал — відео, огляди, стріми</div></div><div class="res-arrow">↗</div></div>
+      <div class="res-card" onclick="window.open('https://www.instagram.com/wows_legends/','_blank')"><div class="res-icon">📸</div><div class="res-info"><div class="res-name">Instagram</div><div class="res-desc" data-i18n="ig_desc">Фото, короткі відео та новини від команди</div></div><div class="res-arrow">↗</div></div>
+      <div class="res-card" onclick="window.open('https://www.facebook.com/WoWsLegends','_blank')"><div class="res-icon">📘</div><div class="res-info"><div class="res-name">Facebook</div><div class="res-desc" data-i18n="fb_desc">Офіційна сторінка — анонси та спільнота</div></div><div class="res-arrow">↗</div></div>
+      <div class="res-card" onclick="window.open('https://discord.com/invite/wowslegends','_blank')"><div class="res-icon">💬</div><div class="res-info"><div class="res-name">Discord</div><div class="res-desc" data-i18n="dc_desc">Офіційний сервер — чат, підтримка, події</div></div><div class="res-arrow">↗</div></div>
+    </div>
+    <div class="res-section-title" data-i18n="tools">Інструменти</div>
+    <div class="res-grid" style="margin-bottom:56px">
+      <div class="res-card" onclick="window.open('https://www.wowsbuilds.com','_blank')"><div class="res-icon">⚙️</div><div class="res-info"><div class="res-name">WoWS Builds</div><div class="res-desc" data-i18n="builds_desc">Білди командирів, статистика кораблів, рейтинг гравців</div></div><div class="res-arrow">↗</div></div>
+      <div class="res-card" onclick="window.open('https://www.wows-gamer-blog.com/2024/07/wows-legends-bonus-codes.html','_blank')"><div class="res-icon">🎁</div><div class="res-info"><div class="res-name" data-i18n="bonus_codes">Бонус коди</div><div class="res-desc" data-i18n="bonus_codes_desc">Актуальні промокоди для безкоштовних нагород</div></div><div class="res-arrow">↗</div></div>
+    </div>
+  </div>
+</div>
 
-.pending-banner {
-  background: rgba(184,146,62,.06);
-  border: 1px solid rgba(184,146,62,.25);
-  border-left: 2px solid var(--accent);
-  border-radius: var(--r);
-  padding: 12px 16px;
-  margin-bottom: 18px;
-  font-size: 13px;
-  color: var(--text);
+<!-- ══ LOTTERY ══ -->
+
+<div id="lotteryPage" class="page">
+  <div class="shell">
+    <div class="page-head">
+      <div class="page-breadcrumb"><a onclick="backToHome()" data-i18n="home">Головна</a><span class="sep">/</span><span data-i18n="nav_lottery">Розіграш</span></div>
+      <div class="page-title" data-i18n="nav_lottery">Розіграш</div>
+    </div>
+    <div class="lottery-layout">
+      <div class="wheel-col">
+        <div class="wheel-frame">
+          <canvas id="wheelCanvas" width="400" height="400"></canvas>
+          <div class="pointer"></div>
+        </div>
+        <button class="spin-btn" id="spinButton" onclick="spinLottery()" data-i18n="spin">Крутити колесо</button>
+        <div class="winner-box" id="winnerBox">
+          <div class="winner-label" data-i18n="winner">Переможець</div>
+          <div class="winner-name" id="winnerName">—</div>
+        </div>
+      </div>
+      <div class="sidebar">
+        <div class="panel">
+          <div class="panel-title"><span data-i18n="participants">Учасники</span> <span class="count-badge" id="playerCount">0</span></div>
+          <textarea id="playersList" placeholder="Кожен нікнейм з нового рядку:&#10;&#10;Admiral_Kraken&#10;NavyStorm99&#10;SeaWolf_UA" oninput="updateWheel()"></textarea>
+          <p class="hint" style="margin-top:6px" data-i18n="each_nick_new_line">Кожен нікнейм — новий рядок</p>
+        </div>
+        <div class="panel">
+          <div class="panel-title" data-i18n="list">Список</div>
+          <div id="chipContainer" class="chip-list"><span class="empty-msg" data-i18n="no_participants">Ще немає учасників</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ VOTING ══ -->
+
+<div id="votingPage" class="page">
+  <div class="shell">
+    <div class="page-head">
+      <div class="page-breadcrumb"><a onclick="backToHome()" data-i18n="home">Головна</a><span class="sep">/</span><span data-i18n="nav_voting">Голосування</span></div>
+      <div class="page-title" data-i18n="nav_voting">Голосування</div>
+    </div>
+    <div class="voting-empty">
+      <div class="voting-empty-icon">🗳</div>
+      <div class="voting-empty-title" data-i18n="no_voting_title">Немає активних голосувань</div>
+      <div class="voting-empty-desc" data-i18n="no_voting_desc">На даний момент відкритих питань для голосування немає. Слідкуй за оновленнями.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ MODALS ══ -->
+
+<div class="modal-overlay" id="loginModal" onclick="if(event.target===this)closeModal('loginModal')">
+  <div class="modal-box">
+    <div class="modal-title" data-i18n="login">Вхід</div>
+    <div class="modal-sub" data-i18n="login_sub">Введи пошту і пароль</div>
+    <label class="modal-label">Email</label>
+    <input type="email" class="modal-input" id="loginEmail" placeholder="твоя@пошта.com" autocomplete="email">
+    <label class="modal-label" data-i18n="password">Пароль</label>
+    <input type="password" class="modal-input" id="loginPassword" placeholder="••••••••" autocomplete="current-password">
+    <div class="modal-error" id="loginError"></div>
+    <div class="modal-actions">
+      <button class="btn-primary" id="loginBtn" onclick="doLogin()" data-i18n="login">Увійти</button>
+      <button class="btn-secondary" onclick="closeModal('loginModal')" data-i18n="cancel">Скасувати</button>
+    </div>
+    <div class="modal-switch"><span data-i18n="no_account">Немає акаунту?</span> <a onclick="switchModal('loginModal','registerModal')" data-i18n="register_link">Зареєструватись</a></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="registerModal" onclick="if(event.target===this)closeModal('registerModal')">
+  <div class="modal-box">
+    <div class="modal-title" data-i18n="register">Реєстрація</div>
+    <div class="modal-sub" data-i18n="register_sub">Після реєстрації адміністратор підтвердить твій доступ до редагування.</div>
+    <label class="modal-label">Email</label>
+    <input type="email" class="modal-input" id="regEmail" placeholder="твоя@пошта.com" autocomplete="email">
+    <label class="modal-label" data-i18n="password_min">Пароль (мінімум 6 символів)</label>
+    <input type="password" class="modal-input" id="regPassword" placeholder="••••••••" autocomplete="new-password">
+    <div class="modal-error" id="regError"></div>
+    <div class="modal-actions">
+      <button class="btn-primary" id="regBtn" onclick="doRegister()" data-i18n="register">Зареєструватись</button>
+      <button class="btn-secondary" onclick="closeModal('registerModal')" data-i18n="cancel">Скасувати</button>
+    </div>
+    <div class="modal-switch"><span data-i18n="have_account">Вже є акаунт?</span> <a onclick="switchModal('registerModal','loginModal')" data-i18n="login_link">Увійти</a></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="addPlayerModal" onclick="if(event.target===this)closeModal('addPlayerModal')">
+  <div class="modal-box">
+    <div class="modal-title" data-i18n="add_player">Додати гравця</div>
+    <label class="modal-label" data-i18n="nickname">Нікнейм</label>
+    <input type="text" class="modal-input" id="newPlayerNick" placeholder="Pavlo_Zhyhalov" autocomplete="off">
+    <div class="modal-actions">
+      <button class="btn-primary" onclick="confirmAddPlayer()" data-i18n="add">Додати</button>
+      <button class="btn-secondary" onclick="closeModal('addPlayerModal')" data-i18n="cancel">Скасувати</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="editXpModal" onclick="if(event.target===this)closeModal('editXpModal')">
+  <div class="modal-box">
+    <div class="modal-title" id="editXpTitle" data-i18n="player_results">Результати гравця</div>
+    <div class="xp-grid">
+      <div><label class="xp-field-label" data-i18n="bb_xp">Лінкор (XP)</label><input type="number" min="0" class="modal-input" id="xpField0" placeholder="напр. 1876"></div>
+      <div><label class="xp-field-label" data-i18n="ca_xp">Крейсер (XP)</label><input type="number" min="0" class="modal-input" id="xpField1" placeholder="напр. 2345"></div>
+      <div><label class="xp-field-label" data-i18n="dd_xp">Есмінець (XP)</label><input type="number" min="0" class="modal-input" id="xpField2" placeholder="напр. 1500"></div>
+      <div><label class="xp-field-label" data-i18n="cv_xp">Авіаносець (XP)</label><input type="number" min="0" class="modal-input" id="xpField3" placeholder="напр. 2100"></div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-primary" onclick="confirmEditXp()" data-i18n="save">Зберегти</button>
+      <button class="btn-secondary" onclick="closeModal('editXpModal')" data-i18n="cancel">Скасувати</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="editRecordModal" onclick="if(event.target===this)closeModal('editRecordModal')">
+  <div class="modal-box">
+    <div class="modal-title" id="editRecordTitle" data-i18n="record">Рекорд</div>
+    <div class="modal-sub" id="editRecordSub"></div>
+    <label class="modal-label" data-i18n="player_nick">Нікнейм гравця</label>
+    <input type="text" class="modal-input" id="recPlayer" placeholder="Pavlo_Zhyhalov">
+    <label class="modal-label" data-i18n="ship">Корабель</label>
+    <input type="text" class="modal-input" id="recShip" placeholder="напр. Preussen, Yamato...">
+    <label class="modal-label" data-i18n="result_number">Результат (число)</label>
+    <input type="number" min="0" class="modal-input" id="recResult" placeholder="напр. 340000">
+    <label class="modal-label" data-i18n="date">Дата</label>
+    <input type="date" class="modal-input" id="recDate">
+    <div class="modal-error" id="recError"></div>
+    <div class="modal-actions">
+      <button class="btn-primary" onclick="confirmEditRecord()" data-i18n="save">Зберегти</button>
+      <button class="btn-secondary" onclick="closeModal('editRecordModal')" data-i18n="cancel">Скасувати</button>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div class="foot-brand">BlackSeaUA</div>
+    <div class="foot-meta">World of Warships Legends · Clan</div>
+  </div>
+</footer>
+
+<script>
+/* ── i18n ── */
+const TRANSLATIONS = {
+  uk: {
+    login:'Увійти', register:'Реєстрація', register_short:'Реєстр.', logout:'Вийти',
+    login_sub:'Введи пошту і пароль',
+    register_sub:'Після реєстрації адміністратор підтвердить твій доступ до редагування.',
+    password:'Пароль', password_min:'Пароль (мінімум 6 символів)',
+    cancel:'Скасувати', save:'Зберегти', add:'Додати',
+    no_account:'Немає акаунту?', register_link:'Зареєструватись',
+    have_account:'Вже є акаунт?', login_link:'Увійти',
+    home:'Головна', sections:'Розділи',
+    nav_tournaments:'Турніри', nav_tournaments_desc:'Поточні та архівні змагання клану.',
+    nav_records:'Рекорди', nav_records_desc:'Кращі результати гравців клану за всі часи.',
+    nav_lottery:'Розіграш', nav_lottery_desc:'Колесо удачі для учасників клану.',
+    nav_voting:'Голосування', nav_voting_desc:'Актуальні питання для голосування.',
+    nav_useful:'Корисне', nav_useful_desc:'Офіційні ресурси, інструменти і посилання.',
+    active_event:'Актуальна подія', active:'Активне',
+    leaders:'Лідери', view_table:'Дивитись таблицю →',
+    days_short:'дн', hours_short:'год', mins_short:'хв', secs_short:'сек',
+    hero_title:'Командний\nМіст Клану',
+    challenge:'Гнучкість', challenge_title:'Челендж «Гнучкість»',
+    challenge_lede:'4 класи кораблів · 4 етапи · 12 днів · Призовий фонд 10 000 дублонів',
+    flex_desc:'4 класи, 12 днів, призовий фонд до 10 000 дублонів',
+    rules:'Правила',
+    rule_classes:'класи: ЛК, КР, ЕМ, АВ', rule_days:'днів / 4 етапи по 3 дні',
+    rule_xp:'XP ÷ 1000 (округл. вниз) = бали', rule_no_repeat:'Класи не повторюються',
+    rule_random:'Тільки Рандом, рівень V+', rule_late:'Не здав вчасно = 0 балів',
+    rule_screenshot:'Скріншот «Командний результат»',
+    rule_win:'Виграє найвища сума балів, при рівності — більший сумарний XP',
+    stage_n:'Етап', until_end:'До кінця етапу',
+    place_1:'1 Місце', place_2:'2 Місце', place_3:'3 Місце', doubloons:'Дублонів',
+    pending_msg:'Твій акаунт очікує підтвердження адміністратора.',
+    results_table:'Таблиця результатів', connecting:'Підключення...',
+    player:'Гравець', total:'Сума',
+    table_hint_public:'Таблиця публічна. Для редагування потрібно увійти.',
+    records_title:'Рекорди Клану', records_lede:'Кращі результати учасників за всі часи.',
+    all_categories:'Всі категорії', loading:'Завантаження...',
+    spin:'Крутити колесо', winner:'Переможець',
+    participants:'Учасники', each_nick_new_line:'Кожен нікнейм — новий рядок',
+    list:'Список', no_participants:'Ще немає учасників',
+    no_voting_title:'Немає активних голосувань',
+    no_voting_desc:'На даний момент відкритих питань для голосування немає. Слідкуй за оновленнями.',
+    official:'Офіційне', tools:'Інструменти',
+    official_site:'Офіційний сайт', official_site_desc:'Новини, патч-ноути, події та анонси гри',
+    yt_desc:'Офіційний канал — відео, огляди, стріми',
+    ig_desc:'Фото, короткі відео та новини від команди',
+    fb_desc:'Офіційна сторінка — анонси та спільнота',
+    dc_desc:'Офіційний сервер — чат, підтримка, події',
+    builds_desc:'Білди командирів, статистика кораблів, рейтинг гравців',
+    bonus_codes:'Бонус коди', bonus_codes_desc:'Актуальні промокоди для безкоштовних нагород',
+    add_player:'Додати гравця', nickname:'Нікнейм',
+    player_results:'Результати гравця',
+    bb_xp:'Лінкор (XP)', ca_xp:'Крейсер (XP)', dd_xp:'Есмінець (XP)', cv_xp:'Авіаносець (XP)',
+    record:'Рекорд', player_nick:'Нікнейм гравця', ship:'Корабель',
+    result_number:'Результат (число)', date:'Дата',
+    stage_days_label:'Етап 1 · Дні 1–3',
+    edit_record_new:'Встановити новий рекорд', edit_record_update:'Оновити рекорд',
+    no_permission:'Немає дозволу. Акаунт ще не підтверджено.',
+    error_prefix:'Помилка:',
+    tournament_done:'Турнір завершено',
+    login_required:'Для редагування ', login_link_inline:'увійди',
+    pending_admin:'Очікуй підтвердження від адміністратора.',
+    add_player_btn:'+ Додати гравця',
+    click_xp_hint:'Клікни на XP або «+ XP» щоб ввести результат.',
+    records_public:'Таблиця рекордів публічна.',
+    click_record_hint:'Клікни на рекорд щоб оновити результат.',
+    pending_admin_rec:'Очікуй підтвердження адміністратора для редагування.',
+    no_players:'Немає учасників',
+    add_player_hint:' — натисніть «+ Додати гравця»',
+    new_nick_prompt:'Новий нікнейм:',
+    nick_exists:'Такий нікнейм вже є!',
+    saving:'Збереження...', saved:'Збережено', sync_ok:'Синхронізовано',
+    conn_error:'Помилка з\'єднання', updated:'Оновлено',
+    min_2_players:'Додай мінімум 2 учасники!',
+    confirm_delete:'Видалити «', confirm_delete2:'»?',
+    fill_all:'Заповни всі поля', fill_email_pass:'Введи пошту і пароль',
+    pass_min6:'Пароль мінімум 6 символів',
+    reg_success:'Реєстрація успішна!\n\nОчікуй підтвердження адміністратора.\nПісля підтвердження зможеш редагувати.',
+  },
+  ru: {
+    login:'Войти', register:'Регистрация', register_short:'Регистр.', logout:'Выйти',
+    login_sub:'Введи почту и пароль',
+    register_sub:'После регистрации администратор подтвердит твой доступ к редактированию.',
+    password:'Пароль', password_min:'Пароль (минимум 6 символов)',
+    cancel:'Отмена', save:'Сохранить', add:'Добавить',
+    no_account:'Нет аккаунта?', register_link:'Зарегистрироваться',
+    have_account:'Уже есть аккаунт?', login_link:'Войти',
+    home:'Главная', sections:'Разделы',
+    nav_tournaments:'Турниры', nav_tournaments_desc:'Текущие и архивные соревнования клана.',
+    nav_records:'Рекорды', nav_records_desc:'Лучшие результаты игроков клана за всё время.',
+    nav_lottery:'Розыгрыш', nav_lottery_desc:'Колесо удачи для участников клана.',
+    nav_voting:'Голосование', nav_voting_desc:'Актуальные вопросы для голосования.',
+    nav_useful:'Полезное', nav_useful_desc:'Официальные ресурсы, инструменты и ссылки.',
+    active_event:'Актуальное событие', active:'Активное',
+    leaders:'Лидеры', view_table:'Смотреть таблицу →',
+    days_short:'дн', hours_short:'ч', mins_short:'мин', secs_short:'сек',
+    hero_title:'Командный\nМостик Клана',
+    challenge:'Гибкость', challenge_title:'Челлендж «Гибкость»',
+    challenge_lede:'4 класса кораблей · 4 этапа · 12 дней · Призовой фонд 10 000 дублонов',
+    flex_desc:'4 класса, 12 дней, призовой фонд до 10 000 дублонов',
+    rules:'Правила',
+    rule_classes:'классы: ЛК, КР, ЭМ, АВ', rule_days:'дней / 4 этапа по 3 дня',
+    rule_xp:'XP ÷ 1000 (округл. вниз) = очки', rule_no_repeat:'Классы не повторяются',
+    rule_random:'Только Рандом, уровень V+', rule_late:'Не сдал вовремя = 0 очков',
+    rule_screenshot:'Скриншот «Командный результат»',
+    rule_win:'Побеждает наибольшая сумма очков, при равенстве — больший суммарный XP',
+    stage_n:'Этап', until_end:'До конца этапа',
+    place_1:'1 Место', place_2:'2 Место', place_3:'3 Место', doubloons:'Дублонов',
+    pending_msg:'Твой аккаунт ожидает подтверждения администратора.',
+    results_table:'Таблица результатов', connecting:'Подключение...',
+    player:'Игрок', total:'Сумма',
+    table_hint_public:'Таблица публичная. Для редактирования нужно войти.',
+    records_title:'Рекорды Клана', records_lede:'Лучшие результаты участников за всё время.',
+    all_categories:'Все категории', loading:'Загрузка...',
+    spin:'Крутить колесо', winner:'Победитель',
+    participants:'Участники', each_nick_new_line:'Каждый ник — новая строка',
+    list:'Список', no_participants:'Ещё нет участников',
+    no_voting_title:'Нет активных голосований',
+    no_voting_desc:'На данный момент открытых вопросов для голосования нет. Следи за обновлениями.',
+    official:'Официальное', tools:'Инструменты',
+    official_site:'Официальный сайт', official_site_desc:'Новости, патч-ноуты, события и анонсы игры',
+    yt_desc:'Официальный канал — видео, обзоры, стримы',
+    ig_desc:'Фото, короткие видео и новости от команды',
+    fb_desc:'Официальная страница — анонсы и сообщество',
+    dc_desc:'Официальный сервер — чат, поддержка, события',
+    builds_desc:'Билды командиров, статистика кораблей, рейтинг игроков',
+    bonus_codes:'Бонус коды', bonus_codes_desc:'Актуальные промокоды для бесплатных наград',
+    add_player:'Добавить игрока', nickname:'Никнейм',
+    player_results:'Результаты игрока',
+    bb_xp:'Линкор (XP)', ca_xp:'Крейсер (XP)', dd_xp:'Эсминец (XP)', cv_xp:'Авианосец (XP)',
+    record:'Рекорд', player_nick:'Никнейм игрока', ship:'Корабль',
+    result_number:'Результат (число)', date:'Дата',
+    stage_days_label:'Этап 1 · Дни 1–3',
+    edit_record_new:'Установить новый рекорд', edit_record_update:'Обновить рекорд',
+    no_permission:'Нет разрешения. Аккаунт ещё не подтверждён.',
+    error_prefix:'Ошибка:',
+    tournament_done:'Турнир завершён',
+    login_required:'Для редактирования ', login_link_inline:'войди',
+    pending_admin:'Ожидай подтверждения от администратора.',
+    add_player_btn:'+ Добавить игрока',
+    click_xp_hint:'Кликни на XP или «+ XP» чтобы ввести результат.',
+    records_public:'Таблица рекордов публичная.',
+    click_record_hint:'Кликни на рекорд чтобы обновить результат.',
+    pending_admin_rec:'Ожидай подтверждения администратора для редактирования.',
+    no_players:'Нет участников',
+    add_player_hint:' — нажмите «+ Добавить игрока»',
+    new_nick_prompt:'Новый никнейм:',
+    nick_exists:'Такой никнейм уже есть!',
+    saving:'Сохранение...', saved:'Сохранено', sync_ok:'Синхронизировано',
+    conn_error:'Ошибка соединения', updated:'Обновлено',
+    min_2_players:'Добавь минимум 2 участника!',
+    confirm_delete:'Удалить «', confirm_delete2:'»?',
+    fill_all:'Заполни все поля', fill_email_pass:'Введи почту и пароль',
+    pass_min6:'Пароль минимум 6 символов',
+    reg_success:'Регистрация успешна!\n\nОжидай подтверждения администратора.\nПосле подтверждения сможешь редактировать.',
+  },
+  en: {
+    login:'Sign In', register:'Register', register_short:'Register', logout:'Sign Out',
+    login_sub:'Enter your email and password',
+    register_sub:'After registration, an admin will confirm your editing access.',
+    password:'Password', password_min:'Password (min 6 characters)',
+    cancel:'Cancel', save:'Save', add:'Add',
+    no_account:'No account?', register_link:'Register',
+    have_account:'Already have an account?', login_link:'Sign In',
+    home:'Home', sections:'Sections',
+    nav_tournaments:'Tournaments', nav_tournaments_desc:'Current and archived clan competitions.',
+    nav_records:'Records', nav_records_desc:'Best player results of all time.',
+    nav_lottery:'Lottery', nav_lottery_desc:'Wheel of fortune for clan members.',
+    nav_voting:'Voting', nav_voting_desc:'Current questions open for voting.',
+    nav_useful:'Resources', nav_useful_desc:'Official resources, tools and links.',
+    active_event:'Active Event', active:'Active',
+    leaders:'Leaders', view_table:'View full table →',
+    days_short:'d', hours_short:'h', mins_short:'m', secs_short:'s',
+    hero_title:'Clan\nCommand Bridge',
+    challenge:'Flexibility', challenge_title:'Challenge «Flexibility»',
+    challenge_lede:'4 ship classes · 4 stages · 12 days · Prize pool 10,000 Doubloons',
+    flex_desc:'4 classes, 12 days, prize pool up to 10,000 doubloons',
+    rules:'Rules',
+    rule_classes:'classes: BB, CA, DD, CV', rule_days:'days / 4 stages of 3 days',
+    rule_xp:'XP ÷ 1000 (floor) = points', rule_no_repeat:'No repeat classes',
+    rule_random:'Random only, Tier V+', rule_late:'Late submission = 0 points',
+    rule_screenshot:'Screenshot «Team Score»',
+    rule_win:'Highest total points wins; ties broken by total XP across all stages',
+    stage_n:'Stage', until_end:'Stage ends in',
+    place_1:'1st Place', place_2:'2nd Place', place_3:'3rd Place', doubloons:'Doubloons',
+    pending_msg:'Your account is awaiting admin approval.',
+    results_table:'Leaderboard', connecting:'Connecting...',
+    player:'Player', total:'Total',
+    table_hint_public:'Table is public. Sign in to edit.',
+    records_title:'Clan Records', records_lede:'Best results of all time.',
+    all_categories:'All Categories', loading:'Loading...',
+    spin:'Spin the wheel', winner:'Winner',
+    participants:'Participants', each_nick_new_line:'One nickname per line',
+    list:'List', no_participants:'No participants yet',
+    no_voting_title:'No Active Votes',
+    no_voting_desc:'There are no open questions for voting at this time. Check back later.',
+    official:'Official', tools:'Tools',
+    official_site:'Official Website', official_site_desc:'News, patch notes, events and announcements',
+    yt_desc:'Official channel — videos, reviews, streams',
+    ig_desc:'Photos, short videos and news from the team',
+    fb_desc:'Official page — announcements and community',
+    dc_desc:'Official server — chat, support, events',
+    builds_desc:'Commander builds, ship stats, player ratings',
+    bonus_codes:'Bonus Codes', bonus_codes_desc:'Active promo codes for free rewards',
+    add_player:'Add Player', nickname:'Nickname',
+    player_results:'Player Results',
+    bb_xp:'Battleship (XP)', ca_xp:'Cruiser (XP)', dd_xp:'Destroyer (XP)', cv_xp:'Carrier (XP)',
+    record:'Record', player_nick:'Player Nickname', ship:'Ship',
+    result_number:'Result (number)', date:'Date',
+    stage_days_label:'Stage 1 · Days 1–3',
+    edit_record_new:'Set new record', edit_record_update:'Update record',
+    no_permission:'No permission. Account not yet approved.',
+    error_prefix:'Error:',
+    tournament_done:'Tournament ended',
+    login_required:'To edit, ', login_link_inline:'sign in',
+    pending_admin:'Awaiting admin approval.',
+    add_player_btn:'+ Add Player',
+    click_xp_hint:'Click XP or «+ XP» to enter result.',
+    records_public:'Records table is public.',
+    click_record_hint:'Click a record to update it.',
+    pending_admin_rec:'Awaiting admin approval to edit.',
+    no_players:'No participants',
+    add_player_hint:' — click «+ Add Player»',
+    new_nick_prompt:'New nickname:',
+    nick_exists:'This nickname already exists!',
+    saving:'Saving...', saved:'Saved', sync_ok:'Synced',
+    conn_error:'Connection error', updated:'Updated',
+    min_2_players:'Add at least 2 participants!',
+    confirm_delete:'Delete «', confirm_delete2:'»?',
+    fill_all:'Fill in all fields', fill_email_pass:'Enter email and password',
+    pass_min6:'Password must be at least 6 characters',
+    reg_success:'Registration successful!\n\nAwait admin confirmation.\nAfter approval you can edit.',
+  }
+};
+
+let currentLang = 'uk';
+
+function t(key) {
+  return (TRANSLATIONS[currentLang] && TRANSLATIONS[currentLang][key]) || TRANSLATIONS['uk'][key] || key;
 }
 
-.table-wrapper { overflow-x: auto; }
-table.lb {
-  width: 100%;
-  border-collapse: collapse;
-  min-width: 540px;
+function toggleLangMenu(){
+  document.getElementById('langDropdown').classList.toggle('open');
 }
-table.lb thead tr {
-  background: var(--surface2);
-  border-bottom: 1px solid var(--border2);
-}
-table.lb th {
-  font-family: var(--f-mono);
-  font-size: 10px;   /* п.14 */
-  letter-spacing: .18em;
-  color: var(--muted);
-  padding: 12px 14px;
-  text-align: center;
-  font-weight: 400;
-  text-transform: uppercase;
-  white-space: nowrap;
-}
-table.lb tbody tr { border-bottom: 1px solid var(--border); transition: background .12s; }
-table.lb tbody tr:last-child { border-bottom: none; }
-table.lb tbody tr:hover { background: rgba(255,255,255,.02); }
-table.lb td { padding: 13px 14px; font-size: 15px; vertical-align: middle; text-align: center; }
-table.lb td.name-cell { text-align: left; font-weight: 400; color: var(--cream); }
-table.lb td.name-cell.editable { cursor: pointer; }
-table.lb td.name-cell.editable:hover { color: var(--accent); }
+document.addEventListener('click',e=>{
+  const dd=document.getElementById('langDropdown');
+  if(dd&&!dd.contains(e.target))dd.classList.remove('open');
+});
 
-.rank-badge {
-  font-family: var(--f-mono);
-  font-weight: 400;
-  font-size: 13px;
-  width: 30px; height: 30px;
-  display: inline-flex; align-items: center; justify-content: center;
-  border-radius: 2px;
-  color: var(--muted);
-  background: var(--surface2);
-}
-.rank-1 { color: var(--accent); background: rgba(184,146,62,.12); }
-.rank-2 { color: #b8c8d8; background: rgba(184,200,216,.1); }
-.rank-3 { color: #c0855a; background: rgba(192,133,90,.1); }
-.rank-n { color: var(--muted); }
+const LANG_META={uk:{flag:'🇺🇦',code:'UA'},ru:{flag:'🇷🇺',code:'RU'},en:{flag:'🇬🇧',code:'EN'}};
 
-.xp-val { font-family: var(--f-mono); font-size: 13px; color: var(--text); }
-.xp-val.editable { cursor: pointer; }
-.xp-val.editable:hover { color: var(--accent); }
-.xp-empty { font-size: 13px; color: var(--muted); white-space: nowrap; }
-.xp-empty.editable { cursor: pointer; }
-.xp-empty.editable:hover { color: var(--accent); }
-.score-total {
-  font-family: var(--f-head);
-  font-weight: 700;
-  font-size: 17px;
-  color: var(--accent);
+function setLang(lang) {
+  currentLang = lang;
+  document.getElementById('langDropdown').classList.remove('open');
+  document.getElementById('langFlag').textContent=LANG_META[lang].flag;
+  document.getElementById('langCode').textContent=LANG_META[lang].code;
+  document.querySelectorAll('.lang-option').forEach((el,i)=>{
+    el.classList.toggle('active',['uk','ru','en'][i]===lang);
+  });
+  applyTranslations();
+  updateAuthUI();
 }
-.score-total.zero { color: var(--muted); font-weight: 400; font-size: 14px; }
-.delete-btn {
-  background: none;
-  border: 1px solid rgba(196,80,80,.25);
-  color: var(--red);
-  padding: 4px 9px;
-  cursor: pointer;
-  border-radius: var(--r);
-  font-size: 12px;
-  transition: all .18s;
-}
-.delete-btn:hover { background: rgba(196,80,80,.1); border-color: var(--red); }
-.hint { font-size: 12px; color: var(--muted); margin-top: 10px; }
 
-/* ── RECORDS GRID ── */
-.records-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 1px;
-  background: var(--border);
-  border: 1px solid var(--border);
-  border-radius: var(--r);
-  overflow: hidden;
+function applyTranslations() {
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (key === 'stage_n') {
+      const n = el.getAttribute('data-n');
+      el.textContent = t('stage_n') + ' ' + n;
+    } else if (key === 'hero_title') {
+      el.innerHTML = t('hero_title').replace('\n', '<br>');
+    } else {
+      el.textContent = t(key);
+    }
+  });
+  // Update hero countdown labels
+  document.querySelectorAll('.seg i').forEach((el, i) => {
+    const keys = ['days_short','hours_short','mins_short','secs_short'];
+    if (keys[i]) el.textContent = t(keys[i]);
+  });
 }
-.record-card { background: var(--surface); overflow: hidden; transition: background .15s; }
-.record-card:hover { background: var(--surface2); }
-.record-card-header {
-  padding: 12px 18px;
-  background: var(--surface2);
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-.record-category {
-  font-family: var(--f-mono);
-  font-size: 10px;
-  letter-spacing: .2em;
-  text-transform: uppercase;
-  color: var(--muted);
-}
-.record-edit-btn {
-  background: none;
-  border: 1px solid transparent;
-  color: var(--muted);
-  cursor: pointer;
-  font-family: var(--f-mono);
-  font-size: 9px;
-  letter-spacing: .12em;
-  text-transform: uppercase;
-  padding: 3px 8px;
-  border-radius: var(--r);
-  transition: all .15s;
-}
-.record-edit-btn:hover { color: var(--accent); border-color: var(--border); }
-.record-card-body { padding: 18px 20px; }
-.record-value {
-  font-family: var(--f-head);
-  font-weight: 800;
-  font-size: 38px;
-  color: var(--cream);
-  line-height: 1;
-  letter-spacing: -.025em;
-  margin-bottom: 12px;
-}
-.record-value span {
-  font-family: var(--f-mono);
-  font-size: 12px;
-  color: var(--muted);
-  font-weight: 400;
-  letter-spacing: .1em;
-  margin-left: 4px;
-  vertical-align: middle;
-}
-.record-meta { display: flex; flex-direction: column; gap: 4px; }
-.record-player { font-size: 15px; color: var(--cream); font-weight: 500; }
-.record-ship { font-size: 14px; color: var(--text); }
-.record-date { font-family: var(--f-mono); font-size: 11px; color: var(--muted); letter-spacing: .1em; margin-top: 4px; }
-.record-empty { font-size: 13px; color: var(--muted); font-style: italic; padding: 10px 0; }
 
-/* ── RESOURCES ── */
-.res-section-title {
-  font-family: var(--f-mono);
-  font-size: 10px;
-  letter-spacing: .22em;
-  text-transform: uppercase;
-  color: var(--muted);
-  margin-bottom: 12px;
-  margin-top: 32px;
-  padding-bottom: 8px;
-  border-bottom: 1px solid var(--border);
-}
-.res-section-title:first-child { margin-top: 0; }
-.res-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 1px;
-  background: var(--border);
-  border: 1px solid var(--border);
-  border-radius: var(--r);
-  overflow: hidden;
-}
-.res-card {
-  background: var(--surface);
-  padding: 18px 20px;
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  cursor: pointer;
-  transition: background .15s;
-}
-.res-card:hover { background: var(--surface2); }
-.res-icon {
-  width: 38px; height: 38px;
-  border: 1px solid var(--border);
-  border-radius: var(--r);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 17px;
-  flex-shrink: 0;
-  background: var(--surface2);
-}
-.res-info { flex: 1; min-width: 0; }
-.res-name {
-  font-family: var(--f-head);
-  font-size: 14px;
-  font-weight: 700;
-  color: var(--cream);
-  text-transform: uppercase;
-  margin-bottom: 3px;
-}
-.res-desc { font-size: 13px; color: var(--muted); line-height: 1.5; }
-.res-arrow { color: var(--border2); font-size: 13px; flex-shrink: 0; transition: all .18s; }
-.res-card:hover .res-arrow { color: var(--accent); transform: translate(2px, -2px); }
+/* ── SUPABASE ── */
+const SUPA_URL='https://otwcegfsmxmhiegukkyl.supabase.co';
+const SUPA_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im90d2NlZ2ZzbXhtaGllZ3Vra3lsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg2NTMwOTUsImV4cCI6MjA5NDIyOTA5NX0.FU45yk9GKVjEkuH-pWp5kB8fA_nVy2wpYQc48baxeL0';
 
-/* ── LOTTERY ── */
-.lottery-layout {
-  display: grid;
-  grid-template-columns: 1fr 290px;
-  gap: 36px;
-  align-items: start;
-  padding-bottom: 60px;
-}
-@media (max-width: 700px) { .lottery-layout { grid-template-columns: 1fr; gap: 24px; } }
-.wheel-col { display: flex; flex-direction: column; align-items: center; gap: 20px; }
-.wheel-frame { position: relative; display: inline-block; width: 100%; max-width: 360px; }
-.pointer {
-  position: absolute;
-  top: -16px; left: 50%; transform: translateX(-50%);
-  width: 0; height: 0;
-  border-left: 13px solid transparent;
-  border-right: 13px solid transparent;
-  border-top: 26px solid var(--accent);
-  filter: drop-shadow(0 4px 8px rgba(184,146,62,.4));
-  z-index: 10;
-}
-canvas#wheelCanvas {
-  width: 100%; height: auto;
-  border-radius: 50%;
-  box-shadow: 0 0 0 2px var(--border), 0 0 0 3px rgba(184,146,62,.2), 0 12px 32px rgba(0,0,0,.45);
-  display: block;
-}
-.spin-btn {
-  font-family: var(--f-mono);
-  font-weight: 400;
-  font-size: 12px;   /* п.14 */
-  letter-spacing: .24em;
-  text-transform: uppercase;
-  background: transparent;
-  border: 1px solid var(--accent);
-  color: var(--accent);
-  padding: 13px 44px;
-  cursor: pointer;
-  transition: all .2s;
-  border-radius: var(--r);
-}
-.spin-btn:hover:not(:disabled) { background: var(--accent-bg); }
-.spin-btn:disabled { opacity: .4; cursor: not-allowed; }
-.winner-box {
-  display: none;
-  text-align: center;
-  padding: 14px 30px;
-  border: 1px solid var(--accent);
-  border-radius: var(--r);
-  background: rgba(184,146,62,.05);
-  animation: fadeUp .3s ease;
-  min-width: 200px;
-}
-.winner-box.show { display: block; }
-@keyframes fadeUp { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
-.winner-label {
-  font-family: var(--f-mono);
-  font-size: 10px;
-  letter-spacing: .28em;
-  text-transform: uppercase;
-  color: var(--muted);
-  margin-bottom: 6px;
-}
-.winner-name {
-  font-family: var(--f-head);
-  font-weight: 700;
-  font-size: 24px;
-  color: var(--cream);
-  letter-spacing: -.01em;
-  word-break: break-all;
-}
-.sidebar { display: flex; flex-direction: column; gap: 16px; }
-.panel {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--r);
-  padding: 18px;
-}
-.panel-title {
-  font-family: var(--f-mono);
-  font-size: 10px;
-  letter-spacing: .2em;
-  text-transform: uppercase;
-  color: var(--muted);
-  margin-bottom: 12px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.count-badge {
-  background: var(--accent);
-  color: var(--bg);
-  font-size: 10px;
-  font-family: var(--f-mono);
-  padding: 1px 7px;
-  border-radius: 2px;
-}
-textarea {
-  width: 100%;
-  min-height: 170px;
-  background: var(--bg2);
-  border: 1px solid var(--border);
-  color: var(--cream);
-  font-family: var(--f-mono);
-  font-size: 13px;
-  padding: 10px;
-  resize: vertical;
-  outline: none;
-  transition: border-color .18s;
-  line-height: 1.9;
-  border-radius: var(--r);
-}
-textarea:focus { border-color: var(--accent); }
-textarea::placeholder { color: var(--muted); }
-.chip-list { display: flex; flex-wrap: wrap; gap: 5px; max-height: 110px; overflow-y: auto; }
-.chip {
-  background: var(--bg2);
-  border: 1px solid var(--border);
-  padding: 3px 10px;
-  font-family: var(--f-mono);
-  font-size: 12px;
-  border-radius: 2px;
-  color: var(--text);
-}
-.empty-msg { font-size: 12px; color: var(--muted); font-style: italic; }
+const STAGES=[
+  {num:1,label:'Етап 1 · Дні 1–3',end:new Date('2026-05-15T20:59:59Z')},
+  {num:2,label:'Етап 2 · Дні 4–6',end:new Date('2026-05-18T20:59:59Z')},
+  {num:3,label:'Етап 3 · Дні 7–9',end:new Date('2026-05-21T20:59:59Z')},
+  {num:4,label:'Етап 4 · Дні 10–12',end:new Date('2026-05-24T20:59:59Z')},
+];
 
-/* ── VOTING ── */
-.voting-empty {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  padding: 80px 24px;
-  gap: 14px;
+function getCurrentStage(){const now=new Date();return STAGES.find(s=>now<s.end)||null;}
+function pad(n){return String(n).padStart(2,'0');}
+
+function updateTimer(){
+  const stage=getCurrentStage();
+  const stageLabel=document.getElementById('timerStageLabel');
+  const digits=document.getElementById('timerDigits');
+  STAGES.forEach(s=>{
+    const el=document.getElementById('stage'+s.num);
+    if(el)el.classList.toggle('active-stage',stage&&stage.num===s.num);
+  });
+  const hc=document.getElementById('heroCountdown');
+  const hsl=document.getElementById('heroStageLabel');
+  if(!stage){
+    if(stageLabel)stageLabel.textContent=t('tournament_done');
+    if(digits)digits.innerHTML='—';
+    if(hsl)hsl.textContent=t('tournament_done');
+    if(hc)hc.innerHTML=`<div class="seg"><b>—</b><i>${t('days_short')}</i></div><div class="seg"><b>—</b><i>${t('hours_short')}</i></div><div class="seg"><b>—</b><i>${t('mins_short')}</i></div><div class="seg"><b>—</b><i>${t('secs_short')}</i></div>`;
+    return;
+  }
+  const diff=stage.end-new Date();
+  if(diff<=0)return;
+  const days=Math.floor(diff/86400000);
+  const hours=Math.floor((diff%86400000)/3600000);
+  const mins=Math.floor((diff%3600000)/60000);
+  const secs=Math.floor((diff%60000)/1000);
+  // stage label: use localized stage name
+  const stageName=`${t('stage_n')} ${stage.num} · ${['Дні','Дни','Days'][['uk','ru','en'].indexOf(currentLang)]||'Дні'} ${['1–3','4–6','7–9','10–12'][stage.num-1]}`;
+  if(stageLabel)stageLabel.textContent=stageName;
+  if(hsl)hsl.textContent=stageName;
+  if(digits){
+    const parts=[];
+    if(days>0)parts.push(`<span>${days}</span>${t('days_short')}`);
+    parts.push(`<span>${pad(hours)}</span>${t('hours_short')}`);
+    parts.push(`<span>${pad(mins)}</span>${t('mins_short')}`);
+    parts.push(`<span>${pad(secs)}</span>${t('secs_short')}`);
+    digits.innerHTML=parts.join(' ');
+  }
+  if(hc)hc.innerHTML=`<div class="seg"><b>${days}</b><i>${t('days_short')}</i></div><div class="seg"><b>${pad(hours)}</b><i>${t('hours_short')}</i></div><div class="seg"><b>${pad(mins)}</b><i>${t('mins_short')}</i></div><div class="seg"><b>${pad(secs)}</b><i>${t('secs_short')}</i></div>`;
 }
-.voting-empty-icon { font-size: 40px; opacity: .5; }
-.voting-empty-title {
-  font-family: var(--f-head);
-  font-size: 20px;
-  font-weight: 700;
-  color: var(--cream);
-  text-transform: uppercase;
-  letter-spacing: -.01em;
+
+const RECORD_CATS=[
+  {key:'fires',   label:'Пожежі',        unit:'шт'},
+  {key:'citadels',label:'Цитаделі',      unit:'шт'},
+  {key:'floods',  label:'Затоплення',    unit:'шт'},
+  {key:'damage',  label:'Дамаг',         unit:''},
+  {key:'xp',      label:'Чистий досвід', unit:'XP'},
+  {key:'kills',   label:'Знищено',       unit:'шт'},
+  {key:'medals',  label:'Медалі',        unit:'шт'},
+];
+
+let currentUser=null,userApproved=false,accessToken=null;
+
+function esc(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML;}
+
+async function sbFetch(path,opts={}){
+  const headers={'apikey':SUPA_KEY,'Content-Type':'application/json'};
+  headers['Authorization']='Bearer '+(accessToken||SUPA_KEY);
+  if(opts.method==='POST')headers['Prefer']='return=representation';
+  const res=await fetch(SUPA_URL+path,{...opts,headers:{...headers,...(opts.headers||{})}});
+  if(!res.ok){const tx=await res.text();throw new Error(tx);}
+  const text=await res.text();return text?JSON.parse(text):[];
 }
-.voting-empty-desc {
-  font-size: 14px;
-  color: var(--muted);
-  max-width: 38ch;
-  line-height: 1.65;
+
+async function doLogin(){
+  const email=document.getElementById('loginEmail').value.trim();
+  const pass=document.getElementById('loginPassword').value;
+  const errEl=document.getElementById('loginError');
+  const btn=document.getElementById('loginBtn');
+  errEl.textContent='';
+  if(!email||!pass){errEl.textContent=t('fill_email_pass');return;}
+  btn.disabled=true;btn.textContent=t('login')+'...';
+  try{
+    const res=await fetch(SUPA_URL+'/auth/v1/token?grant_type=password',{
+      method:'POST',headers:{'apikey':SUPA_KEY,'Content-Type':'application/json'},
+      body:JSON.stringify({email,password:pass})
+    });
+    const data=await res.json();
+    if(!res.ok)throw new Error(data.error_description||data.msg||t('error_prefix'));
+    accessToken=data.access_token;
+    currentUser={email:data.user.email,id:data.user.id};
+    try{localStorage.setItem('sb_token',accessToken);}catch(e){}
+    await checkApproval();
+    closeModal('loginModal');updateAuthUI();
+    if(document.getElementById('tournamentFlexPage').classList.contains('active'))renderTable();
+    if(document.getElementById('recordsPage').classList.contains('active'))renderRecords();
+  }catch(e){errEl.textContent=e.message;}
+  finally{btn.disabled=false;btn.textContent=t('login');}
+}
+
+async function doRegister(){
+  const email=document.getElementById('regEmail').value.trim();
+  const pass=document.getElementById('regPassword').value;
+  const errEl=document.getElementById('regError');
+  const btn=document.getElementById('regBtn');
+  errEl.textContent='';
+  if(!email||!pass){errEl.textContent=t('fill_all');return;}
+  if(pass.length<6){errEl.textContent=t('pass_min6');return;}
+  btn.disabled=true;btn.textContent=t('register')+'...';
+  try{
+    const res=await fetch(SUPA_URL+'/auth/v1/signup',{
+      method:'POST',headers:{'apikey':SUPA_KEY,'Content-Type':'application/json'},
+      body:JSON.stringify({email,password:pass})
+    });
+    const data=await res.json();
+    if(!res.ok)throw new Error(data.error_description||data.msg||t('error_prefix'));
+    await fetch(SUPA_URL+'/rest/v1/allowed_users',{
+      method:'POST',
+      headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
+      body:JSON.stringify({email:email.toLowerCase(),approved:false})
+    });
+    closeModal('registerModal');
+    alert(t('reg_success'));
+  }catch(e){errEl.textContent=e.message;}
+  finally{btn.disabled=false;btn.textContent=t('register');}
+}
+
+async function checkApproval(){
+  if(!currentUser){userApproved=false;return;}
+  try{
+    const res=await fetch(`${SUPA_URL}/rest/v1/allowed_users?email=eq.${encodeURIComponent(currentUser.email.toLowerCase())}&select=approved`,{
+      headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+(accessToken||SUPA_KEY)}
+    });
+    const data=await res.json();
+    userApproved=Array.isArray(data)&&data[0]?.approved===true;
+  }catch(e){userApproved=false;}
+}
+
+function doLogout(){
+  currentUser=null;userApproved=false;accessToken=null;
+  try{localStorage.removeItem('sb_token');}catch(e){}
+  updateAuthUI();
+  if(document.getElementById('tournamentFlexPage').classList.contains('active'))renderTable();
+  if(document.getElementById('recordsPage').classList.contains('active'))renderRecords();
+}
+
+async function tryRestoreSession(){
+  try{
+    const token=localStorage.getItem('sb_token');if(!token)return;
+    const res=await fetch(SUPA_URL+'/auth/v1/user',{headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+token}});
+    if(!res.ok){localStorage.removeItem('sb_token');return;}
+    const data=await res.json();
+    accessToken=token;currentUser={email:data.email,id:data.id};
+    await checkApproval();updateAuthUI();
+  }catch(e){}
+}
+
+function updateAuthUI(){
+  const area=document.getElementById('headerAuth');
+  if(currentUser){
+    const cls=userApproved?'approved':'';
+    const status=userApproved?'✓ ':'⏳ ';
+    // Show truncated email to avoid layout shift on mobile
+    const emailDisplay=currentUser.email.length>22?currentUser.email.slice(0,20)+'…':currentUser.email;
+    area.innerHTML=`<span class="auth-user ${cls}" title="${currentUser.email}">${status}${emailDisplay}</span>
+      <button class="auth-btn" onclick="doLogout()">${t('logout')}</button>`;
+  }else{
+    area.innerHTML=`<button class="auth-btn primary" onclick="openModal('loginModal')">${t('login')}</button>
+      <button class="auth-btn" onclick="openModal('registerModal')">${t('register')}</button>`;
+  }
+  const lbArea=document.getElementById('lbActionArea');
+  const pending=document.getElementById('pendingBanner');
+  const hint=document.getElementById('tableHint');
+  const delCol=document.getElementById('deleteColHeader');
+  if(lbArea){
+    if(!currentUser){
+      lbArea.innerHTML=`<span class="login-prompt">${t('login_required')}<a onclick="openModal('loginModal')">${t('login_link_inline')}</a></span>`;
+      if(pending)pending.style.display='none';
+      if(hint)hint.textContent=t('table_hint_public');
+      if(delCol)delCol.style.display='none';
+    }else if(!userApproved){
+      lbArea.innerHTML='';
+      if(pending)pending.style.display='block';
+      if(hint)hint.textContent=t('pending_admin');
+      if(delCol)delCol.style.display='none';
+    }else{
+      lbArea.innerHTML=`<button class="add-player-btn" onclick="openAddPlayerModal()">${t('add_player_btn')}</button>`;
+      if(pending)pending.style.display='none';
+      if(hint)hint.textContent=t('click_xp_hint');
+      if(delCol)delCol.style.display='';
+    }
+  }
+  const recArea=document.getElementById('recActionArea');
+  const recHint=document.getElementById('recHint');
+  if(recArea){
+    if(currentUser&&userApproved){
+      recArea.innerHTML='';
+      if(recHint)recHint.textContent=t('click_record_hint');
+    }else if(currentUser){
+      recArea.innerHTML='';
+      if(recHint)recHint.textContent=t('pending_admin_rec');
+    }else{
+      recArea.innerHTML=`<span class="login-prompt">${t('login_required')}<a onclick="openModal('loginModal')">${t('login_link_inline')}</a></span>`;
+      if(recHint)recHint.textContent=t('records_public');
+    }
+  }
+}
+
+const PAGE_MAP={'':'homePage','home':'homePage','lottery':'lotteryPage','tournaments':'tournamentsListPage','flex':'tournamentFlexPage','records':'recordsPage','resources':'resourcesPage','voting':'votingPage'};
+const HASH_MAP={'homePage':'home','lotteryPage':'lottery','tournamentsListPage':'tournaments','tournamentFlexPage':'flex','recordsPage':'records','resourcesPage':'resources','votingPage':'voting'};
+
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.location.hash=HASH_MAP[id]||'home';
+  window.scrollTo(0,0);
+}
+function backToHome(){showPage('homePage');}
+function openLottery(){showPage('lotteryPage');setTimeout(()=>{setCanvasSize();drawWheel();},40);}
+function openTournamentsList(){showPage('tournamentsListPage');}
+function openTournamentFlex(){showPage('tournamentFlexPage');updateAuthUI();loadPlayers();updateTimer();}
+function openRecords(){showPage('recordsPage');updateAuthUI();loadRecords();}
+function openResources(){showPage('resourcesPage');}
+function openVoting(){showPage('votingPage');}
+
+function restorePage(){
+  const hash=window.location.hash.replace('#','');
+  const pageId=PAGE_MAP[hash]||'homePage';
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById(pageId).classList.add('active');
+  if(pageId==='lotteryPage')setTimeout(()=>{setCanvasSize();drawWheel();},40);
+  if(pageId==='tournamentFlexPage'){updateAuthUI();loadPlayers();updateTimer();}
+  if(pageId==='recordsPage'){updateAuthUI();loadRecords();}
+}
+
+/* ── WHEEL ── */
+let lp=[],wAngle=0,wSpin=false;
+const cv=document.getElementById('wheelCanvas'),cx=cv.getContext('2d');
+let cW=cv.width,cH=cv.height,cX=cW/2,cY=cH/2,cR=cW/2-8;
+const SC=['#0d2540','#0f2e38','#112038','#0d2b30','#162040','#0d2838','#102030','#142838'];
+
+function setCanvasSize(){
+  const f=document.querySelector('.wheel-frame');if(!f)return;
+  const sz=Math.min(f.clientWidth,360);
+  cv.width=sz;cv.height=sz;cW=sz;cH=sz;cX=sz/2;cY=sz/2;cR=sz/2-8;drawWheel();
+}
+window.addEventListener('resize',()=>{if(document.getElementById('lotteryPage').classList.contains('active'))setCanvasSize();});
+
+function drawWheel(){
+  cx.clearRect(0,0,cW,cH);
+  if(!lp.length){
+    cx.beginPath();cx.arc(cX,cY,cR,0,Math.PI*2);cx.fillStyle='#0b1822';cx.fill();
+    cx.strokeStyle='#172e42';cx.lineWidth=2;cx.stroke();
+    cx.fillStyle='#3d6078';cx.font='300 13px "DM Sans",sans-serif';
+    cx.textAlign='center';cx.textBaseline='middle';cx.fillText(t('no_participants')+' →',cX,cY);return;
+  }
+  const n=lp.length,sl=(Math.PI*2)/n;
+  for(let i=0;i<n;i++){
+    const s=wAngle+i*sl,e=s+sl;
+    cx.beginPath();cx.moveTo(cX,cY);cx.arc(cX,cY,cR,s,e);cx.closePath();
+    cx.fillStyle=SC[i%SC.length];cx.fill();cx.strokeStyle='#07101a';cx.lineWidth=1.5;cx.stroke();
+    cx.save();cx.translate(cX,cY);cx.rotate(s+sl/2);
+    cx.textAlign='right';cx.textBaseline='middle';
+    const fs=n<=6?13:n<=12?11:n<=20?9:8;
+    cx.font=`500 ${fs}px "Syne",sans-serif`;
+    const lb=lp[i].length>13?lp[i].slice(0,12)+'…':lp[i];
+    cx.fillStyle='rgba(0,0,0,.35)';cx.fillText(lb,cR-10,1);
+    cx.fillStyle='#d8eaf5';cx.fillText(lb,cR-11,0);cx.restore();
+  }
+  cx.beginPath();cx.arc(cX,cY,cR,0,Math.PI*2);cx.strokeStyle='#172e42';cx.lineWidth=2;cx.stroke();
+  cx.beginPath();cx.arc(cX,cY,11,0,Math.PI*2);cx.fillStyle='#07101a';cx.fill();cx.strokeStyle='#b8923e';cx.lineWidth=2;cx.stroke();
+}
+
+function calcWinner(){
+  const n=lp.length,sl=(Math.PI*2)/n;
+  const pos=((-Math.PI/2)-wAngle%(Math.PI*2)+Math.PI*2*10)%(Math.PI*2);
+  return Math.floor(pos/sl)%n;
+}
+
+function spinLottery(){
+  if(lp.length<2){alert(t('min_2_players'));return;}
+  if(wSpin)return;
+  wSpin=true;document.getElementById('spinButton').disabled=true;
+  document.getElementById('winnerBox').classList.remove('show');
+  const n=lp.length,sl=(Math.PI*2)/n;
+  const wi=Math.floor(Math.random()*n);
+  const tgt=(((-Math.PI/2)-wi*sl-sl/2)%(Math.PI*2)+Math.PI*2)%(Math.PI*2);
+  const cur=(wAngle%(Math.PI*2)+Math.PI*2)%(Math.PI*2);
+  let diff=tgt-cur;if(diff<0)diff+=Math.PI*2;
+  const total=(7+Math.floor(Math.random()*5))*Math.PI*2+diff;
+  const sa=wAngle,dur=4000+Math.random()*1200,t0=performance.now();
+  function ease(t){return 1-Math.pow(1-t,4);}
+  (function fr(now){
+    const tm=Math.min((now-t0)/dur,1);
+    wAngle=sa+total*ease(tm);drawWheel();
+    if(tm<1){requestAnimationFrame(fr);}
+    else{
+      const w=lp[calcWinner()];
+      document.getElementById('winnerName').textContent=w;
+      const b=document.getElementById('winnerBox');
+      b.classList.remove('show');void b.offsetWidth;b.classList.add('show');
+      wSpin=false;document.getElementById('spinButton').disabled=false;
+    }
+  })(t0);
+}
+
+function updateWheel(){
+  lp=document.getElementById('playersList').value.split('\n').map(s=>s.trim()).filter(s=>s.length>0);
+  document.getElementById('playerCount').textContent=lp.length;
+  const cc=document.getElementById('chipContainer');
+  cc.innerHTML=lp.length===0?`<span class="empty-msg">${t('no_participants')}</span>`:lp.map(p=>`<span class="chip">${esc(p)}</span>`).join('');
+  drawWheel();
+  try{localStorage.setItem('lp',JSON.stringify(lp));}catch(e){}
+}
+
+function loadLottery(){
+  try{
+    const s=localStorage.getItem('lp');
+    if(s){lp=JSON.parse(s);document.getElementById('playersList').value=lp.join('\n');updateWheel();}
+  }catch(e){}
+}
+
+/* ── TOURNAMENT ── */
+let td=[],xpIdx=null,pollingStarted=false;
+
+function setSyncStatus(state,text){
+  const dot=document.getElementById('syncDot'),txt=document.getElementById('syncText');
+  if(!dot||!txt)return;dot.className='sync-dot '+state;txt.textContent=text;
+}
+
+async function loadPlayers(){
+  setSyncStatus('loading',t('connecting'));
+  try{
+    const res=await fetch(`${SUPA_URL}/rest/v1/tournament_players?select=*&order=created_at.asc`,{headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY}});
+    td=await res.json();renderTable();setSyncStatus('ok',t('sync_ok'));
+    updateHeroLeaders();
+    if(!pollingStarted){pollingStarted=true;startPolling();}
+  }catch(e){setSyncStatus('err',t('conn_error'));}
+}
+
+function startPolling(){
+  setInterval(async()=>{
+    if(!document.getElementById('tournamentFlexPage').classList.contains('active'))return;
+    try{
+      const res=await fetch(`${SUPA_URL}/rest/v1/tournament_players?select=*&order=created_at.asc`,{headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY}});
+      const data=await res.json();
+      if(JSON.stringify(data)!==JSON.stringify(td)){td=data;renderTable();setSyncStatus('ok',t('updated'));}
+    }catch(e){}
+  },5000);
+}
+
+/* п.4: лідерство — спочатку по балах, при рівності — по сумарному XP */
+function calcScore(p){return[p.xp_bb,p.xp_ca,p.xp_dd,p.xp_cv].reduce((s,v)=>s+(v&&v>0?Math.floor(v/1000):0),0);}
+function calcTotalXP(p){return[p.xp_bb,p.xp_ca,p.xp_dd,p.xp_cv].reduce((s,v)=>s+(v&&v>0?v:0),0);}
+
+function sortPlayers(arr){
+  return arr.map(p=>({...p,sc:calcScore(p),totalXP:calcTotalXP(p)}))
+    .sort((a,b)=>b.sc-a.sc||b.totalXP-a.totalXP);
+}
+
+function updateHeroLeaders(){
+  const ws=sortPlayers(td).slice(0,3);
+  const hl=document.getElementById('heroLeaders');
+  if(!hl)return;
+  if(!ws.length){hl.innerHTML=`<div class="ins-player"><span class="rk">—</span><span class="nm" style="color:var(--muted)">Немає даних</span></div>`;return;}
+  hl.innerHTML=ws.map((p,i)=>`<div class="ins-player"><span class="rk${i===0?' g':''}">${i+1}</span><span class="nm">${esc(p.nick)}</span><span class="sc">${p.sc} б</span></div>`).join('');
+}
+
+function renderTable(){
+  const tb=document.getElementById('tournamentTbody');
+  const canEdit=currentUser&&userApproved;
+  if(!td.length){
+    tb.innerHTML=`<tr><td colspan="${canEdit?8:7}" style="padding:40px;color:var(--muted);font-size:13px;text-align:center;font-style:italic">${t('no_players')}${canEdit?t('add_player_hint'):''}</td></tr>`;
+    return;
+  }
+  const ws=sortPlayers(td);
+  const fields=['xp_bb','xp_ca','xp_dd','xp_cv'];
+  tb.innerHTML=ws.map((p,r)=>{
+    const rc=r===0?'rank-1':r===1?'rank-2':r===2?'rank-3':'rank-n';
+    const nameCell=canEdit?`<td class="name-cell editable" onclick="editNick(${p.id})">✏ ${esc(p.nick)}</td>`:`<td class="name-cell">${esc(p.nick)}</td>`;
+    const xc=fields.map(f=>{
+      if(canEdit)return p[f]&&p[f]>0?`<td><span class="xp-val editable" onclick="openXp(${p.id})">${p[f].toLocaleString()}<br><small style="font-size:10px;color:var(--muted)">${Math.floor(p[f]/1000)}б</small></span></td>`:`<td><span class="xp-empty editable" onclick="openXp(${p.id})">+ XP</span></td>`;
+      return p[f]&&p[f]>0?`<td><span class="xp-val">${p[f].toLocaleString()}<br><small style="font-size:10px;color:var(--muted)">${Math.floor(p[f]/1000)}б</small></span></td>`:`<td><span class="xp-empty">—</span></td>`;
+    }).join('');
+    const delCell=canEdit?`<td><button class="delete-btn" onclick="delP(${p.id})">✕</button></td>`:'';
+    return`<tr><td><span class="rank-badge ${rc}">${r+1}</span></td>${nameCell}${xc}<td><span class="score-total ${p.sc===0?'zero':''}">${p.sc}</span></td>${delCell}</tr>`;
+  }).join('');
+}
+
+async function delP(id){
+  if(!userApproved)return;
+  const p=td.find(x=>x.id===id);if(!p)return;
+  if(!confirm(`${t('confirm_delete')}${p.nick}${t('confirm_delete2')}`))return;
+  try{
+    await sbFetch(`/rest/v1/tournament_players?id=eq.${id}`,{method:'DELETE'});
+    td=td.filter(x=>x.id!==id);renderTable();setSyncStatus('ok',t('saved'));
+  }catch(e){alert(t('error_prefix')+' '+e.message);}
+}
+
+async function editNick(id){
+  if(!userApproved)return;
+  const p=td.find(x=>x.id===id);if(!p)return;
+  const n=prompt(t('new_nick_prompt'),p.nick);
+  if(!n||!n.trim()||n.trim()===p.nick)return;
+  try{
+    setSyncStatus('loading',t('saving'));
+    await sbFetch(`/rest/v1/tournament_players?id=eq.${id}`,{method:'PATCH',body:JSON.stringify({nick:n.trim(),updated_at:new Date().toISOString()})});
+    p.nick=n.trim();renderTable();setSyncStatus('ok',t('saved'));
+  }catch(e){alert(t('error_prefix')+' '+e.message);setSyncStatus('err',t('error_prefix'));}
+}
+
+function openAddPlayerModal(){
+  if(!userApproved){openModal('loginModal');return;}
+  openModal('addPlayerModal');setTimeout(()=>document.getElementById('newPlayerNick').focus(),50);
+}
+
+async function confirmAddPlayer(){
+  const n=document.getElementById('newPlayerNick').value.trim();
+  if(!n){document.getElementById('newPlayerNick').focus();return;}
+  if(td.some(p=>p.nick.toLowerCase()===n.toLowerCase())){alert(t('nick_exists'));return;}
+  try{
+    setSyncStatus('loading',t('saving'));
+    const res=await sbFetch('/rest/v1/tournament_players',{method:'POST',body:JSON.stringify({nick:n})});
+    if(Array.isArray(res)&&res[0])td.push(res[0]);else await loadPlayers();
+    renderTable();setSyncStatus('ok',t('saved'));
+    closeModal('addPlayerModal');document.getElementById('newPlayerNick').value='';
+  }catch(e){
+    if(e.message.includes('policy'))alert(t('no_permission'));
+    else alert(t('error_prefix')+' '+e.message);
+    setSyncStatus('err',t('error_prefix'));
+  }
+}
+
+function openXp(id){
+  if(!userApproved)return;
+  xpIdx=id;const p=td.find(x=>x.id===id);if(!p)return;
+  document.getElementById('editXpTitle').textContent=`${p.nick} — ${t('player_results')}`;
+  document.getElementById('xpField0').value=p.xp_bb||'';
+  document.getElementById('xpField1').value=p.xp_ca||'';
+  document.getElementById('xpField2').value=p.xp_dd||'';
+  document.getElementById('xpField3').value=p.xp_cv||'';
+  openModal('editXpModal');setTimeout(()=>document.getElementById('xpField0').focus(),50);
+}
+
+async function confirmEditXp(){
+  if(xpIdx===null)return;
+  const vals=['xpField0','xpField1','xpField2','xpField3'].map(f=>{
+    const v=parseInt(document.getElementById(f).value);return(!isNaN(v)&&v>0)?v:null;
+  });
+  try{
+    setSyncStatus('loading',t('saving'));
+    await sbFetch(`/rest/v1/tournament_players?id=eq.${xpIdx}`,{method:'PATCH',body:JSON.stringify({xp_bb:vals[0],xp_ca:vals[1],xp_dd:vals[2],xp_cv:vals[3],updated_at:new Date().toISOString()})});
+    const p=td.find(x=>x.id===xpIdx);
+    if(p){p.xp_bb=vals[0];p.xp_ca=vals[1];p.xp_dd=vals[2];p.xp_cv=vals[3];}
+    renderTable();setSyncStatus('ok',t('saved'));closeModal('editXpModal');xpIdx=null;
+  }catch(e){
+    if(e.message.includes('policy'))alert(t('no_permission'));
+    else alert(t('error_prefix')+' '+e.message);
+    setSyncStatus('err',t('error_prefix'));
+  }
+}
+
+/* ── RECORDS ── */
+let recData={},editingCat=null,recPollingStarted=false;
+
+function setRecSyncStatus(state,text){
+  const dot=document.getElementById('recSyncDot'),txt=document.getElementById('recSyncText');
+  if(!dot||!txt)return;dot.className='sync-dot '+state;txt.textContent=text;
+}
+
+async function loadRecords(){
+  setRecSyncStatus('loading',t('loading'));
+  try{
+    const res=await fetch(`${SUPA_URL}/rest/v1/clan_records?select=*`,{headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY}});
+    const data=await res.json();
+    recData={};data.forEach(r=>{recData[r.category]=r;});
+    renderRecords();setRecSyncStatus('ok',t('sync_ok'));
+    if(!recPollingStarted){recPollingStarted=true;startRecPolling();}
+  }catch(e){setRecSyncStatus('err',t('conn_error'));}
+}
+
+function startRecPolling(){
+  setInterval(async()=>{
+    if(!document.getElementById('recordsPage').classList.contains('active'))return;
+    try{
+      const res=await fetch(`${SUPA_URL}/rest/v1/clan_records?select=*`,{headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY}});
+      const data=await res.json();
+      const nd={};data.forEach(r=>{nd[r.category]=r;});
+      if(JSON.stringify(nd)!==JSON.stringify(recData)){recData=nd;renderRecords();setRecSyncStatus('ok',t('updated'));}
+    }catch(e){}
+  },5000);
+}
+
+function formatResult(cat,val){
+  if(cat==='damage'||cat==='xp')return val.toLocaleString();
+  return val;
+}
+
+function renderRecords(){
+  const grid=document.getElementById('recordsGrid');
+  const canEdit=currentUser&&userApproved;
+  grid.innerHTML=RECORD_CATS.map(cat=>{
+    const rec=recData[cat.key];
+    const editBtn=canEdit?`<button class="record-edit-btn" onclick="openEditRecord('${cat.key}')">${t('save').replace('Зберегти','Змінити').replace('Save','Edit').replace('Сохранить','Изменить')}</button>`:'';
+    const body=rec
+      ?`<div class="record-value">${formatResult(cat.key,rec.result)}<span>${cat.unit}</span></div>
+        <div class="record-meta">
+          <div class="record-player">${esc(rec.player_nick)}</div>
+          <div class="record-ship">${esc(rec.ship)}</div>
+          <div class="record-date">${rec.date}</div>
+        </div>`
+      :`<div class="record-empty">${canEdit?'Натисни «Змінити» щоб встановити рекорд':'Рекорд ще не встановлено'}</div>`;
+    return`<div class="record-card">
+      <div class="record-card-header"><div class="record-category">${cat.label}</div>${editBtn}</div>
+      <div class="record-card-body">${body}</div>
+    </div>`;
+  }).join('');
+}
+
+function openEditRecord(catKey){
+  if(!userApproved)return;
+  editingCat=catKey;
+  const cat=RECORD_CATS.find(c=>c.key===catKey);
+  const rec=recData[catKey];
+  document.getElementById('editRecordTitle').textContent=cat.label;
+  document.getElementById('editRecordSub').textContent=rec?t('edit_record_update'):t('edit_record_new');
+  document.getElementById('recPlayer').value=rec?.player_nick||'';
+  document.getElementById('recShip').value=rec?.ship||'';
+  document.getElementById('recResult').value=rec?.result||'';
+  document.getElementById('recDate').value=rec?.date||new Date().toISOString().split('T')[0];
+  document.getElementById('recError').textContent='';
+  openModal('editRecordModal');setTimeout(()=>document.getElementById('recPlayer').focus(),50);
+}
+
+async function confirmEditRecord(){
+  const player=document.getElementById('recPlayer').value.trim();
+  const ship=document.getElementById('recShip').value.trim();
+  const result=parseInt(document.getElementById('recResult').value);
+  const date=document.getElementById('recDate').value;
+  const errEl=document.getElementById('recError');
+  errEl.textContent='';
+  if(!player||!ship||isNaN(result)||!date){errEl.textContent=t('fill_all');return;}
+  const body={category:editingCat,player_nick:player,ship,result,date,updated_at:new Date().toISOString()};
+  try{
+    setRecSyncStatus('loading',t('saving'));
+    const existing=recData[editingCat];
+    if(existing){
+      await sbFetch(`/rest/v1/clan_records?id=eq.${existing.id}`,{method:'PATCH',body:JSON.stringify(body)});
+      recData[editingCat]={...existing,...body};
+    }else{
+      const res=await sbFetch('/rest/v1/clan_records',{method:'POST',body:JSON.stringify(body)});
+      if(Array.isArray(res)&&res[0])recData[editingCat]=res[0];
+    }
+    renderRecords();setRecSyncStatus('ok',t('saved'));closeModal('editRecordModal');editingCat=null;
+  }catch(e){
+    if(e.message.includes('policy'))errEl.textContent=t('no_permission');
+    else errEl.textContent=t('error_prefix')+' '+e.message;
+    setRecSyncStatus('err',t('error_prefix'));
+  }
 }
 
 /* ── MODALS ── */
-.modal-overlay {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,.8);
-  z-index: 1000;
-  align-items: center;
-  justify-content: center;
-  backdrop-filter: blur(6px);
-}
-.modal-overlay.active { display: flex; }
-.modal-box {
-  background: var(--surface2);
-  border: 1px solid var(--border2);
-  padding: 30px 32px;
-  width: min(420px, 92vw);
-  border-radius: var(--r);
-  animation: fadeUp .22s ease;
-}
-.modal-title {
-  font-family: var(--f-head);
-  font-weight: 700;
-  font-size: 18px;
-  letter-spacing: -.01em;
-  text-transform: uppercase;
-  color: var(--cream);
-  margin-bottom: 6px;
-}
-.modal-sub { font-size: 13px; color: var(--muted); margin-bottom: 18px; line-height: 1.55; }
-.modal-label {
-  font-family: var(--f-mono);
-  font-size: 10px;
-  letter-spacing: .16em;
-  text-transform: uppercase;
-  color: var(--muted);
-  display: block;
-  margin-bottom: 5px;
-}
-.modal-input {
-  width: 100%;
-  background: var(--bg);
-  border: 1px solid var(--border);
-  color: var(--cream);
-  font-family: var(--f-body);
-  font-size: 14px;
-  padding: 10px 12px;
-  outline: none;
-  border-radius: var(--r);
-  transition: border-color .18s;
-  margin-bottom: 14px;
-}
-.modal-input:focus { border-color: var(--accent); }
-.modal-error { font-size: 13px; color: var(--red); margin-bottom: 12px; min-height: 18px; }
-.modal-actions { display: flex; gap: 10px; }
-.btn-primary {
-  flex: 1;
-  font-family: var(--f-mono);
-  font-weight: 400;
-  font-size: 11px;
-  letter-spacing: .18em;
-  text-transform: uppercase;
-  background: var(--accent);
-  color: var(--bg);
-  border: none;
-  padding: 11px;
-  cursor: pointer;
-  border-radius: var(--r);
-  transition: opacity .18s;
-}
-.btn-primary:hover { opacity: .88; }
-.btn-primary:disabled { opacity: .4; cursor: not-allowed; }
-.btn-secondary {
-  font-family: var(--f-mono);
-  font-size: 11px;
-  letter-spacing: .14em;
-  text-transform: uppercase;
-  background: transparent;
-  color: var(--muted);
-  border: 1px solid var(--border);
-  padding: 11px 18px;
-  cursor: pointer;
-  border-radius: var(--r);
-  transition: all .18s;
-}
-.btn-secondary:hover { color: var(--cream); border-color: var(--border2); }
-.modal-switch { font-size: 13px; color: var(--muted); margin-top: 14px; text-align: center; }
-.modal-switch a { color: var(--accent); cursor: pointer; }
-.xp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
-.xp-field-label {
-  font-family: var(--f-mono);
-  font-size: 10px;
-  letter-spacing: .14em;
-  text-transform: uppercase;
-  color: var(--muted);
-  display: block;
-  margin-bottom: 4px;
+function openModal(id){document.getElementById(id).classList.add('active');}
+function closeModal(id){document.getElementById(id).classList.remove('active');}
+function switchModal(from,to){closeModal(from);openModal(to);}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')document.querySelectorAll('.modal-overlay.active').forEach(m=>m.classList.remove('active'));});
+
+/* ── SCROLL REVEAL ── */
+function initReveal(){
+  // Блок актуальної події
+  const eb=document.querySelector('.instrument.event-block');
+  if(eb)setTimeout(()=>eb.classList.add('visible'),120);
+
+  // Картки розділів — з'являються по черзі
+  const cards=document.querySelectorAll('#homePage .card');
+  const observer=new IntersectionObserver((entries)=>{
+    entries.forEach(entry=>{
+      if(entry.isIntersecting){
+        const card=entry.target;
+        const idx=Array.from(cards).indexOf(card);
+        setTimeout(()=>card.classList.add('visible'), idx*80);
+        observer.unobserve(card);
+      }
+    });
+  },{threshold:0.1});
+  cards.forEach(c=>observer.observe(c));
 }
 
-/* ── FOOTER ── */
-footer {
-  border-top: 1px solid var(--border);
-  padding: 24px 0;
-  position: relative;
-  z-index: 1;
-}
-.footer-inner {
-  max-width: var(--maxw);
-  margin: 0 auto;
-  padding: 0 24px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 16px;
-  flex-wrap: wrap;
-}
-.foot-brand {
-  font-family: var(--f-head);
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: .1em;
-  text-transform: uppercase;
-  color: var(--muted);
-}
-.foot-meta {
-  font-family: var(--f-mono);
-  font-size: 10px;
-  letter-spacing: .14em;
-  text-transform: uppercase;
-  color: var(--border2);
+/* ── FLIP TIMER ── */
+const prevVals={};
+function flipDigit(el,newVal){
+  if(el.textContent===String(newVal))return;
+  el.classList.add('flip-out');
+  setTimeout(()=>{
+    el.textContent=newVal;
+    el.classList.remove('flip-out');
+    el.classList.add('flip-in');
+    requestAnimationFrame(()=>requestAnimationFrame(()=>el.classList.remove('flip-in')));
+  },90);
 }
 
-/* ── RESPONSIVE ── */
-@media (max-width: 640px) {
-  .header-inner { height: 50px; padding: 0 12px; gap: 8px; }
-  .game-title { display: none; }
-  .lang-switcher { gap: 1px; }
-  .lang-btn { padding: 3px 5px; font-size: 9px; }
-  .auth-btn { padding: 5px 9px; font-size: 10px; }
-  .auth-user { max-width: 90px; font-size: 10px; }
-  .hero { padding: 40px 0 36px; }
-  .hero-title { font-size: 28px; }
-  .section { padding: 32px 0; }
-  .page-head { padding: 24px 0 18px; }
-  .lb-control { gap: 8px; }
-  .timer-slim { flex-direction: column; align-items: flex-start; }
-  .card { min-height: 100px; }
-  .instrument.event-block { padding: 18px 20px; }
-  table.lb td { padding: 10px 8px; font-size: 13px; }
-  table.lb th { padding: 10px 8px; }
+function updateFlipCountdown(){
+  const stage=getCurrentStage();
+  if(!stage)return;
+  const diff=stage.end-new Date();
+  if(diff<=0)return;
+  const days=Math.floor(diff/86400000);
+  const hours=Math.floor((diff%86400000)/3600000);
+  const mins=Math.floor((diff%3600000)/60000);
+  const secs=Math.floor((diff%60000)/1000);
+  const segs=document.querySelectorAll('#heroCountdown .seg b');
+  if(segs.length===4){
+    flipDigit(segs[0],days);
+    flipDigit(segs[1],pad(hours));
+    flipDigit(segs[2],pad(mins));
+    flipDigit(segs[3],pad(secs));
+  }
 }
 
-@media (max-width: 400px) {
-  .auth-user { max-width: 70px; }
-  .lang-btn { padding: 3px 4px; }
-}
+/* ── INIT ── */
+(async()=>{
+  restorePage();
+  await tryRestoreSession();
+  updateAuthUI();
+  applyTranslations();
+  setInterval(updateTimer,1000);
+  setInterval(updateFlipCountdown,1000);
+  updateTimer();
+  setTimeout(initReveal,50);
+  loadLottery();
+  try{
+    const res=await fetch(`${SUPA_URL}/rest/v1/tournament_players?select=*&order=created_at.asc`,{headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY}});
+    td=await res.json();updateHeroLeaders();
+  }catch(e){}
+})();
+</script>
 
-/* ── ANIMATIONS ── */
-
-/* 1. Scroll reveal для карток */
-.card {
-  opacity: 0;
-  transform: translateY(24px);
-  transition: opacity .45s ease, transform .45s ease, background .15s, box-shadow .18s;
-}
-.card.visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* 2. Поява блоку актуальної події */
-.instrument.event-block {
-  opacity: 0;
-  transform: translateX(-18px);
-  transition: opacity .5s ease, transform .5s ease, background .15s, box-shadow .2s;
-}
-.instrument.event-block.visible {
-  opacity: 1;
-  transform: translateX(0);
-}
-
-/* 3. Flip таймер */
-.seg b {
-  display: block;
-  font-family: var(--f-mono);
-  font-size: 22px;
-  color: var(--accent);
-  line-height: 1;
-  transition: transform .18s ease, opacity .18s ease;
-}
-.seg b.flip-out {
-  transform: translateY(-8px);
-  opacity: 0;
-}
-.seg b.flip-in {
-  transform: translateY(8px);
-  opacity: 0;
-}
-
-/* 4. Пульсація активного етапу */
-@keyframes stagePulse {
-  0%, 100% { border-left-color: var(--accent); }
-  50% { border-left-color: rgba(184,146,62,.3); }
-}
-.stage-card.active-stage {
-  animation: stagePulse 2s ease-in-out infinite;
-}
-
-/* prefers-reduced-motion — вимикаємо все для тих хто не хоче */
-@media (prefers-reduced-motion: reduce) {
-  .card { opacity: 1; transform: none; transition: background .15s, box-shadow .18s; }
-  .instrument.event-block { opacity: 1; transform: none; transition: background .15s, box-shadow .2s; }
-  .seg b { transition: none; }
-  .stage-card.active-stage { animation: none; }
-}
+</body>
+</html>
