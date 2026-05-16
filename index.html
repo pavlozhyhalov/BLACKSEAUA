@@ -41,7 +41,7 @@ gtag('config', 'G-V2SVEPJSH0');
       </div>
       <div class="header-auth" id="headerAuth">
         <button class="auth-btn primary" onclick="openModal('loginModal')" data-i18n="login">Увійти</button>
-        <button class="auth-btn" onclick="openModal('registerModal')" data-i18n="register_short">Реєстр.</button>
+        <button class="auth-btn register-btn" onclick="openModal('registerModal')" data-i18n="register_short">Реєстр.</button>
       </div>
     </div>
   </div>
@@ -1258,23 +1258,28 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape')document.querySelect
 
 /* ── SCROLL REVEAL ── */
 function initReveal(){
-  // Блок актуальної події
   const eb=document.querySelector('.instrument.event-block');
-  if(eb)setTimeout(()=>eb.classList.add('visible'),120);
+  if(eb)setTimeout(()=>eb.classList.add('visible'),150);
 
-  // Картки розділів — з'являються по черзі
   const cards=document.querySelectorAll('#homePage .card');
-  const observer=new IntersectionObserver((entries)=>{
-    entries.forEach(entry=>{
-      if(entry.isIntersecting){
-        const card=entry.target;
-        const idx=Array.from(cards).indexOf(card);
-        setTimeout(()=>card.classList.add('visible'), idx*80);
-        observer.unobserve(card);
-      }
-    });
-  },{threshold:0.1});
-  cards.forEach(c=>observer.observe(c));
+  cards.forEach((card,idx)=>{
+    const rect=card.getBoundingClientRect();
+    if(rect.top<window.innerHeight){
+      // Вже видима — анімуємо з затримкою
+      setTimeout(()=>card.classList.add('visible'),200+idx*100);
+    } else {
+      // Поза екраном — анімуємо при скролі
+      const observer=new IntersectionObserver((entries)=>{
+        entries.forEach(entry=>{
+          if(entry.isIntersecting){
+            setTimeout(()=>card.classList.add('visible'),idx*80);
+            observer.unobserve(card);
+          }
+        });
+      },{threshold:0.1});
+      observer.observe(card);
+    }
+  });
 }
 
 /* ── FLIP TIMER ── */
