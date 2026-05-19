@@ -17,11 +17,12 @@ gtag('config', 'G-V2SVEPJSH0');
 <style>
 
 /* ══ SHIPS TTX PAGE ══ */
-.ships-layout{display:grid;grid-template-columns:280px 1fr;gap:16px;padding-bottom:60px;align-items:start}
-@media(max-width:860px){.ships-layout{grid-template-columns:1fr}}
-.ships-sidebar{position:sticky;top:70px;max-height:calc(100vh - 90px);overflow-y:auto;display:flex;flex-direction:column;gap:10px;scrollbar-width:thin}
-.ships-sidebar::-webkit-scrollbar{width:3px}
-.ships-sidebar::-webkit-scrollbar-thumb{background:var(--border)}
+.ships-layout{display:flex;flex-direction:column;gap:16px;padding-bottom:60px}
+.ships-filters-top{display:flex;flex-direction:column;gap:8px}
+.ships-filters-row{display:flex;flex-wrap:wrap;gap:8px}
+.ships-main-area{display:grid;grid-template-columns:280px 1fr;gap:16px;align-items:start}
+@media(max-width:860px){.ships-main-area{grid-template-columns:1fr}}
+.ships-sidebar{display:flex;flex-direction:column;gap:8px}
 .ships-search-box input{width:100%;background:var(--surface);border:1px solid var(--border);color:var(--cream);font-family:var(--f-body);font-size:13px;padding:9px 12px;outline:none;border-radius:var(--r);transition:border-color .18s}
 .ships-search-box input:focus{border-color:var(--accent)}
 .ships-search-box input::placeholder{color:var(--muted)}
@@ -37,7 +38,7 @@ gtag('config', 'G-V2SVEPJSH0');
 .sf.sf-cv.a{background:rgba(220,160,40,.1);color:#e0b040;border-color:#b88030}
 .sf.sf-prem.a{background:rgba(184,146,62,.12);color:var(--accent);border-color:var(--accent)}
 .ships-count{font-family:var(--f-mono);font-size:10px;letter-spacing:.12em;color:var(--muted);text-align:right;padding:2px 0}
-.ships-list{border:1px solid var(--border);border-radius:var(--r);overflow:hidden;max-height:360px;overflow-y:auto;background:var(--surface)}
+.ships-list{border:1px solid var(--border);border-radius:var(--r);overflow:hidden;max-height:calc(100vh - 280px);min-height:200px;overflow-y:auto;background:var(--surface)}
 .ships-list::-webkit-scrollbar{width:3px}
 .ships-list::-webkit-scrollbar-thumb{background:var(--border2)}
 .sitem{padding:7px 10px;cursor:pointer;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:6px;transition:background .12s;user-select:none}
@@ -409,73 +410,84 @@ gtag('config', 'G-V2SVEPJSH0');
       <p class="page-lede" data-i18n="ships_lede">PS4/PS5/XBOX · 436 кораблів · Вибери до 3 для порівняння</p>
     </div>
     <div class="ships-layout">
-      <div class="ships-sidebar">
+
+      <!-- ФІЛЬТРИ ЗВЕРХУ -->
+      <div class="ships-filters-top">
         <div class="ships-search-box">
           <input type="search" id="sq" placeholder="Назва корабля..." oninput="fl()" autocomplete="off">
         </div>
-        <div class="ships-filter-group">
-          <div class="ships-filter-label" data-i18n="ships_class">Клас</div>
-          <div class="ships-filters" id="cls-btns">
-            <button class="sf a" onclick="sc(this,'all')" data-i18n="filter_all">ВСІ</button>
-            <button class="sf sf-bb" onclick="sc(this,'BB')" data-i18n="filter_bb">ЛК</button>
-            <button class="sf sf-ca" onclick="sc(this,'CA')" data-i18n="filter_ca">КР</button>
-            <button class="sf sf-dd" onclick="sc(this,'DD')" data-i18n="filter_dd">ЕМ</button>
-            <button class="sf sf-cv" onclick="sc(this,'CV')" data-i18n="filter_cv">АВ</button>
+        <div class="ships-filters-row">
+          <div class="ships-filter-group" style="flex:0 0 auto">
+            <div class="ships-filter-label" data-i18n="ships_class">Клас</div>
+            <div class="ships-filters" id="cls-btns">
+              <button class="sf a" onclick="sc(this,'all')" data-i18n="filter_all">ВСІ</button>
+              <button class="sf sf-bb" onclick="sc(this,'BB')" data-i18n="filter_bb">ЛК</button>
+              <button class="sf sf-ca" onclick="sc(this,'CA')" data-i18n="filter_ca">КР</button>
+              <button class="sf sf-dd" onclick="sc(this,'DD')" data-i18n="filter_dd">ЕМ</button>
+              <button class="sf sf-cv" onclick="sc(this,'CV')" data-i18n="filter_cv">АВ</button>
+            </div>
           </div>
-        </div>
-        <div class="ships-filter-group">
-          <div class="ships-filter-label" data-i18n="ships_tier">Рівень</div>
-          <div class="ships-filters" id="tier-btns">
-            <button class="sf a" onclick="st(this,'all')" data-i18n="filter_all">ВСІ</button>
-            <button class="sf" onclick="st(this,'III')">III</button>
-            <button class="sf" onclick="st(this,'IV')">IV</button>
-            <button class="sf" onclick="st(this,'V')">V</button>
-            <button class="sf" onclick="st(this,'VI')">VI</button>
-            <button class="sf" onclick="st(this,'VII')">VII</button>
-            <button class="sf" onclick="st(this,'VIII')">VIII</button>
-            <button class="sf" onclick="st(this,'&#9733;')" data-i18n="filter_legend">&#9733; ЛЕГЕН.</button>
+          <div class="ships-filter-group" style="flex:0 0 auto">
+            <div class="ships-filter-label" data-i18n="ships_tier">Рівень</div>
+            <div class="ships-filters" id="tier-btns">
+              <button class="sf a" onclick="st(this,'all')" data-i18n="filter_all">ВСІ</button>
+              <button class="sf" onclick="st(this,'III')">III</button>
+              <button class="sf" onclick="st(this,'IV')">IV</button>
+              <button class="sf" onclick="st(this,'V')">V</button>
+              <button class="sf" onclick="st(this,'VI')">VI</button>
+              <button class="sf" onclick="st(this,'VII')">VII</button>
+              <button class="sf" onclick="st(this,'VIII')">VIII</button>
+              <button class="sf" onclick="st(this,'&#9733;')" data-i18n="filter_legend">&#9733; ЛЕГЕН.</button>
+            </div>
           </div>
-        </div>
-        <div class="ships-filter-group">
-          <div class="ships-filter-label" data-i18n="ships_nation">Нація</div>
-          <div class="ships-filters" id="nat-btns">
-            <button class="sf a" onclick="sn(this,'all')" data-i18n="filter_all">ВСІ</button>
-            <button class="sf" onclick="sn(this,'USA')" data-i18n="nat_usa">США</button>
-            <button class="sf" onclick="sn(this,'Japan')" data-i18n="nat_jpn">ЯПО</button>
-            <button class="sf" onclick="sn(this,'UK')" data-i18n="nat_uk">БРИ</button>
-            <button class="sf" onclick="sn(this,'Germany')" data-i18n="nat_ger">НІМ</button>
-            <button class="sf" onclick="sn(this,'USSR')" data-i18n="nat_ussr">РАД</button>
-            <button class="sf" onclick="sn(this,'France')" data-i18n="nat_fra">ФРА</button>
-            <button class="sf" onclick="sn(this,'Italy')" data-i18n="nat_ita">ІТА</button>
-            <button class="sf" onclick="sn(this,'Pan-Asia')" data-i18n="nat_pasia">П.АЗ</button>
-            <button class="sf" onclick="sn(this,'Pan-America')" data-i18n="nat_pam">П.АМ</button>
-            <button class="sf" onclick="sn(this,'Netherlands')" data-i18n="nat_nld">НІД</button>
-            <button class="sf" onclick="sn(this,'Europe')" data-i18n="nat_eu">ЄВР</button>
-            <button class="sf" onclick="sn(this,'Spain')" data-i18n="nat_esp">ІСП</button>
+          <div class="ships-filter-group" style="flex:1 1 auto;min-width:0">
+            <div class="ships-filter-label" data-i18n="ships_nation">Нація</div>
+            <div class="ships-filters" id="nat-btns">
+              <button class="sf a" onclick="sn(this,'all')" data-i18n="filter_all">ВСІ</button>
+              <button class="sf" onclick="sn(this,'USA')" data-i18n="nat_usa">США</button>
+              <button class="sf" onclick="sn(this,'Japan')" data-i18n="nat_jpn">ЯПО</button>
+              <button class="sf" onclick="sn(this,'UK')" data-i18n="nat_uk">БРИ</button>
+              <button class="sf" onclick="sn(this,'Germany')" data-i18n="nat_ger">НІМ</button>
+              <button class="sf" onclick="sn(this,'USSR')" data-i18n="nat_ussr">РАД</button>
+              <button class="sf" onclick="sn(this,'France')" data-i18n="nat_fra">ФРА</button>
+              <button class="sf" onclick="sn(this,'Italy')" data-i18n="nat_ita">ІТА</button>
+              <button class="sf" onclick="sn(this,'Pan-Asia')" data-i18n="nat_pasia">П.АЗ</button>
+              <button class="sf" onclick="sn(this,'Pan-America')" data-i18n="nat_pam">П.АМ</button>
+              <button class="sf" onclick="sn(this,'Netherlands')" data-i18n="nat_nld">НІД</button>
+              <button class="sf" onclick="sn(this,'Europe')" data-i18n="nat_eu">ЄВР</button>
+              <button class="sf" onclick="sn(this,'Spain')" data-i18n="nat_esp">ІСП</button>
+            </div>
           </div>
-        </div>
-        <div class="ships-filter-group">
-          <div class="ships-filter-label" data-i18n="ships_type">Тип</div>
-          <div class="ships-filters">
-            <button class="sf sf-prem" id="prem-btn" onclick="togglePrem(this)" data-i18n="filter_prem">&#9733; Преміум</button>
-            <button class="sf" id="free-btn" onclick="toggleFree(this)" data-i18n="filter_free">Тех. дерево</button>
+          <div class="ships-filter-group" style="flex:0 0 auto">
+            <div class="ships-filter-label" data-i18n="ships_type">Тип</div>
+            <div class="ships-filters">
+              <button class="sf sf-prem" id="prem-btn" onclick="togglePrem(this)" data-i18n="filter_prem">&#9733; Преміум</button>
+              <button class="sf" id="free-btn" onclick="toggleFree(this)" data-i18n="filter_free">Тех. дерево</button>
+            </div>
           </div>
-        </div>
-        <div class="ships-count" id="cnt">Показано: 0</div>
-        <div class="ships-list" id="slist"></div>
-      </div>
-      <div class="ships-compare-col">
-        <div class="ships-selbar">
-          <div class="lb-label" data-i18n="ships_selected">Обрані кораблі</div>
-          <div class="ships-selrow">
-            <div class="ships-selships" id="selships"><span class="ships-hint" data-i18n="ships_hint">Клікні на корабель зліва (макс. 3)...</span></div>
-            <button class="ships-cbtn" id="cbtn" onclick="renderCmp()" disabled data-i18n="ships_compare">ПОРІВНЯТИ</button>
-          </div>
-        </div>
-        <div id="cmparea">
-          <div class="ships-empty"><div class="ships-empty-title" data-i18n="ships_select_prompt">Вибери 2 або 3 кораблі та натисни Порівняти</div></div>
         </div>
       </div>
+
+      <!-- СПИСОК + ПОРІВНЯННЯ (нижче фільтрів) -->
+      <div class="ships-main-area">
+        <div class="ships-sidebar">
+          <div class="ships-count" id="cnt">Показано: 0</div>
+          <div class="ships-list" id="slist"></div>
+        </div>
+        <div class="ships-compare-col">
+          <div class="ships-selbar">
+            <div class="lb-label" data-i18n="ships_selected">Обрані кораблі</div>
+            <div class="ships-selrow">
+              <div class="ships-selships" id="selships"><span class="ships-hint" data-i18n="ships_hint">Клікни на корабель зліва (макс. 3)...</span></div>
+              <button class="ships-cbtn" id="cbtn" onclick="renderCmp()" disabled data-i18n="ships_compare">ПОРІВНЯТИ</button>
+            </div>
+          </div>
+          <div id="cmparea">
+            <div class="ships-empty"><div class="ships-empty-title" data-i18n="ships_select_prompt">Вибери 2 або 3 кораблі та натисни Порівняти</div></div>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
 </div>
@@ -2070,7 +2082,7 @@ function renderShipList(){
   const cnt=document.getElementById('cnt');
   const slist=document.getElementById('slist');
   if(!cnt||!slist)return;
-  cnt.textContent = t('filter_all') ? (currentLang==='uk'?'Показано: ':'Показано: ') + filtered.length : 'Count: ' + filtered.length;
+  const lbl2 = currentLang==='en'?'Shown: ':'Показано: '; cnt.textContent = lbl2 + filtered.length;
   slist.innerHTML = filtered.map(s=>{
     const isSel = selected.find(x=>x.n===s.n);
     const tleg = s.t==='★';
@@ -2093,15 +2105,13 @@ function toggleShip(s){
     selected.push(s);
   }
   renderSelShips(); renderShipList();
-  const cbtn=document.getElementById('cbtn');
-  if(cbtn)cbtn.disabled = selected.length < 2;
+  updateCmpBtn();
 }
 
 function removeShip(name){
   selected = selected.filter(s=>s.n!==name);
   renderSelShips(); renderShipList();
-  const cbtn=document.getElementById('cbtn');
-  if(cbtn)cbtn.disabled = selected.length < 2;
+  updateCmpBtn();
 }
 
 function renderSelShips(){
@@ -2114,6 +2124,14 @@ function renderSelShips(){
   el.innerHTML = selected.map(s=>`<div class="ships-schip" onclick="removeShip('${s.n.replace(/'/g,"\'")}')">
 <span class="scls ${s.c}">${CLS_UA_S[s.c]||s.c}</span>
 <span>${s.n}</span><span class="rm">&#215;</span></div>`).join('');
+}
+
+function updateCmpBtn(){
+  const cbtn=document.getElementById('cbtn');
+  if(cbtn){
+    cbtn.disabled = selected.length < 2;
+    cbtn.style.display = '';
+  }
 }
 
 function renderCmp(){
