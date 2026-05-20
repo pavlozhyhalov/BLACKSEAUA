@@ -18,7 +18,8 @@ gtag('config', 'G-V2SVEPJSH0');
 <style>
 
 /* ══ SHIPS TTX PAGE ══ */
-.ships-layout{display:flex;flex-direction:column;gap:16px;padding-bottom:60px}
+#shipsPage{overflow-x:hidden;max-width:100vw;box-sizing:border-box}
+.ships-layout{display:flex;flex-direction:column;gap:16px;padding-bottom:60px;overflow-x:hidden}
 .ships-filters-top{display:flex;flex-direction:column;gap:8px}
 .ships-filters-row{display:flex;flex-wrap:wrap;gap:8px}
 .ships-main-area{display:grid;grid-template-columns:280px 1fr;gap:16px;align-items:start}
@@ -72,7 +73,7 @@ gtag('config', 'G-V2SVEPJSH0');
 .ships-cbtn:disabled{opacity:.35;cursor:not-allowed}
 .ships-empty{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:60px 24px;text-align:center}
 .ships-empty-title{font-size:14px;color:var(--muted)}
-.cmp-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;max-width:100%}.ctable{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;min-width:max-content}
+.cmp-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;width:calc(100vw - 32px);max-width:calc(100vw - 32px);box-sizing:border-box;display:block}#cmparea{overflow-x:hidden;width:100%}.ctable{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;width:max-content}
 .cthdr{display:grid;gap:1px;background:var(--border)}
 .cthdr-lbl{background:var(--surface2);padding:10px 12px;font-family:var(--f-mono);font-size:9px;color:var(--accent);letter-spacing:.2em;text-transform:uppercase}
 .cthdr-col{background:var(--surface2);padding:12px;text-align:center}
