@@ -1683,12 +1683,11 @@ function renderShipList(){
   slist.innerHTML = filtered.map(s=>{
     const isSel = selected.find(x=>x.n===s.n);
     const tleg = s.t==='★';
-    const starBadge = s.p ? '<span class="sstar">&#9733;</span>' : '';
     const nameClass = (s.p || tleg) ? 'sname prem' : 'sname';
     return `<div class="sitem${isSel?' sel':''}" onclick="toggleShip(${JSON.stringify(s).replace(/"/g,'&quot;')})">
 <span class="stier${tleg?' leg':''}">${tleg?'★':s.t}</span>
 <span class="scls ${s.c}">${CLS_UA_S[s.c]||s.c}</span>
-<span class="${nameClass}">${s.n}${starBadge}</span>
+<span class="${nameClass}">${s.n}</span>
 <span class="snat">${NAT_FLAG[s.na]||''} ${s.na}</span>
 </div>`;
   }).join('');
