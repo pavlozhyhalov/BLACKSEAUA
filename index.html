@@ -1581,33 +1581,38 @@ let SHIPS = [];
 
 async function loadShipsFromSupabase() {
   const cntEl = document.getElementById('cnt');
+  const slist = document.getElementById('slist');
   if(cntEl) cntEl.textContent = 'Завантаження...';
+  if(slist) slist.innerHTML = '<div style="padding:16px;text-align:center;color:var(--muted);font-size:12px;font-family:var(--f-mono)">Завантаження кораблів...</div>';
   try {
-    // Fetch all ships from Supabase (max 1000 per request)
-    const res = await fetch(SUPA_URL + '/rest/v1/ships?select=*&order=t,c,n&limit=1000', {
+    const url = SUPA_URL + '/rest/v1/ships?select=n,t,c,na,p,hp,sp,con,cal,g,r,rng,sigma,belt,deck,turn,rudder,he_pen,ap_pen,dpm,sec_range,sec_cal,torp,torps_range,torps_dmg,torps_reload,torps_count,radar,hydro,heal,smoke,boost,reload_b&order=t,c,n&limit=1000';
+    const res = await fetch(url, {
       headers: {
         'apikey': SUPA_KEY,
-        'Authorization': 'Bearer ' + SUPA_KEY
+        'Authorization': 'Bearer ' + SUPA_KEY,
+        'Accept': 'application/json'
       }
     });
-    if (!res.ok) throw new Error('HTTP ' + res.status);
+    if (!res.ok) {
+      const txt = await res.text();
+      throw new Error('HTTP ' + res.status + ': ' + txt.slice(0,100));
+    }
     const data = await res.json();
-    if (data && data.length > 0) {
+    if (data && Array.isArray(data) && data.length > 0) {
       SHIPS = data;
-      console.log('Loaded', SHIPS.length, 'ships from Supabase');
+      console.log('[Ships] Loaded', SHIPS.length, 'ships from Supabase');
     } else {
-      throw new Error('No data');
+      throw new Error('Empty response: ' + JSON.stringify(data).slice(0,100));
     }
   } catch(e) {
-    console.warn('Supabase load failed, using local data:', e.message);
-    // Fallback: load from embedded minimal data
-    loadShipsFallback();
+    console.error('[Ships] Supabase load failed:', e.message);
+    if(slist) slist.innerHTML = '<div style="padding:16px;color:var(--red);font-size:11px;font-family:var(--f-mono)">Помилка: ' + e.message + '</div>';
+    return;
   }
   fl();
 }
 
 function loadShipsFallback() {
-  // Minimal fallback - just a notice
   SHIPS = [];
   const slist = document.getElementById('slist');
   if(slist) slist.innerHTML = '<div style="padding:12px;color:var(--muted);font-size:12px;">Помилка завантаження. Перевірте підключення.</div>';
