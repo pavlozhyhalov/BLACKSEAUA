@@ -72,7 +72,7 @@ gtag('config', 'G-V2SVEPJSH0');
 .ships-cbtn:disabled{opacity:.35;cursor:not-allowed}
 .ships-empty{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:60px 24px;text-align:center}
 .ships-empty-title{font-size:14px;color:var(--muted)}
-.ctable{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;overflow-x:auto}
+.cmp-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;max-width:100%}.ctable{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;min-width:max-content}
 .cthdr{display:grid;gap:1px;background:var(--border)}
 .cthdr-lbl{background:var(--surface2);padding:10px 12px;font-family:var(--f-mono);font-size:9px;color:var(--accent);letter-spacing:.2em;text-transform:uppercase}
 .cthdr-col{background:var(--surface2);padding:12px;text-align:center}
@@ -95,6 +95,35 @@ gtag('config', 'G-V2SVEPJSH0');
 .ytag.y{background:rgba(77,148,104,.1);color:var(--green);border:1px solid rgba(77,148,104,.25)}
 .ytag.n{background:rgba(30,61,87,.1);color:var(--muted);border:1px solid var(--border)}
 
+
+/* ── NATION FLAGS ── */
+.nf{display:inline-block;width:18px;height:12px;border-radius:1px;background-size:cover;background-position:center;vertical-align:middle;margin-right:2px;flex-shrink:0}
+/* USA */
+.nf-usa{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 19 10'%3E%3Crect width='19' height='10' fill='%23B22234'/%3E%3Crect y='1.54' width='19' height='1.1' fill='white'/%3E%3Crect y='3.08' width='19' height='1.1' fill='%23B22234'/%3E%3Crect y='4.62' width='19' height='1.1' fill='white'/%3E%3Crect y='6.15' width='19' height='1.1' fill='%23B22234'/%3E%3Crect y='7.69' width='19' height='1.1' fill='white'/%3E%3Crect width='7.6' height='5.38' fill='%233C3B6E'/%3E%3C/svg%3E")}
+/* Japan */
+.nf-jpn{background:#fff;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18 12'%3E%3Crect width='18' height='12' fill='white'/%3E%3Ccircle cx='9' cy='6' r='3.6' fill='%23BC002D'/%3E%3C/svg%3E")}
+/* UK */
+.nf-uk{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 30'%3E%3Crect width='60' height='30' fill='%23012169'/%3E%3Cpath d='M0,0 L60,30 M60,0 L0,30' stroke='white' stroke-width='6'/%3E%3Cpath d='M0,0 L60,30 M60,0 L0,30' stroke='%23C8102E' stroke-width='4'/%3E%3Cpath d='M30,0 V30 M0,15 H60' stroke='white' stroke-width='10'/%3E%3Cpath d='M30,0 V30 M0,15 H60' stroke='%23C8102E' stroke-width='6'/%3E%3C/svg%3E")}
+/* Germany */
+.nf-ger{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 5 3'%3E%3Crect width='5' height='1' fill='%23000'/%3E%3Crect y='1' width='5' height='1' fill='%23D00'/%3E%3Crect y='2' width='5' height='1' fill='%23FFCE00'/%3E%3C/svg%3E")}
+/* France */
+.nf-fra{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 2'%3E%3Crect width='1' height='2' fill='%23002395'/%3E%3Crect x='1' width='1' height='2' fill='white'/%3E%3Crect x='2' width='1' height='2' fill='%23ED2939'/%3E%3C/svg%3E")}
+/* Italy */
+.nf-ita{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 2'%3E%3Crect width='1' height='2' fill='%23009246'/%3E%3Crect x='1' width='1' height='2' fill='white'/%3E%3Crect x='2' width='1' height='2' fill='%23CE2B37'/%3E%3C/svg%3E")}
+/* USSR - Soviet flag */
+.nf-ussr{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18 12'%3E%3Crect width='18' height='12' fill='%23CC0000'/%3E%3Ctext x='3' y='9' font-size='8' fill='%23FFD700'%3E%E2%98%AD%3C/text%3E%3C/svg%3E")}
+/* Netherlands */
+.nf-nld{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 2'%3E%3Crect width='3' height='0.67' fill='%23AE1C28'/%3E%3Crect y='0.67' width='3' height='0.67' fill='white'/%3E%3Crect y='1.33' width='3' height='0.67' fill='%2321468B'/%3E%3C/svg%3E")}
+/* Pan-America - anchor + stars on blue */
+.nf-pam{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18 12'%3E%3Crect width='18' height='12' fill='%23002B7F'/%3E%3Ccircle cx='9' cy='6' r='3' fill='none' stroke='%23FFD700' stroke-width='1.2'/%3E%3Cline x1='9' y1='3' x2='9' y2='9' stroke='%23FFD700' stroke-width='1'/%3E%3Cline x1='6.5' y1='7' x2='11.5' y2='7' stroke='%23FFD700' stroke-width='1'/%3E%3C/svg%3E")}
+/* Pan-Asia - dragon red */
+.nf-pas{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18 12'%3E%3Crect width='18' height='12' fill='%23C8102E'/%3E%3Ccircle cx='6' cy='6' r='2.5' fill='%23FFD700'/%3E%3Ccircle cx='12' cy='4' r='1' fill='%23FFD700'/%3E%3Ccircle cx='14' cy='7' r='0.8' fill='%23FFD700'/%3E%3Ccircle cx='12' cy='9.5' r='0.8' fill='%23FFD700'/%3E%3C/svg%3E")}
+/* Spain */
+.nf-esp{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 2'%3E%3Crect width='3' height='2' fill='%23AA151B'/%3E%3Crect y='0.5' width='3' height='1' fill='%23F1BF00'/%3E%3C/svg%3E")}
+/* Europe - EU stars on blue */
+.nf-eur{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18 12'%3E%3Crect width='18' height='12' fill='%23003399'/%3E%3Cg fill='%23FFDD00' font-size='4' text-anchor='middle'%3E%3Ctext x='9' y='3.5'%3E%E2%98%85%3C/text%3E%3Ctext x='12.5' y='4.8'%3E%E2%98%85%3C/text%3E%3Ctext x='13.8' y='8'%3E%E2%98%85%3C/text%3E%3Ctext x='12.5' y='11'%3E%E2%98%85%3C/text%3E%3Ctext x='9' y='12'%3E%E2%98%85%3C/text%3E%3Ctext x='5.5' y='11'%3E%E2%98%85%3C/text%3E%3Ctext x='4.2' y='8'%3E%E2%98%85%3C/text%3E%3Ctext x='5.5' y='4.8'%3E%E2%98%85%3C/text%3E%3C/g%3E%3C/svg%3E")}
+/* Commonwealth */
+.nf-com{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18 12'%3E%3Crect width='18' height='12' fill='%2300247D'/%3E%3Cpath d='M0,0 L18,12 M18,0 L0,12' stroke='white' stroke-width='3'/%3E%3Cpath d='M9,0 V12 M0,6 H18' stroke='white' stroke-width='4'/%3E%3Cpath d='M9,0 V12 M0,6 H18' stroke='%23C8102E' stroke-width='2.5'/%3E%3C/svg%3E")}
 </style>
 </head>
 <body>
@@ -408,7 +437,7 @@ gtag('config', 'G-V2SVEPJSH0');
     <div class="page-head">
       <div class="page-breadcrumb"><a onclick="backToHome()" data-i18n="home">Головна</a><span class="sep">/</span><span data-i18n="nav_ships">ТТХ Кораблів</span></div>
       <div class="page-title" data-i18n="nav_ships">ТТХ Кораблів</div>
-      <p class="page-lede" data-i18n="ships_lede">PS4/PS5/XBOX · 436 кораблів · Вибери до 3 для порівняння</p>
+      <p class="page-lede" data-i18n="ships_lede">428 кораблів · порівняння до 5</p>
     </div>
     <div class="ships-layout">
 
@@ -479,7 +508,7 @@ gtag('config', 'G-V2SVEPJSH0');
           <div class="ships-selbar">
             <div class="lb-label" data-i18n="ships_selected">Обрані кораблі</div>
             <div class="ships-selrow">
-              <div class="ships-selships" id="selships"><span class="ships-hint" data-i18n="ships_hint">Клікни на корабель зліва (макс. 3)...</span></div>
+              <div class="ships-selships" id="selships"><span class="ships-hint" data-i18n="ships_hint">Клікни на корабель зліва (макс. 5)...</span></div>
               <button class="ships-cbtn" id="cbtn" onclick="renderCmp()" disabled data-i18n="ships_compare">ПОРІВНЯТИ</button>
             </div>
           </div>
@@ -588,7 +617,7 @@ gtag('config', 'G-V2SVEPJSH0');
 /* ── i18n ── */
 const TRANSLATIONS = {
   uk: {
-    nav_ships:'ТТХ Кораблів', ships_lede:'PS4/PS5/XBOX · 436 кораблів · Вибери до 3 для порівняння',
+    nav_ships:'ТТХ Кораблів', ships_lede:'428 кораблів · порівняння до 5',
     nav_ships_desc:'Характеристики та порівняння всіх кораблів.',
     ships_search_ph:'Назва корабля...',
     ships_class:'Клас', ships_tier:'Рівень', ships_nation:'Нація', ships_type:'Тип',
@@ -596,7 +625,7 @@ const TRANSLATIONS = {
     filter_legend:'ЛЕГЕН.', filter_prem:'Преміум', filter_free:'Тех. дерево',
     nat_usa:'США', nat_jpn:'ЯПО', nat_uk:'БРИ', nat_ger:'НІМ', nat_ussr:'РАД',
     nat_fra:'ФРА', nat_ita:'ІТА', nat_pasia:'П.АЗ', nat_pam:'П.АМ', nat_nld:'НІД', nat_eu:'ЄВР', nat_esp:'ІСП',
-    ships_selected:'Обрані кораблі', ships_hint:'Клікни на корабель зліва (макс. 3)...',
+    ships_selected:'Обрані кораблі', ships_hint:'Клікни на корабель зліва (макс. 5)...',
     ships_compare:'ПОРІВНЯТИ', ships_select_prompt:'Вибери 2 або 3 кораблі та натисни Порівняти',
     ships_max3:'Максимум 3 кораблі для порівняння',
     login:'Увійти', register:'Реєстрація', register_short:'Реєстр.', logout:'Вийти',
@@ -684,7 +713,7 @@ const TRANSLATIONS = {
     filter_legend:'ЛЕГЕНД.', filter_prem:'Премиум', filter_free:'Тех. ветка',
     nat_usa:'США', nat_jpn:'ЯПО', nat_uk:'БРИ', nat_ger:'НЕМ', nat_ussr:'СССР',
     nat_fra:'ФРА', nat_ita:'ИТА', nat_pasia:'П.АЗ', nat_pam:'П.АМ', nat_nld:'НИД', nat_eu:'ЕВР', nat_esp:'ИСП',
-    ships_selected:'Выбранные корабли', ships_hint:'Кликни на корабль слева (макс. 3)...',
+    ships_selected:'Выбранные корабли', ships_hint:'Кликни на корабль слева (макс. 5)...',
     ships_compare:'СРАВНИТЬ', ships_select_prompt:'Выбери 2 или 3 корабля и нажми Сравнить',
     ships_max3:'Максимум 3 корабля для сравнения',
     login:'Войти', register:'Регистрация', register_short:'Регистр.', logout:'Выйти',
@@ -1584,8 +1613,23 @@ function updateFlipCountdown(){
 
 const CLS_UA_S = {'BB':'ЛК','CA':'КР','DD':'ЕМ','CV':'АВ'};
 const CLS_FULL_S = {'BB':'Лінкор','CA':'Крейсер','DD':'Есмінець','CV':'Авіаносець'};
+const NAT_FLAG = {
+  'USA':       '<span class="nf nf-usa"></span>',
+  'Japan':     '<span class="nf nf-jpn"></span>',
+  'UK':        '<span class="nf nf-uk"></span>',
+  'Germany':   '<span class="nf nf-ger"></span>',
+  'France':    '<span class="nf nf-fra"></span>',
+  'Italy':     '<span class="nf nf-ita"></span>',
+  'USSR':      '<span class="nf nf-ussr"></span>',
+  'Netherlands':'<span class="nf nf-nld"></span>',
+  'Pan-America':'<span class="nf nf-pam"></span>',
+  'Pan-Asia':  '<span class="nf nf-pas"></span>',
+  'Spain':     '<span class="nf nf-esp"></span>',
+  'Europe':    '<span class="nf nf-eur"></span>',
+  'Commonwealth':'<span class="nf nf-com"></span>'
+};
 const TIER_ORDER_S = {'III':3,'IV':4,'V':5,'VI':6,'VII':7,'VIII':8,'★':9};
-const TIER_UA_S = {'III':'III','IV':'IV','V':'V','VI':'VI','VII':'VII','VIII':'VIII','★':'Легенд. ★'};
+const TIER_UA_S = {'III':'III','IV':'IV','V':'V','VI':'VI','VII':'VII','VIII':'VIII','★':'Легенд.'};
 
 let curCls='all', curTier='all', curNat='all', premF=0, freeF=0;
 let selected=[], filtered=[];
@@ -1640,12 +1684,12 @@ function renderShipList(){
     const isSel = selected.find(x=>x.n===s.n);
     const tleg = s.t==='★';
     const starBadge = s.p ? '<span class="sstar">&#9733;</span>' : '';
-    const nameClass = s.p ? 'sname prem' : 'sname';
+    const nameClass = (s.p || tleg) ? 'sname prem' : 'sname';
     return `<div class="sitem${isSel?' sel':''}" onclick="toggleShip(${JSON.stringify(s).replace(/"/g,'&quot;')})">
-<span class="stier${tleg?' leg':''}">${s.t}</span>
+<span class="stier${tleg?' leg':''}">${tleg?'★':s.t}</span>
 <span class="scls ${s.c}">${CLS_UA_S[s.c]||s.c}</span>
 <span class="${nameClass}">${s.n}${starBadge}</span>
-<span class="snat">${s.na}</span>
+<span class="snat">${NAT_FLAG[s.na]||''} ${s.na}</span>
 </div>`;
   }).join('');
 }
@@ -1654,7 +1698,7 @@ function toggleShip(s){
   const idx = selected.findIndex(x=>x.n===s.n);
   if(idx>=0){ selected.splice(idx,1); }
   else {
-    if(selected.length>=3){ alert(t('ships_max3')||'Максимум 3 кораблі'); return; }
+    if(selected.length>=5){ alert(t('ships_max3')||'Максимум 5 кораблів'); return; }
     selected.push(s);
   }
   renderSelShips(); renderShipList();
@@ -1671,7 +1715,7 @@ function renderSelShips(){
   const el = document.getElementById('selships');
   if(!el)return;
   if(!selected.length){
-    el.innerHTML = '<span class="ships-hint">' + (t('ships_hint')||'Клікни на корабель зліва (макс. 3)...') + '</span>';
+    el.innerHTML = '<span class="ships-hint">' + (t('ships_hint')||'Клікни на корабель зліва (макс. 5)...') + '</span>';
     return;
   }
   el.innerHTML = selected.map(s=>`<div class="ships-schip" onclick="removeShip('${s.n.replace(/'/g,"\'")}')">
@@ -1713,7 +1757,7 @@ function renderCmp(){
   function row(label, vals, unit='', hi=true, maxV=0){
     const cls = rank(vals, hi);
     const max = maxV || Math.max(...vals.filter(v=>typeof v==='number'&&v>0));
-    const grd = `grid-template-columns:180px repeat(${N},1fr)`;
+    const grd = `grid-template-columns:140px repeat(${N},minmax(120px,1fr))`;
     const cells = vals.map((v,i)=>{
       const c = cls[i];
       const disp = (typeof v==='number'&&v>0) ? v+unit : (v||'—');
@@ -1724,7 +1768,7 @@ function renderCmp(){
   }
 
   function rowBool(label, vals){
-    const grd = `grid-template-columns:180px repeat(${N},1fr)`;
+    const grd = `grid-template-columns:140px repeat(${N},minmax(120px,1fr))`;
     const yesLbl = currentLang==='en'?'YES':currentLang==='ru'?'ДА':'ТАК';
     const noLbl = currentLang==='en'?'NO':'НІ';
     const cells = vals.map(v=>`<div class="cval"><span class="ytag ${v?'y':'n'}">${v?yesLbl:noLbl}</span></div>`).join('');
@@ -1735,17 +1779,17 @@ function renderCmp(){
     return `<div class="csec" style="grid-column:1/-1">${title}</div>`;
   }
 
-  const grd = `grid-template-columns:180px repeat(${N},1fr)`;
+  const grd = `grid-template-columns:140px repeat(${N},minmax(120px,1fr))`;
 
   const tierLbl = s => TIER_UA_S[s.t]||s.t;
   const hdr = `<div class="cthdr" style="${grd}">
 <div class="cthdr-lbl">ХАРАКТЕРИСТИКА</div>
 ${ships.map(s=>`<div class="cthdr-col">
-<div class="cship-name${s.p?' prem':''}">${s.n}</div>
+<div class="cship-name${(s.p||s.t==='★')?' prem':''}">${s.n}</div>
 <div class="cship-sub">
 <span class="scls ${s.c}">${CLS_UA_S[s.c]||s.c}</span>
 <span class="stier${s.t==='★'?' leg':''}">${tierLbl(s)}</span>
-<span>${s.na}</span>
+<span>${NAT_FLAG[s.na]||''} ${s.na}</span>
 ${s.p?'<span class="ptag">PREM</span>':''}
 </div></div>`).join('')}
 </div>`;
@@ -1825,7 +1869,7 @@ ${rowBool(reloadBL,ships.map(s=>s.reload_b))}
 
   const cmparea=document.getElementById('cmparea');
   if(cmparea){
-    cmparea.innerHTML = `<div class="ctable">${hdr}<div>${rows}</div></div>`;
+    cmparea.innerHTML = `<div class="cmp-scroll"><div class="ctable">${hdr}<div>${rows}</div></div></div>`;
     cmparea.scrollIntoView({behavior:'smooth'});
   }
 }
