@@ -1241,6 +1241,7 @@ async function doLogin(){
     if(!res.ok)throw new Error(data.error_description||data.msg||t('error_prefix'));
     accessToken=data.access_token;
     currentUser={email:data.user.email,id:data.user.id};
+    console.log('Login OK. refresh_token present:', !!data.refresh_token);
     try{localStorage.setItem('sb_token',accessToken);}catch(e){}
     try{if(data.refresh_token)localStorage.setItem('sb_refresh',data.refresh_token);}catch(e){}
     await checkApproval();
@@ -1300,33 +1301,57 @@ function doLogout(){
 
 async function tryRestoreSession(){
   try{
-    const token=localStorage.getItem('sb_token');if(!token)return;
-    // Спочатку пробуємо поточний токен
-    let res=await fetch(SUPA_URL+'/auth/v1/user',{headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+token}});
+    const token=localStorage.getItem('sb_token');
+    if(!token)return;
+
+    // Перевіряємо поточний токен
+    let res=await fetch(SUPA_URL+'/auth/v1/user',{
+      headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+token}
+    });
+
     if(!res.ok){
       // Токен протух — пробуємо refresh
       const refreshToken=localStorage.getItem('sb_refresh');
-      if(!refreshToken){localStorage.removeItem('sb_token');return;}
+      if(!refreshToken){
+        localStorage.removeItem('sb_token');
+        return;
+      }
       const rRes=await fetch(SUPA_URL+'/auth/v1/token?grant_type=refresh_token',{
         method:'POST',
         headers:{'apikey':SUPA_KEY,'Content-Type':'application/json'},
         body:JSON.stringify({refresh_token:refreshToken})
       });
       if(!rRes.ok){
-        localStorage.removeItem('sb_token');localStorage.removeItem('sb_refresh');return;
+        localStorage.removeItem('sb_token');
+        localStorage.removeItem('sb_refresh');
+        return;
       }
       const rData=await rRes.json();
+      // ← БАГ БУВ ТУТ: оновлюємо accessToken новим значенням
       accessToken=rData.access_token;
-      try{localStorage.setItem('sb_token',accessToken);}catch(e){}
-      try{localStorage.setItem('sb_refresh',rData.refresh_token);}catch(e){}
-      // Повторно отримуємо дані користувача
-      res=await fetch(SUPA_URL+'/auth/v1/user',{headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+accessToken}});
-      if(!res.ok){localStorage.removeItem('sb_token');localStorage.removeItem('sb_refresh');return;}
+      try{localStorage.setItem('sb_token',rData.access_token);}catch(e){}
+      try{if(rData.refresh_token)localStorage.setItem('sb_refresh',rData.refresh_token);}catch(e){}
+      // Повторно отримуємо user з новим токеном
+      res=await fetch(SUPA_URL+'/auth/v1/user',{
+        headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+accessToken}
+      });
+      if(!res.ok){
+        localStorage.removeItem('sb_token');
+        localStorage.removeItem('sb_refresh');
+        return;
+      }
+    } else {
+      // Токен ще живий
+      accessToken=token;
     }
+
     const data=await res.json();
-    accessToken=token;currentUser={email:data.email,id:data.id};
-    await checkApproval();updateAuthUI();
-  }catch(e){}
+    currentUser={email:data.email,id:data.id};
+    await checkApproval();
+    updateAuthUI();
+  }catch(e){
+    console.warn('Session restore error:',e);
+  }
 }
 
 function updateAuthUI(){
@@ -1810,8 +1835,8 @@ function updateFlipCountdown(){
 
 /* ── INIT ── */
 (async()=>{
-  restorePage();
   await tryRestoreSession();
+  restorePage();
   updateAuthUI();
   restoreLangUI();
   applyTranslations();
