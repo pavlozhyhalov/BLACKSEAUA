@@ -1242,6 +1242,7 @@ async function doLogin(){
     accessToken=data.access_token;
     currentUser={email:data.user.email,id:data.user.id};
     try{localStorage.setItem('sb_token',accessToken);}catch(e){}
+    try{if(data.refresh_token)localStorage.setItem('sb_refresh',data.refresh_token);}catch(e){}
     await checkApproval();
     closeModal('loginModal');updateAuthUI();
     if(document.getElementById('tournamentFlexPage').classList.contains('active'))renderTable();
@@ -1291,6 +1292,7 @@ async function checkApproval(){
 function doLogout(){
   currentUser=null;userApproved=false;accessToken=null;
   try{localStorage.removeItem('sb_token');}catch(e){}
+  try{localStorage.removeItem('sb_refresh');}catch(e){}
   updateAuthUI();
   if(document.getElementById('tournamentFlexPage').classList.contains('active'))renderTable();
   if(document.getElementById('recordsPage').classList.contains('active'))renderRecords();
@@ -1299,8 +1301,28 @@ function doLogout(){
 async function tryRestoreSession(){
   try{
     const token=localStorage.getItem('sb_token');if(!token)return;
-    const res=await fetch(SUPA_URL+'/auth/v1/user',{headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+token}});
-    if(!res.ok){localStorage.removeItem('sb_token');return;}
+    // Спочатку пробуємо поточний токен
+    let res=await fetch(SUPA_URL+'/auth/v1/user',{headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+token}});
+    if(!res.ok){
+      // Токен протух — пробуємо refresh
+      const refreshToken=localStorage.getItem('sb_refresh');
+      if(!refreshToken){localStorage.removeItem('sb_token');return;}
+      const rRes=await fetch(SUPA_URL+'/auth/v1/token?grant_type=refresh_token',{
+        method:'POST',
+        headers:{'apikey':SUPA_KEY,'Content-Type':'application/json'},
+        body:JSON.stringify({refresh_token:refreshToken})
+      });
+      if(!rRes.ok){
+        localStorage.removeItem('sb_token');localStorage.removeItem('sb_refresh');return;
+      }
+      const rData=await rRes.json();
+      accessToken=rData.access_token;
+      try{localStorage.setItem('sb_token',accessToken);}catch(e){}
+      try{localStorage.setItem('sb_refresh',rData.refresh_token);}catch(e){}
+      // Повторно отримуємо дані користувача
+      res=await fetch(SUPA_URL+'/auth/v1/user',{headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+accessToken}});
+      if(!res.ok){localStorage.removeItem('sb_token');localStorage.removeItem('sb_refresh');return;}
+    }
     const data=await res.json();
     accessToken=token;currentUser={email:data.email,id:data.id};
     await checkApproval();updateAuthUI();
