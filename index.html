@@ -423,54 +423,49 @@ gtag('config', 'G-V2SVEPJSH0');
       <p class="page-lede">Лігова система · Кожен з кожним · Перемога 3 очки · Нічия 1 · Поразка 0</p>
     </div>
 
-    <!-- STATUS BLOCK -->
-    <div id="leagueStatusBlock" class="league-status-block">
-      <div class="league-status-inner">
-        <div id="leagueStatusBadge" class="league-status-badge reg">📋 НАБІР ЗАЯВОК</div>
-        <div class="league-reg-timer-wrap">
-          <div class="league-reg-timer-label">Заявки приймаються до</div>
-          <div class="league-reg-deadline">30.05.2026 · 23:59 за Києвом</div>
-          <div class="league-reg-countdown" id="leagueRegCountdown">
-            <div class="seg"><b>—</b><i>дн</i></div>
-            <div class="seg"><b>—</b><i>год</i></div>
-            <div class="seg"><b>—</b><i>хв</i></div>
-            <div class="seg"><b>—</b><i>сек</i></div>
-          </div>
-        </div>
-        <!-- ACTIVE TIMER (hidden until started) -->
-        <div id="leagueActiveTimerWrap" style="display:none">
-          <div class="league-reg-timer-label">До завершення турніру</div>
-          <div class="league-reg-countdown" id="leagueActiveCountdown">
-            <div class="seg"><b>—</b><i>дн</i></div>
-            <div class="seg"><b>—</b><i>год</i></div>
-            <div class="seg"><b>—</b><i>хв</i></div>
-            <div class="seg"><b>—</b><i>сек</i></div>
-          </div>
-        </div>
+    <!-- RULES -->
+    <div class="rules-box">
+      <div class="rules-box-title">Правила</div>
+      <div class="rules-list">
+        <div class="rule-item">Кожен грає з кожним — домашній і гостьовий бій</div>
+        <div class="rule-item">Перемога — 3 очки · Нічия — 1 очко · Поразка — 0</div>
+        <div class="rule-item">Переможець визначається адміністратором у графіку боїв</div>
+        <div class="rule-item">Тривалість турніру — 7 діб з моменту старту</div>
       </div>
     </div>
 
-    <!-- APPLY BUTTON (public) -->
-    <div id="leagueApplyArea" style="margin-bottom:18px">
+    <!-- TIMER BLOCK — реєстрація або активний турнір -->
+    <div class="timer-slim" id="leagueTimerSlim">
+      <div class="timer-slim-left">
+        <div class="timer-slim-label" id="leagueTimerLabel">До кінця реєстрації</div>
+        <div class="timer-slim-stage" id="leagueTimerStage">Набір заявок · до 30.05.2026 23:59</div>
+      </div>
+      <div class="timer-slim-digits" id="leagueTimerDigits">—</div>
+    </div>
+
+    <!-- STATUS BADGE -->
+    <div style="margin-bottom:16px">
+      <span id="leagueStatusBadge" class="league-status-badge reg">📋 НАБІР ЗАЯВОК</span>
+    </div>
+
+    <!-- APPLY BUTTON (public, тільки під час реєстрації) -->
+    <div id="leagueApplyArea" style="margin-bottom:16px">
       <button class="league-apply-btn" onclick="openLeagueApplyModal()">📋 Подати заявку</button>
     </div>
 
-    <!-- ADMIN CONTROLS (approved only) -->
-    <div id="leagueAdminControls" style="display:none;gap:10px;flex-wrap:wrap;margin-bottom:18px">
-      <button class="add-player-btn" id="leagueStartBtn" onclick="leagueAdminStart()">▶ Розпочати турнір</button>
-      <button class="add-player-btn" onclick="openLeagueSchedulePage()">📅 Редагувати графік боїв</button>
-    </div>
-      <button class="add-player-btn" id="leagueStartBtn" onclick="leagueAdminStart()">▶ Розпочати турнір</button>
-      <button class="add-player-btn" onclick="openLeagueSchedulePage()">📅 Редагувати графік боїв</button>
-    </div>
-
     <!-- VIEW SCHEDULE BTN (public) -->
-    <div style="margin-bottom:18px">
+    <div style="margin-bottom:16px">
       <button class="league-schedule-view-btn" onclick="openLeagueSchedulePage()">📅 Подивитись графік боїв</button>
     </div>
 
-    <!-- SYNC STATUS -->
-    <div class="lb-control" style="margin-bottom:12px">
+    <!-- ADMIN CONTROLS (тільки авторизованим з правом редагування) -->
+    <div id="leagueAdminControls" style="display:none;gap:10px;flex-wrap:wrap;margin-bottom:16px">
+      <button class="add-player-btn" id="leagueStartBtn" onclick="leagueAdminStart()">▶ Розпочати турнір</button>
+      <button class="add-player-btn" onclick="openLeagueSchedulePage()">📅 Редагувати графік боїв</button>
+    </div>
+
+    <!-- SYNC STATUS + TABLE -->
+    <div class="lb-control">
       <span class="lb-label">Таблиця ліги</span>
       <div class="lb-actions">
         <div class="sync-status"><div class="sync-dot loading" id="leagueSyncDot"></div><span id="leagueSyncText">Підключення...</span></div>
@@ -478,17 +473,16 @@ gtag('config', 'G-V2SVEPJSH0');
       </div>
     </div>
 
-    <!-- LEAGUE TABLE -->
-    <div class="table-wrapper" style="margin-bottom:48px">
+    <div class="table-wrapper" style="margin-bottom:56px">
       <table class="lb" id="leagueTable">
         <thead>
           <tr>
             <th style="width:44px">#</th>
             <th style="text-align:left">Гравець</th>
             <th title="Матчі зіграні">М</th>
-            <th title="Перемоги">П</th>
-            <th title="Нічиї">Н</th>
-            <th title="Поразки">П</th>
+            <th title="Перемоги" style="color:var(--green)">В</th>
+            <th title="Нічиї" style="color:var(--accent)">Н</th>
+            <th title="Поразки" style="color:var(--red)">П</th>
             <th title="Очки"><b>Очки</b></th>
             <th id="lgDelCol" style="width:36px;display:none"></th>
           </tr>
@@ -1808,16 +1802,13 @@ function updateFlipCountdown(){
   updateTimer();
   setTimeout(initReveal,50);
   loadLottery();
-  // League: start reg countdown immediately for home page
-  updateLeagueRegCountdown();
-  updateLeagueStatusUI();
   try{
     const res=await fetch(`${SUPA_URL}/rest/v1/tournament_players?select=*&order=created_at.asc`,{headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY}});
     td=await res.json();updateHeroLeaders();
   }catch(e){}
 })();
 
-/* league logic is in league.js */
+/* league logic is in league.js — loaded below */
 
 
 
