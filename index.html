@@ -97,6 +97,13 @@ gtag('config', 'G-V2SVEPJSH0');
 .ytag.n{background:rgba(30,61,87,.1);color:var(--muted);border:1px solid var(--border)}
 
 
+/* ── TOURNAMENTS LIST: SECTIONS + ARCHIVE ── */
+.tlist-section-label{font-family:var(--f-mono);font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);padding:4px 0 10px;border-bottom:1px solid var(--border);margin-bottom:14px}
+.tlist-archive-label{color:var(--border2)}
+.card-archived{opacity:.72;border-left:2px solid var(--border2) !important}
+.card-archived:hover{opacity:1;border-left-color:var(--border2) !important}
+.card-archive-meta{font-family:var(--f-mono);font-size:9px;letter-spacing:.08em;color:var(--border2);margin-top:8px;padding-top:8px;border-top:1px solid var(--border)}
+
 /* ── LEAGUE TOURNAMENT STYLES ── */
 .status-reg-badge{color:#b8923e;font-size:11px;font-family:var(--f-mono);letter-spacing:.08em}
 .league-status-block{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:18px 20px;margin-bottom:20px}
@@ -226,28 +233,6 @@ gtag('config', 'G-V2SVEPJSH0');
       <div class="hero-title" data-i18n="hero_title">Командний<br>Міст Клану</div>
 
       <div class="instruments">
-        <div class="instrument event-block" onclick="openTournamentFlex()">
-          <div class="ins-label">
-            <span data-i18n="active_event">Актуальна подія</span>
-            <span class="ins-live">LIVE</span>
-          </div>
-          <div class="ins-val" data-i18n="challenge">Гнучкість</div>
-          <div class="ins-sub" id="heroStageLabel">—</div>
-          <div class="ins-countdown" id="heroCountdown">
-            <div class="seg"><b>—</b><i data-i18n="days_short">дн</i></div>
-            <div class="seg"><b>—</b><i data-i18n="hours_short">год</i></div>
-            <div class="seg"><b>—</b><i data-i18n="mins_short">хв</i></div>
-            <div class="seg"><b>—</b><i data-i18n="secs_short">сек</i></div>
-          </div>
-          <div class="ins-divider"></div>
-          <div class="ins-leaders-label" data-i18n="leaders">Лідери</div>
-          <div class="ins-row" id="heroLeaders">
-            <div class="ins-player"><span class="rk g">1</span><span class="nm">—</span><span class="sc">—</span></div>
-            <div class="ins-player"><span class="rk">2</span><span class="nm">—</span><span class="sc">—</span></div>
-            <div class="ins-player"><span class="rk">3</span><span class="nm">—</span><span class="sc">—</span></div>
-          </div>
-          <div class="ins-link" style="margin-top:12px" data-i18n="view_table">Дивитись таблицю →</div>
-        </div>
         <div class="league-announce-block" onclick="openTournamentLeague()">
           <div class="lab-top">
             <div class="lab-title">⚓ Ліга Чорного Моря</div>
@@ -314,16 +299,24 @@ gtag('config', 'G-V2SVEPJSH0');
       <div class="page-breadcrumb"><a onclick="backToHome()" data-i18n="home">Головна</a><span class="sep">/</span><span data-i18n="nav_tournaments">Турніри</span></div>
       <div class="page-title" data-i18n="nav_tournaments">Турніри</div>
     </div>
+    <!-- ACTIVE TOURNAMENTS -->
+    <div class="tlist-section-label" data-i18n="active_tournaments">Активні турніри</div>
     <div class="cards" style="max-width:420px">
-      <div class="card" onclick="openTournamentFlex()">
-        <span class="card-num">01 · <span data-i18n="active">Активне</span></span>
-        <div class="card-title" data-i18n="challenge">Гнучкість</div>
-        <div class="card-desc" data-i18n="flex_desc">4 класи, 12 днів, призовий фонд до 10 000 дублонів</div>
-      </div>
       <div class="card" onclick="openTournamentLeague()" style="border-left:2px solid var(--accent)">
-        <span class="card-num">02 · <span style="color:var(--accent);letter-spacing:.06em">📋 НАБІР ЗАЯВОК</span></span>
+        <span class="card-num">01 · <span style="color:var(--accent);letter-spacing:.06em">📋 НАБІР ЗАЯВОК</span></span>
         <div class="card-title">Ліга Чорного Моря ⚓</div>
         <div class="card-desc">Лігова система · Кожен з кожним · Домашні та гостьові бої</div>
+      </div>
+    </div>
+
+    <!-- ARCHIVE -->
+    <div class="tlist-section-label tlist-archive-label" style="margin-top:28px" data-i18n="archive">Архів</div>
+    <div class="cards" style="max-width:420px">
+      <div class="card card-archived" onclick="openTournamentFlex()">
+        <span class="card-num">✅ <span data-i18n="finished">Завершено</span></span>
+        <div class="card-title" data-i18n="challenge">Гнучкість</div>
+        <div class="card-desc" data-i18n="flex_desc">4 класи, 12 днів, призовий фонд до 10 000 дублонів</div>
+        <div class="card-archive-meta">Травень 2026 · Результати доступні</div>
       </div>
     </div>
   </div>
@@ -334,9 +327,10 @@ gtag('config', 'G-V2SVEPJSH0');
 <div id="tournamentFlexPage" class="page">
   <div class="shell">
     <div class="page-head">
-      <div class="page-breadcrumb"><a onclick="backToHome()" data-i18n="home">Головна</a><span class="sep">/</span><a onclick="openTournamentsList()" data-i18n="nav_tournaments">Турніри</a><span class="sep">/</span><span data-i18n="challenge">Гнучкість</span></div>
+      <div class="page-breadcrumb"><a onclick="backToHome()" data-i18n="home">Головна</a><span class="sep">/</span><a onclick="openTournamentsList()" data-i18n="nav_tournaments">Турніри</a><span class="sep">/</span><span style="color:var(--muted)" data-i18n="archive">Архів</span><span class="sep">/</span><span data-i18n="challenge">Гнучкість</span></div>
       <div class="page-title" data-i18n="challenge_title">Челендж «Гнучкість»</div>
       <p class="page-lede" data-i18n="challenge_lede">4 класи кораблів · 4 етапи · 12 днів · Призовий фонд 10 000 дублонів</p>
+      <div style="display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:var(--r);padding:4px 10px;margin-top:8px"><span style="font-family:var(--f-mono);font-size:9px;letter-spacing:.14em;color:var(--muted)">✅ ЗАВЕРШЕНО · АРХІВ</span></div>
     </div>
 
     <div class="rules-box">
@@ -897,6 +891,7 @@ const TRANSLATIONS = {
     fill_all:'Заповни всі поля', fill_email_pass:'Введи пошту і пароль',
     pass_min6:'Пароль мінімум 6 символів',
     reg_success:'Реєстрація успішна!\n\nОчікуй підтвердження адміністратора.\nПісля підтвердження зможеш редагувати.',
+    active_tournaments:'Активні турніри', archive:'Архів', finished:'Завершено',
   },
   ru: {
     nav_ships:'ТТХ Кораблей', ships_lede:'PS4/PS5/XBOX · 436 кораблей · Выбери до 3 для сравнения',
@@ -985,6 +980,7 @@ const TRANSLATIONS = {
     fill_all:'Заполни все поля', fill_email_pass:'Введи почту и пароль',
     pass_min6:'Пароль минимум 6 символов',
     reg_success:'Регистрация успешна!\n\nОжидай подтверждения администратора.\nПосле подтверждения сможешь редактировать.',
+    active_tournaments:'Активные турниры', archive:'Архив', finished:'Завершено',
   },
   en: {
     nav_ships:'Ship Stats', ships_lede:'PS4/PS5/XBOX · 436 ships · Select up to 3 to compare',
@@ -1073,6 +1069,7 @@ const TRANSLATIONS = {
     fill_all:'Fill in all fields', fill_email_pass:'Enter email and password',
     pass_min6:'Password must be at least 6 characters',
     reg_success:'Registration successful!\n\nAwait admin confirmation.\nAfter approval you can edit.',
+    active_tournaments:'Active Tournaments', archive:'Archive', finished:'Finished',
   }
 };
 
