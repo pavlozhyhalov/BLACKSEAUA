@@ -3,7 +3,7 @@
 <head>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-V2SVEPJSH0"></script>
-<script src="ships.js?v=20260916j"></script>
+<script src="ships.js?v=20260916k"></script>
 <script>
 window.dataLayer = window.dataLayer || [];
 function gtag(){dataLayer.push(arguments);}
@@ -14,7 +14,7 @@ gtag('config', 'G-V2SVEPJSH0');
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <title>BLACKSEAUA · WORLD OF WARSHIPS LEGENDS</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Syne+Mono&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="blackseaua.css?v=20260916j">
+<link rel="stylesheet" href="blackseaua.css?v=20260916k">
 <style>
 
 /* ══ SHIPS TTX PAGE ══ */
@@ -267,6 +267,14 @@ gtag('config', 'G-V2SVEPJSH0');
   <div class="shell">
     <div class="page-breadcrumb"><a onclick="backToHome()" data-i18n="home">Головна</a><span class="sep">/</span><a onclick="openChallenges()">Челенджі</a><span class="sep">/</span><a id="chPairCrumbCh" onclick="chBackToChallenge()">—</a><span class="sep">/</span><span>Пара</span></div>
     <div id="chPairDetail"><div class="sync-status"><div class="sync-dot loading"></div><span>Завантаження...</span></div></div>
+  </div>
+</div>
+
+<!-- ══ SOLO PLAYER DETAIL ══ -->
+<div id="soloPlayerPage" class="page">
+  <div class="shell">
+    <div class="page-breadcrumb"><a onclick="backToHome()" data-i18n="home">Головна</a><span class="sep">/</span><a onclick="openChallenges()">Челенджі</a><span class="sep">/</span><a id="chSoloCrumbCh" onclick="chBackToChallenge()">—</a><span class="sep">/</span><span>Гравець</span></div>
+    <div id="chSoloDetail"><div class="sync-status"><div class="sync-dot loading"></div><span>Завантаження...</span></div></div>
   </div>
 </div>
 
@@ -1264,8 +1272,8 @@ function updateAuthUI(){
   }
 }
 
-const PAGE_MAP={'':'homePage','home':'homePage','ships':'shipsPage','lottery':'lotteryPage','tournaments':'tournamentsListPage','flex':'tournamentFlexPage','records':'recordsPage','resources':'resourcesPage','voting':'votingPage','challenges':'tournamentsListPage','challenge':'challengePage','pair':'pairPage'};
-const HASH_MAP={'homePage':'home','shipsPage':'ships','lotteryPage':'lottery','tournamentsListPage':'tournaments','tournamentFlexPage':'flex','recordsPage':'records','resourcesPage':'resources','votingPage':'voting','challengePage':'challenge','pairPage':'pair'};
+const PAGE_MAP={'':'homePage','home':'homePage','ships':'shipsPage','lottery':'lotteryPage','tournaments':'tournamentsListPage','flex':'tournamentFlexPage','records':'recordsPage','resources':'resourcesPage','voting':'votingPage','challenges':'tournamentsListPage','challenge':'challengePage','pair':'pairPage','solo':'soloPlayerPage'};
+const HASH_MAP={'homePage':'home','shipsPage':'ships','lotteryPage':'lottery','tournamentsListPage':'tournaments','tournamentFlexPage':'flex','recordsPage':'records','resourcesPage':'resources','votingPage':'voting','challengePage':'challenge','pairPage':'pair','soloPlayerPage':'solo'};
 
 function revealCards(){
   document.querySelectorAll('.page.active .card').forEach((card,idx)=>{
@@ -1305,6 +1313,7 @@ function restorePage(){
   if(pageId==='tournamentsListPage'&&window.chRenderList)chRenderList();
   if(pageId==='challengePage'&&window.chLoadChallenge){if(arg)chLoadChallenge(+arg);else openTournamentsList();}
   if(pageId==='pairPage'&&window.chLoadPair){if(arg)chLoadPair(+arg);else openTournamentsList();}
+  if(pageId==='soloPlayerPage'&&window.chLoadSolo){if(arg)chLoadSolo(+arg);else openTournamentsList();}
 }
 
 /* ── WHEEL ── */
@@ -1999,7 +2008,7 @@ ${rowBool(reloadBL,ships.map(s=>s.reload_b))}
 }
 
 </script>
-<script src="challenge.js?v=20260916j"></script>
+<script src="challenge.js?v=20260916k"></script>
 
 
 </body>

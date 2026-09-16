@@ -1442,3 +1442,10 @@ footer {
 .ch-manage-inline{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .ch-manage-item .ch-inp{width:100%}
 .ch-manage-inline .ch-inp{flex:1;min-width:150px}
+/* ── CHALLENGE: solo tables ── */
+.ch-solo-board td.pts,.ch-solo-table td.pts{font-family:var(--f-mono);font-weight:700;color:var(--accent)}
+.ch-solo-board tbody tr{cursor:pointer}
+.ch-solo-board th,.ch-solo-table th{font-size:11px}
+.ch-solo-board td,.ch-solo-table td{font-size:13px;padding:11px 12px}
+.ch-solo-table th.lft,.ch-solo-table td.lft{text-align:left}
+.ch-solo-table .ch-inp{font-size:12px;padding:6px 8px}

@@ -13,6 +13,8 @@ const CH_STATUS={draft:['Чернетка','done'],registration:['Набір з�
 let chChallenges=[], chC=null, chTasks=[], chParts=[], chPairs=[], chScores=[], chFinal=null;
 let chPair=null, chPairC=null, chPairRows=[], chPairChallenge=null;
 let chPairTasks=[], chPairTaskDone=[];
+let chSoloScores=[];
+let chSolo=null, chSoloC=null, chSoloRows=[];
 let chWA=0;
 
 /* ═══════════ HOME BANNER: recruitment countdown ═══════════ */
@@ -66,12 +68,14 @@ async function chGet(path){
 function openChallenges(){showPage('tournamentsListPage');window.location.hash='tournaments';chRenderList();}
 function openChallenge(id){showPage('challengePage');window.location.hash='challenge='+id;chLoadChallenge(id);}
 function openPair(id){showPage('pairPage');window.location.hash='pair='+id;chLoadPair(id);}
+function openSolo(id){showPage('soloPlayerPage');window.location.hash='solo='+id;chLoadSolo(id);}
 function chBackToChallenge(){if(chPairChallenge)openChallenge(chPairChallenge);else openChallenges();}
 
 function chOnAuthChange(){
   if(document.getElementById('tournamentsListPage').classList.contains('active'))chRenderList();
   else if(document.getElementById('challengePage').classList.contains('active')&&chC)chRenderChallenge();
   else if(document.getElementById('pairPage').classList.contains('active')&&chPair)chRenderPair();
+  else if(document.getElementById('soloPlayerPage').classList.contains('active')&&chSolo)chRenderSolo();
 }
 
 /* ═══════════ HELPERS ═══════════ */
@@ -133,9 +137,15 @@ async function chLoadChallenge(id){
     if(!chC){box.innerHTML='<p class="hint">Челендж не знайдено.</p>';return;}
     chTasks =await chGet('challenge_task?challenge_id=eq.'+id+'&order=row_no.asc');
     chParts =await chGet('participant?challenge_id=eq.'+id+'&order=created_at.asc');
-    chPairs =await chGet('pair?challenge_id=eq.'+id);
-    chScores=await chGet('v_pair_scores?challenge_id=eq.'+id);
-    const fr=await chGet('final_result?challenge_id=eq.'+id);chFinal=fr[0]||null;
+    if(chC.mode==='solo'){
+      chPairs=[];chScores=[];chFinal=null;
+      chSoloScores=await chGet('v_solo_scores?challenge_id=eq.'+id);
+    }else{
+      chPairs =await chGet('pair?challenge_id=eq.'+id);
+      chScores=await chGet('v_pair_scores?challenge_id=eq.'+id);
+      const fr=await chGet('final_result?challenge_id=eq.'+id);chFinal=fr[0]||null;
+      chSoloScores=[];
+    }
     const cr=document.getElementById('chCrumb');if(cr)cr.textContent=chC.title;
     chRenderChallenge();
   }catch(e){if(box)box.innerHTML='<p class="hint">Помилка: '+esc(chErrMsg(e))+'</p>';}
@@ -175,6 +185,7 @@ function chRenderChallenge(){
   const box=document.getElementById('chDetail');if(!box||!chC)return;
   const off=isOfficer;
   const reg=chC.status==='registration'||chC.status==='draft';
+  const solo=chC.mode==='solo';
   let h='';
 
   // header
@@ -209,50 +220,75 @@ function chRenderChallenge(){
     // Block 2 — actions: participants / pairs
     let acts='';
     if(reg)acts+=`<button class="ch-mini-btn" onclick="chOpenAddPart()">＋ Додати учасника</button>`;
-    if(reg&&chVets().length>0)acts+=`<button class="ch-mini-btn primary" onclick="chFixPairs()">✔ Зафіксувати пари → Активний</button>`;
-    if(reg&&chPairs.length>0)acts+=`<button class="ch-mini-btn danger" onclick="chResetDraw()">↺ Перезапустити жеребкування</button>`;
-    if(chC.status==='active')acts+=`<button class="ch-mini-btn" onclick="chMarkFinalists()">★ Позначити фіналістів (топ-2)</button>`;
+    if(reg&&!solo&&chVets().length>0)acts+=`<button class="ch-mini-btn primary" onclick="chFixPairs()">✔ Зафіксувати пари → Активний</button>`;
+    if(reg&&!solo&&chPairs.length>0)acts+=`<button class="ch-mini-btn danger" onclick="chResetDraw()">↺ Перезапустити жеребкування</button>`;
+    if(chC.status==='active'&&!solo)acts+=`<button class="ch-mini-btn" onclick="chMarkFinalists()">★ Позначити фіналістів (топ-2)</button>`;
     if(acts)h+=`<div class="ch-officer-bar">${acts}</div>`;
   }
 
-  // participants + draw (registration)
-  if(reg){
-    h+=`<div class="ch-section-label">Учасники (${chParts.length})</div>`;
-    if(!chParts.length)h+=`<p class="hint">Учасників ще немає.</p>`;
-    else{
-      h+=`<div class="ch-part-list">`+chParts.map(p=>`<span class="ch-chip cls-${p.class}">${esc(p.nickname)} <i>${CH_CLASS_LABEL[p.class]}</i>${
+  if(solo){
+    // ── SOLO: individual leaderboard ──
+    if(reg&&off){
+      h+=`<div class="ch-section-label">Учасники (${chParts.length})</div>`;
+      if(!chParts.length)h+=`<p class="hint">Учасників ще немає.</p>`;
+      else h+=`<div class="ch-part-list">`+chParts.map(p=>`<span class="ch-chip cls-${p.class}">${esc(p.nickname)} <i>${CH_CLASS_LABEL[p.class]}</i>${
         off?` <b onclick="event.stopPropagation();chDelPart(${p.id})">✕</b>`:''}</span>`).join('')+`</div>`;
     }
-    const nv=chVets().length, nn=chNovices().length;
-    if(off){
-      h+=`<div class="ch-draw">`;
-      if(nv!==nn)h+=`<p class="hint">⚠ Для жеребкування кількість ветеранів (${nv}) має дорівнювати кількості новачків (${nn}).</p>`;
-      const upv=chUnpairedVets();
-      if(nv===nn&&nv>0&&upv.length>0){
-        h+=`<div class="ch-draw-title">Жеребкування пар</div>
-          <p class="hint">Натисни «Жеребкувати» — нікнейми перемішаються, і пара утвориться між тими, хто опинився в одному рядку.</p>
-          <div class="table-wrapper"><table class="ch-draw-table"><thead><tr><th>Новачки</th><th></th><th>Ветерани</th></tr></thead><tbody id="chDrawBody"></tbody></table></div>
-          <button class="spin-btn" id="chDrawBtn" onclick="chDrawAll()">Жеребкувати пари</button>`;
-      }else if(nv===nn&&nv>0&&upv.length===0){
-        h+=`<p class="hint">✔ Усі пари сформовано. Натисни «Зафіксувати пари → Активний».</p>`;
+    h+=`<div class="ch-section-label">Рейтинг (${chParts.length})</div>`;
+    h+=chSoloBoard();
+  }else{
+    // ── PAIRS ──
+    if(reg){
+      h+=`<div class="ch-section-label">Учасники (${chParts.length})</div>`;
+      if(!chParts.length)h+=`<p class="hint">Учасників ще немає.</p>`;
+      else{
+        h+=`<div class="ch-part-list">`+chParts.map(p=>`<span class="ch-chip cls-${p.class}">${esc(p.nickname)} <i>${CH_CLASS_LABEL[p.class]}</i>${
+          off?` <b onclick="event.stopPropagation();chDelPart(${p.id})">✕</b>`:''}</span>`).join('')+`</div>`;
       }
-      h+=`</div>`;
+      const nv=chVets().length, nn=chNovices().length;
+      if(off){
+        h+=`<div class="ch-draw">`;
+        if(nv!==nn)h+=`<p class="hint">⚠ Для жеребкування кількість ветеранів (${nv}) має дорівнювати кількості новачків (${nn}).</p>`;
+        const upv=chUnpairedVets();
+        if(nv===nn&&nv>0&&upv.length>0){
+          h+=`<div class="ch-draw-title">Жеребкування пар</div>
+            <p class="hint">Натисни «Жеребкувати» — нікнейми перемішаються, і пара утвориться між тими, хто опинився в одному рядку.</p>
+            <div class="table-wrapper"><table class="ch-draw-table"><thead><tr><th>Новачки</th><th></th><th>Ветерани</th></tr></thead><tbody id="chDrawBody"></tbody></table></div>
+            <button class="spin-btn" id="chDrawBtn" onclick="chDrawAll()">Жеребкувати пари</button>`;
+        }else if(nv===nn&&nv>0&&upv.length===0){
+          h+=`<p class="hint">✔ Усі пари сформовано. Натисни «Зафіксувати пари → Активний».</p>`;
+        }
+        h+=`</div>`;
+      }
     }
-  }
-
-  // pairs
-  h+=`<div class="ch-section-label">Пари (${chPairs.length})</div>`;
-  h+=`<div class="ch-pairs">`+chPairCards()+`</div>`;
-
-  // final 2x2
-  if(chC.status==='final'||chC.status==='done'){
-    h+=chFinalBlock();
+    h+=`<div class="ch-section-label">Пари (${chPairs.length})</div>`;
+    h+=`<div class="ch-pairs">`+chPairCards()+`</div>`;
+    if(chC.status==='final'||chC.status==='done')h+=chFinalBlock();
   }
 
   box.innerHTML=h;
-  if(reg&&isOfficer&&chVets().length===chNovices().length&&chVets().length>0&&chUnpairedVets().length>0){
+  if(!solo&&reg&&isOfficer&&chVets().length===chNovices().length&&chVets().length>0&&chUnpairedVets().length>0){
     chFillDraw(chUnpairedNovices(), chUnpairedVets());
   }
+}
+
+function chSoloBoard(){
+  if(!chParts.length)return '<p class="hint">Учасників ще немає.</p>';
+  const sById=Object.fromEntries(chSoloScores.map(s=>[s.participant_id,s]));
+  const sorted=[...chParts].sort((a,b)=>{
+    const sa=sById[a.id]||{},sb=sById[b.id]||{};
+    if((sb.points||0)!==(sa.points||0))return (sb.points||0)-(sa.points||0);
+    const la=sa.last_done_at?Date.parse(sa.last_done_at):Infinity;
+    const lb=sb.last_done_at?Date.parse(sb.last_done_at):Infinity;
+    return la-lb;
+  });
+  return `<div class="table-wrapper"><table class="lb ch-solo-board"><thead><tr>
+    <th style="width:34px">#</th><th style="text-align:left">Гравець</th><th>Клас</th><th>Виконано</th><th>Бали</th></tr></thead><tbody>${
+    sorted.map((p,i)=>{const s=sById[p.id]||{};return `<tr onclick="openSolo(${p.id})" style="cursor:pointer">
+      <td>${i+1}</td><td style="text-align:left">${esc(p.nickname)}</td>
+      <td>${CH_CLASS_LABEL[p.class]}</td><td>${s.done_count||0}/7</td>
+      <td class="pts">${s.points||0}</td></tr>`;}).join('')
+  }</tbody></table></div>`;
 }
 
 function chPairCards(){
@@ -577,6 +613,66 @@ async function chSaveTaskRow(vId,nId){
     if(msg)msg.textContent=m; else alert(m);
     await chLoadPair(chPair.id);
   }
+}
+
+/* ═══════════ SOLO PLAYER PAGE ═══════════ */
+async function chLoadSolo(id){
+  const box=document.getElementById('chSoloDetail');if(box)box.innerHTML=CH_LOADING;
+  try{
+    const ps=await chGet('participant?id=eq.'+id+'&select=*');chSolo=ps[0];
+    if(!chSolo){box.innerHTML='<p class="hint">Гравця не знайдено.</p>';return;}
+    chPairChallenge=chSolo.challenge_id;
+    const cs=await chGet('challenge?id=eq.'+chSolo.challenge_id+'&select=*');chSoloC=cs[0];
+    chTasks=await chGet('challenge_task?challenge_id=eq.'+chSolo.challenge_id+'&order=row_no.asc');
+    chSoloRows=await chGet('v_progress_points?participant_id=eq.'+id+'&select=*');
+    const cr=document.getElementById('chSoloCrumbCh');if(cr)cr.textContent=chSoloC.title;
+    chRenderSolo();
+  }catch(e){if(box)box.innerHTML='<p class="hint">Помилка: '+esc(chErrMsg(e))+'</p>';}
+}
+
+function chRenderSolo(){
+  const box=document.getElementById('chSoloDetail');if(!box||!chSolo)return;
+  const taskById=Object.fromEntries(chTasks.map(t=>[t.id,t]));
+  const rows=[...chSoloRows].sort((a,b)=>(taskById[a.task_id]?.row_no||0)-(taskById[b.task_id]?.row_no||0));
+  const pts=rows.reduce((a,r)=>a+(r.points||0),0);
+  const done=rows.filter(r=>r.status==='done').length;
+  const locked=chSoloC.status==='done'&&!isAdmin;
+  const canEdit=isOfficer&&!locked;
+  const normOf=t=>chSolo.class==='V'?t.norm_v:(chSolo.class==='N1'?t.norm_n1:t.norm_n2);
+  const notClosed=rows.filter(r=>r.status!=='done').map(r=>taskById[r.task_id]?.title).filter(Boolean);
+
+  let h=`<div class="page-head"><div class="page-title">${esc(chSolo.nickname)} <span class="ch-rank">${CH_CLASS_LABEL[chSolo.class]}</span></div>
+    <p class="page-lede">${esc(chSoloC.title)}</p></div>`;
+  h+=`<div class="ch-pairtot-box"><div class="ch-pairtot-lbl">Бали гравця</div><div class="ch-pairtot-val">${pts}</div>
+    <div class="ch-help ok">Виконано ${done} із 7</div></div>`;
+  if(locked)h+=`<p class="hint">🔒 Челендж завершено — редагування заблоковане.</p>`;
+  h+=`<div class="ch-notclosed">${notClosed.length?('Не закрито: '+notClosed.map(esc).join(', ')):'Усі завдання виконано ✓'}</div>`;
+  h+=`<div id="chSoloMsg" class="ch-row-err" style="margin:10px 0"></div>`;
+  h+=`<div class="table-wrapper"><table class="lb ch-solo-table"><thead><tr>
+    <th>№</th><th class="lft">Завдання</th><th>Норма</th><th>Статус</th><th>Бали</th>${canEdit?'<th></th>':''}</tr></thead><tbody>`;
+  rows.forEach(r=>{
+    const t=taskById[r.task_id]||{};const d=r.status==='done';
+    h+=`<tr>
+      <td>${t.row_no}</td><td class="lft">${esc(t.title)}</td><td>${esc(normOf(t)||'—')}</td>
+      <td>${canEdit
+        ?`<select id="ss_${r.id}" class="ch-inp"><option value="not_done"${!d?' selected':''}>Не виконано</option><option value="done"${d?' selected':''}>Виконано</option></select>`
+        :(d?'Виконано':'Не виконано')}</td>
+      <td class="pts">${r.points||0}</td>
+      ${canEdit?`<td><button class="ch-mini-btn primary ch-save-btn" onclick="chSaveSoloRow(${r.id})">Зберегти</button></td>`:''}
+    </tr>`;
+  });
+  h+=`</tbody></table></div>`;
+  box.innerHTML=h;
+}
+
+async function chSaveSoloRow(id){
+  const st=document.getElementById('ss_'+id);if(!st)return;
+  const msg=document.getElementById('chSoloMsg');if(msg)msg.textContent='';
+  try{
+    await sbFetch('/rest/v1/progress?id=eq.'+id,{method:'PATCH',
+      body:JSON.stringify({status:st.value,bonus_squad:false,bonus_vet_norm:false,updated_at:new Date().toISOString()})});
+    await chLoadSolo(chSolo.id);
+  }catch(e){const m='⚠ '+chErrMsg(e);if(msg)msg.textContent=m;else alert(m);await chLoadSolo(chSolo.id);}
 }
 
 /* start home recruitment banner */
