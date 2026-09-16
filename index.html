@@ -3,7 +3,7 @@
 <head>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-V2SVEPJSH0"></script>
-<script src="ships.js?v=20260916e"></script>
+<script src="ships.js?v=20260916f"></script>
 <script>
 window.dataLayer = window.dataLayer || [];
 function gtag(){dataLayer.push(arguments);}
@@ -14,7 +14,7 @@ gtag('config', 'G-V2SVEPJSH0');
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <title>BLACKSEAUA · WORLD OF WARSHIPS LEGENDS</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Syne+Mono&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="blackseaua.css?v=20260916e">
+<link rel="stylesheet" href="blackseaua.css?v=20260916f">
 <style>
 
 /* ══ SHIPS TTX PAGE ══ */
@@ -174,6 +174,21 @@ gtag('config', 'G-V2SVEPJSH0');
       <div class="hero-eyebrow">World of Warships Legends · Clan Hub</div>
       <div class="hero-title" data-i18n="hero_title">Командний<br>Міст Клану</div>
 
+      <div id="chBanner" class="ch-banner" style="display:none" onclick="chBannerClick()">
+        <div class="ch-banner-glow"></div>
+        <div class="ch-banner-top">
+          <span class="ch-banner-badge"><span class="ch-dot"></span>ВІДКРИТО НАБІР</span>
+          <span class="ch-banner-arrow">Відкрити челендж →</span>
+        </div>
+        <div class="ch-banner-title" id="chBannerTitle">Челендж «Ветеран + Новачок»</div>
+        <div class="ch-banner-sub" id="chBannerSub">Набір заявок завершується 20.09 · 23:59 за Києвом</div>
+        <div class="ch-banner-countdown" id="chBannerCountdown">
+          <div class="cbseg"><b id="cbD">—</b><i>днів</i></div>
+          <div class="cbseg"><b id="cbH">—</b><i>год</i></div>
+          <div class="cbseg"><b id="cbM">—</b><i>хв</i></div>
+          <div class="cbseg"><b id="cbS">—</b><i>сек</i></div>
+        </div>
+      </div>
     </div>
 
     <div class="section">
@@ -1988,7 +2003,7 @@ ${rowBool(reloadBL,ships.map(s=>s.reload_b))}
 }
 
 </script>
-<script src="challenge.js?v=20260916e"></script>
+<script src="challenge.js?v=20260916f"></script>
 
 
 </body>

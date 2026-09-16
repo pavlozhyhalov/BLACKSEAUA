@@ -14,6 +14,37 @@ let chChallenges=[], chC=null, chTasks=[], chParts=[], chPairs=[], chScores=[], 
 let chPair=null, chPairC=null, chPairRows=[], chPairChallenge=null;
 let chWA=0;
 
+/* ═══════════ HOME BANNER: recruitment countdown ═══════════ */
+// Набір заявок до 20.09 23:59 за Києвом (UTC+3) = 20:59 UTC
+const CH_DEADLINE=new Date('2026-09-20T20:59:00Z');
+let chReg=null; // {id,title} of a challenge currently in registration
+function chBannerClick(){ if(chReg)openChallenge(chReg.id); else openChallenges(); }
+function chPad(n){return String(n).padStart(2,'0');}
+function updateChallengeBanner(){
+  const b=document.getElementById('chBanner');if(!b)return;
+  if(!chReg){b.style.display='none';return;}
+  b.style.display='block';
+  const t=document.getElementById('chBannerTitle');if(t)t.textContent=chReg.title;
+  const diff=CH_DEADLINE.getTime()-Date.now();
+  const sub=document.getElementById('chBannerSub');
+  if(diff<=0){
+    if(sub)sub.textContent='Набір завершено';
+    ['cbD','cbH','cbM','cbS'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent='0';});
+    return;
+  }
+  const d=Math.floor(diff/86400000), h=Math.floor(diff%86400000/3600000),
+        m=Math.floor(diff%3600000/60000), s=Math.floor(diff%60000/1000);
+  const set=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v;};
+  set('cbD',d);set('cbH',chPad(h));set('cbM',chPad(m));set('cbS',chPad(s));
+}
+function chInitBanner(){
+  updateChallengeBanner();
+  fetch(SUPA_URL+'/rest/v1/challenge?status=eq.registration&select=id,title&order=created_at.desc&limit=1',
+    {headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY}})
+    .then(r=>r.ok?r.json():[]).then(d=>{chReg=(Array.isArray(d)&&d[0])?d[0]:null;updateChallengeBanner();}).catch(()=>{});
+  setInterval(updateChallengeBanner,1000);
+}
+
 const CH_LOADING='<div class="sync-status"><div class="sync-dot loading"></div><span>Завантаження...</span></div>';
 
 function chErrMsg(e){try{const j=JSON.parse(e.message);return j.message||j.hint||j.details||j.error||e.message;}catch(_){return e.message;}}
@@ -140,8 +171,7 @@ function chRenderChallenge(){
   let h='';
 
   // header
-  h+=`<div class="page-head"><div class="page-title">${esc(chC.title)} ${chStatusBadge(chC.status)}</div>
-    <p class="page-lede">${chDateRange(chC)} · Пари формуються випадковим жеребкуванням · Бали пари — сума обох гравців</p></div>`;
+  h+=`<div class="page-head"><div class="page-title ch-title-row">${esc(chC.title)} ${chStatusBadge(chC.status)}</div></div>`;
 
   // rules
   h+=`<div class="rules-box"><div class="rules-box-title">Опис</div>
@@ -488,3 +518,6 @@ async function chSaveTaskRow(vId,nId){
     await chLoadPair(chPair.id);
   }
 }
+
+/* start home recruitment banner */
+chInitBanner();
