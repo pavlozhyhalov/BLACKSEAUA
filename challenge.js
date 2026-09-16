@@ -141,7 +141,7 @@ function chRenderChallenge(){
 
   // header
   h+=`<div class="page-head"><div class="page-title">${esc(chC.title)} ${chStatusBadge(chC.status)}</div>
-    <p class="page-lede">${chDateRange(chC)} · Бали ветерана зараховуються, коли новачок виконав щонайменше ${chC.help_threshold} із 7</p></div>`;
+    <p class="page-lede">${chDateRange(chC)} · Пари формуються випадковим жеребкуванням · Бали пари — сума обох гравців</p></div>`;
 
   // rules
   h+=`<div class="rules-box"><div class="rules-box-title">Опис</div>
@@ -211,8 +211,6 @@ function chPairCards(){
   return sorted.map((p,idx)=>{
     const s=sById[p.id]||{};
     const vet=byId[p.veteran_id],nov=byId[p.novice_id];
-    const thr=chC.help_threshold, nd=s.novice_done||0;
-    const help=nd>=thr?`Новачок ${nd}/7 ✓`:`Новачок ${nd}/7 · бали ветерана заморожені`;
     const finalist=p.is_finalist||(idx<2&&(chC.status==='final'||chC.status==='done'));
     return `<div class="ch-pair-card" onclick="openPair(${p.id})">
       <div class="ch-pair-top">
@@ -220,7 +218,7 @@ function chPairCards(){
         ${finalist?'<span class="ch-finalist">★ ФІНАЛІСТ</span>':''}
       </div>
       <div class="ch-pair-total">${s.pair_total||0}<span> балів</span></div>
-      <div class="ch-help ${nd>=thr?'ok':'frozen'}">${help}</div>
+      <div class="ch-help ok">Ветеран ${s.vet_points||0} · Новачок ${s.novice_points||0}</div>
       <div class="ch-detail-link">Детально →</div>
     </div>`;
   }).join('');
@@ -399,22 +397,20 @@ function chRenderPair(){
   const byId=Object.fromEntries(chParts.map(p=>[p.id,p]));
   const vet=byId[chPair.veteran_id], nov=byId[chPair.novice_id];
   const taskById=Object.fromEntries(chTasks.map(t=>[t.id,t]));
-  const thr=chPairC.help_threshold;
   const rowsOf=pid=>chPairRows.filter(r=>r.participant_id===pid);
   const sumPts=rows=>rows.reduce((a,r)=>a+(r.points||0),0);
   const doneCnt=rows=>rows.filter(r=>r.status==='done').length;
   const vRows=rowsOf(chPair.veteran_id), nRows=rowsOf(chPair.novice_id);
-  const vPts=sumPts(vRows), nPts=sumPts(nRows), nDone=doneCnt(nRows);
-  const vetCounted=nDone>=thr?vPts:0, pairTotal=nPts+vetCounted;
+  const vPts=sumPts(vRows), nPts=sumPts(nRows);
+  const vDone=doneCnt(vRows), nDone=doneCnt(nRows);
+  const pairTotal=nPts+vPts;
   const locked=chPairC.status==='done'&&!isAdmin;
   const canEdit=isOfficer&&!locked;
 
   let h=`<div class="page-head"><div class="page-title">${esc(vet?.nickname||'?')} <span class="ch-vs">×</span> ${esc(nov?.nickname||'?')} <span class="ch-rank">${nov?CH_CLASS_LABEL[nov.class]:''}</span></div>
-    <p class="page-lede">${esc(chPairC.title)} · Поріг допомоги: ${thr}/7</p></div>`;
+    <p class="page-lede">${esc(chPairC.title)}</p></div>`;
   h+=`<div class="ch-pairtot-box"><div class="ch-pairtot-lbl">Бали пари</div><div class="ch-pairtot-val">${pairTotal}</div>
-    <div class="ch-help ${nDone>=thr?'ok':'frozen'}">${nDone>=thr
-      ? `Новачок виконав ${nDone} із 7 — бали ветерана зараховуються`
-      : `Бали ветерана додадуться, коли новачок виконає щонайменше ${thr} із 7 (зараз ${nDone})`}</div></div>`;
+    <div class="ch-help ok">Ветеран ${vPts} б (${vDone}/7) · Новачок ${nPts} б (${nDone}/7)</div></div>`;
   if(locked)h+=`<p class="hint">🔒 Челендж завершено — редагування заблоковане.</p>`;
 
   const notV=vRows.filter(r=>r.status!=='done').map(r=>taskById[r.task_id]?.title).filter(Boolean);
