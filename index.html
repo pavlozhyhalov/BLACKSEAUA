@@ -1283,25 +1283,41 @@ function calcWinner(){
   return Math.floor(pos/sl)%n;
 }
 
+/* Unbiased integer in [0,max) — crypto-grade, no modulo skew.
+   Falls back to Math.random only if Web Crypto is unavailable. */
+function randInt(max){
+  max=Math.floor(max);
+  if(max<=1)return 0;
+  const c=window.crypto||window.msCrypto;
+  if(c&&c.getRandomValues){
+    const limit=Math.floor(0x100000000/max)*max;   // reject the skewed tail
+    const buf=new Uint32Array(1);let x;
+    do{c.getRandomValues(buf);x=buf[0];}while(x>=limit);
+    return x%max;
+  }
+  return Math.floor(Math.random()*max);
+}
+
 function spinLottery(){
   if(lp.length<2){alert(t('min_2_players'));return;}
   if(wSpin)return;
   wSpin=true;document.getElementById('spinButton').disabled=true;
   document.getElementById('winnerBox').classList.remove('show');
   const n=lp.length,sl=(Math.PI*2)/n;
-  const wi=Math.floor(Math.random()*n);
+  const wi=randInt(n);
   const tgt=(((-Math.PI/2)-wi*sl-sl/2)%(Math.PI*2)+Math.PI*2)%(Math.PI*2);
   const cur=(wAngle%(Math.PI*2)+Math.PI*2)%(Math.PI*2);
   let diff=tgt-cur;if(diff<0)diff+=Math.PI*2;
-  const total=(7+Math.floor(Math.random()*5))*Math.PI*2+diff;
-  const sa=wAngle,dur=4000+Math.random()*1200,t0=performance.now();
+  const total=(7+randInt(5))*Math.PI*2+diff;
+  const sa=wAngle,dur=4000+randInt(1200),t0=performance.now();
   function ease(t){return 1-Math.pow(1-t,4);}
   (function fr(now){
     const tm=Math.min((now-t0)/dur,1);
     wAngle=sa+total*ease(tm);drawWheel();
     if(tm<1){requestAnimationFrame(fr);}
     else{
-      const w=lp[calcWinner()];
+      wAngle=sa+total;                 // lock exact final angle
+      const w=lp[wi];                  // announce the intended random pick
       document.getElementById('winnerName').textContent=w;
       const b=document.getElementById('winnerBox');
       b.classList.remove('show');void b.offsetWidth;b.classList.add('show');
