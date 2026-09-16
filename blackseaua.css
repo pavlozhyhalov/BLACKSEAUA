@@ -1434,3 +1434,5 @@ footer {
 .ch-ptask-status{font-family:var(--f-mono);font-size:11px;color:var(--muted)}
 .ch-ptask-status.ok{color:var(--green)}
 .ch-ptask-pts{font-family:var(--f-mono);font-size:13px;font-weight:700;color:var(--accent);min-width:44px;text-align:right}
+.ch-status-sel{display:inline-flex;align-items:center;gap:8px;font-family:var(--f-mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:6px 10px 0 0}
+.ch-status-sel .ch-inp{text-transform:none;letter-spacing:normal}

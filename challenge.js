@@ -7,7 +7,7 @@
    ══════════════════════════════════════════════ */
 
 const CH_CLASS_LABEL={V:'Ветеран',N1:'Новачок Р1',N2:'Новачок Р2'};
-const CH_STATUS={draft:['Чернетка','done'],registration:['Реєстрація','reg'],
+const CH_STATUS={draft:['Чернетка','done'],registration:['Набір заявок','reg'],
   active:['Активний','active'],final:['Фінал','active'],done:['Завершено','done']};
 
 let chChallenges=[], chC=null, chTasks=[], chParts=[], chPairs=[], chScores=[], chFinal=null;
@@ -190,6 +190,9 @@ function chRenderChallenge(){
   // officer status controls
   if(off){
     h+=`<div class="ch-officer-bar">`;
+    h+=`<label class="ch-status-sel">Статус: <select class="ch-inp" onchange="chSetStatus(this.value)">${
+      ['registration','active','final','done'].map(s=>`<option value="${s}"${chC.status===s?' selected':''}>${CH_STATUS[s][0]}</option>`).join('')
+    }</select></label>`;
     if(reg)h+=`<button class="ch-mini-btn" onclick="chOpenAddPart()">＋ Додати учасника</button>`;
     if(reg&&chVets().length>0)h+=`<button class="ch-mini-btn primary" onclick="chFixPairs()">✔ Зафіксувати пари → Активний</button>`;
     if(reg&&chPairs.length>0)h+=`<button class="ch-mini-btn danger" onclick="chResetDraw()">↺ Перезапустити жеребкування</button>`;
