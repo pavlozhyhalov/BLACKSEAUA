@@ -169,7 +169,7 @@ function chSortedPairs(){
 
 function chNormsTable(){
   return `<div class="table-wrapper"><table class="lb ch-norms"><thead><tr>
-    <th style="width:34px">№</th><th style="text-align:left">Завдання</th><th>Р1</th><th>Р2</th><th>Ветеран</th></tr></thead><tbody>${
+    <th style="width:34px">№</th><th style="text-align:left">Завдання</th><th>I–IV</th><th>V–VII</th><th>VIII–Легенди</th></tr></thead><tbody>${
     chTasks.map(t=>`<tr><td>${t.row_no}</td><td style="text-align:left">${esc(t.title)}</td>
       <td>${esc(t.norm_n1||'—')}</td><td>${esc(t.norm_n2||'—')}</td><td>${esc(t.norm_v||'—')}</td></tr>`).join('')
   }</tbody></table></div>`;
