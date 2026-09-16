@@ -1436,3 +1436,9 @@ footer {
 .ch-ptask-pts{font-family:var(--f-mono);font-size:13px;font-weight:700;color:var(--accent);min-width:44px;text-align:right}
 .ch-status-sel{display:inline-flex;align-items:center;gap:8px;font-family:var(--f-mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:6px 10px 0 0}
 .ch-status-sel .ch-inp{text-transform:none;letter-spacing:normal}
+.ch-manage{display:flex;flex-wrap:wrap;gap:18px;margin:16px 0;padding:16px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r)}
+.ch-manage-item{display:flex;flex-direction:column;gap:7px;min-width:200px;flex:1}
+.ch-manage-lbl{font-family:var(--f-mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.ch-manage-inline{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.ch-manage-item .ch-inp{width:100%}
+.ch-manage-inline .ch-inp{flex:1;min-width:150px}

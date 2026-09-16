@@ -187,25 +187,32 @@ function chRenderChallenge(){
   h+=`</div>`;
   h+=`<div class="ch-section-label">Норми за класами</div>`+chNormsTable();
 
-  // officer status controls
+  // officer controls
   if(off){
-    h+=`<div class="ch-officer-bar">`;
-    h+=`<label class="ch-status-sel">Статус: <select class="ch-inp" onchange="chSetStatus(this.value)">${
-      ['registration','active','final','done'].map(s=>`<option value="${s}"${chC.status===s?' selected':''}>${CH_STATUS[s][0]}</option>`).join('')
-    }</select></label>`;
-    if(reg)h+=`<button class="ch-mini-btn" onclick="chOpenAddPart()">＋ Додати учасника</button>`;
-    if(reg&&chVets().length>0)h+=`<button class="ch-mini-btn primary" onclick="chFixPairs()">✔ Зафіксувати пари → Активний</button>`;
-    if(reg&&chPairs.length>0)h+=`<button class="ch-mini-btn danger" onclick="chResetDraw()">↺ Перезапустити жеребкування</button>`;
-    if(chC.status==='active'){h+=`<button class="ch-mini-btn" onclick="chMarkFinalists()">★ Позначити фіналістів (топ-2)</button>`;
-      h+=`<button class="ch-mini-btn primary" onclick="chSetStatus('final')">→ До фіналу</button>`;}
-    if(chC.status==='final')h+=`<button class="ch-mini-btn primary" onclick="chSetStatus('done')">✔ Завершити челендж</button>`;
-    if(chC.status==='done'&&isAdmin)h+=`<button class="ch-mini-btn" onclick="chSetStatus('final')">↩ Розблокувати (адмін)</button>`;
-    h+=`</div>`;
-    h+=`<div class="ch-deadline-edit">
-      <span class="ch-deadline-lbl">Дедлайн набору (за вашим часовим поясом):</span>
-      <input type="datetime-local" id="chDeadlineInp" class="ch-inp" value="${chToLocalInput(chC.reg_deadline)}">
-      <button class="ch-mini-btn primary" onclick="chSetDeadline()">Зберегти дедлайн</button>
+    // Block 1 — management: status + recruitment deadline
+    h+=`<div class="ch-manage">
+      <div class="ch-manage-item">
+        <span class="ch-manage-lbl">Статус челенджу</span>
+        <select class="ch-inp" onchange="chSetStatus(this.value)">${
+          ['registration','active','final','done'].map(s=>`<option value="${s}"${chC.status===s?' selected':''}>${CH_STATUS[s][0]}</option>`).join('')
+        }</select>
+      </div>
+      <div class="ch-manage-item">
+        <span class="ch-manage-lbl">Дедлайн набору (за вашим часовим поясом)</span>
+        <div class="ch-manage-inline">
+          <input type="datetime-local" id="chDeadlineInp" class="ch-inp" value="${chToLocalInput(chC.reg_deadline)}">
+          <button class="ch-mini-btn primary" onclick="chSetDeadline()">Зберегти</button>
+        </div>
+      </div>
     </div>`;
+
+    // Block 2 — actions: participants / pairs
+    let acts='';
+    if(reg)acts+=`<button class="ch-mini-btn" onclick="chOpenAddPart()">＋ Додати учасника</button>`;
+    if(reg&&chVets().length>0)acts+=`<button class="ch-mini-btn primary" onclick="chFixPairs()">✔ Зафіксувати пари → Активний</button>`;
+    if(reg&&chPairs.length>0)acts+=`<button class="ch-mini-btn danger" onclick="chResetDraw()">↺ Перезапустити жеребкування</button>`;
+    if(chC.status==='active')acts+=`<button class="ch-mini-btn" onclick="chMarkFinalists()">★ Позначити фіналістів (топ-2)</button>`;
+    if(acts)h+=`<div class="ch-officer-bar">${acts}</div>`;
   }
 
   // participants + draw (registration)
