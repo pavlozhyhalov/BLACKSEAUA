@@ -241,7 +241,7 @@ function chRenderChallenge(){
         off?` <b onclick="event.stopPropagation();chDelPart(${p.id})">✕</b>`:''}</span>`).join('')+`</div>`;
     }
     h+=`<div class="ch-section-label">Таблиця медалей (${chParts.length} гравців)</div>`;
-    h+=`<p class="hint" style="margin-bottom:6px">↔ Таблицю можна гортати вліво-вправо${off?' · натисни клітинку, щоб зарахувати медаль':''}</p>`;
+    h+=`<p class="hint" style="margin-bottom:6px">Таблицю можна гортати вліво-вправо${off?' · натисни клітинку, щоб зарахувати медаль':''}</p>`;
     h+=chMedalMatrix();
   }else if(solo){
     // ── SOLO: individual leaderboard ──
@@ -567,7 +567,7 @@ function chRenderPair(){
   h+=`<div class="ch-notclosed"><b>${esc(vet?.nickname||'Ветеран')}</b> — ${notV.length?'не закрито: '+notV.map(esc).join(', '):'усі завдання виконано ✓'}</div>`;
   h+=`<div class="ch-notclosed"><b>${esc(nov?.nickname||'Новачок')}</b> — ${notN.length?'не закрито: '+notN.map(esc).join(', '):'усі завдання виконано ✓'}</div>`;
   h+=`<div id="chPairMsg" class="ch-row-err" style="margin:10px 0"></div>`;
-  h+=`<p class="hint" style="margin-bottom:6px">↔ Таблицю можна гортати вліво-вправо</p>`;
+  h+=`<p class="hint" style="margin-bottom:6px">Таблицю можна гортати вліво-вправо</p>`;
   h+=chPairTable(vet,nov,vRows,nRows,taskById,canEdit);
   h+=chPairTasksBlock(canEdit);
 
