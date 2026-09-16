@@ -3,7 +3,7 @@
 <head>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-V2SVEPJSH0"></script>
-<script src="ships.js?v=20260916"></script>
+<script src="ships.js?v=20260916b"></script>
 <script>
 window.dataLayer = window.dataLayer || [];
 function gtag(){dataLayer.push(arguments);}
@@ -14,7 +14,7 @@ gtag('config', 'G-V2SVEPJSH0');
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <title>BLACKSEAUA · WORLD OF WARSHIPS LEGENDS</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Syne+Mono&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="blackseaua.css?v=20260916">
+<link rel="stylesheet" href="blackseaua.css?v=20260916b">
 <style>
 
 /* ══ SHIPS TTX PAGE ══ */
@@ -178,10 +178,10 @@ gtag('config', 'G-V2SVEPJSH0');
 
     <div class="section">
       <div class="cards">
-        <div class="card" ontouchstart="" onclick="openTournamentsList()">
+        <div class="card" ontouchstart="" onclick="openTournamentsList()" style="border-left:2px solid var(--accent)">
           <span class="card-num">01</span>
-          <div class="card-title" data-i18n="nav_tournaments">Турніри</div>
-          <div class="card-desc" data-i18n="nav_tournaments_desc">Поточні та архівні змагання клану.</div>
+          <div class="card-title" data-i18n="nav_tournaments">Челенджі</div>
+          <div class="card-desc" data-i18n="nav_tournaments_desc">Клановий челендж «Ветеран + Новачок»: пари, завдання, бали.</div>
         </div>
         <div class="card" ontouchstart="" onclick="openRecords()">
           <span class="card-num">02</span>
@@ -208,11 +208,6 @@ gtag('config', 'G-V2SVEPJSH0');
           <div class="card-title" data-i18n="nav_ships">ТТХ Кораблів</div>
           <div class="card-desc" data-i18n="nav_ships_desc">Характеристики та порівняння всіх кораблів.</div>
         </div>
-        <div class="card" ontouchstart="" onclick="openChallenges()" style="border-left:2px solid var(--accent)">
-          <span class="card-num">07 · <span style="color:var(--accent);letter-spacing:.06em">⚔ НОВЕ</span></span>
-          <div class="card-title" data-i18n="nav_challenges">Челенджі</div>
-          <div class="card-desc" data-i18n="nav_challenges_desc">Клановий челендж «Ветеран + Новачок»: пари, завдання, бали.</div>
-        </div>
       </div>
     </div>
 
@@ -224,23 +219,20 @@ gtag('config', 'G-V2SVEPJSH0');
 <div id="tournamentsListPage" class="page">
   <div class="shell">
     <div class="page-head">
-      <div class="page-breadcrumb"><a onclick="backToHome()" data-i18n="home">Головна</a><span class="sep">/</span><span data-i18n="nav_tournaments">Турніри</span></div>
-      <div class="page-title" data-i18n="nav_tournaments">Турніри</div>
+      <div class="page-breadcrumb"><a onclick="backToHome()" data-i18n="home">Головна</a><span class="sep">/</span><span data-i18n="nav_tournaments">Челенджі</span></div>
+      <div class="page-title" data-i18n="nav_tournaments">Челенджі</div>
+    </div>
+    <div id="chListOfficer" style="display:none;margin-bottom:16px">
+      <button class="league-apply-btn" onclick="chCreateChallenge()">＋ Створити челендж</button>
     </div>
 
-    <!-- ACTIVE -->
+    <!-- ACTIVE / CURRENT CHALLENGES -->
     <div class="tlist-section-label" data-i18n="active_tournaments">Активні</div>
-    <div class="cards" style="max-width:420px">
-      <div class="card" onclick="openChallenges()" style="border-left:2px solid var(--accent)">
-        <span class="card-num">⚔ <span style="color:var(--accent);letter-spacing:.06em">ЧЕЛЕНДЖ</span></span>
-        <div class="card-title">Ветеран + Новачок</div>
-        <div class="card-desc">Пари ветеран+новачок, завдання й бали. Відкрити розділ челенджів →</div>
-      </div>
-    </div>
+    <div id="chListGrid" class="cards" style="max-width:520px"></div>
 
     <!-- ARCHIVE -->
     <div class="tlist-section-label tlist-archive-label" style="margin-top:28px" data-i18n="archive">Архів</div>
-    <div class="cards" style="max-width:420px">
+    <div class="cards" style="max-width:520px">
       <div class="card card-archived" onclick="openTournamentFlex()">
         <span class="card-num">✅ <span data-i18n="finished">Завершено</span></span>
         <div class="card-title" data-i18n="challenge">Гнучкість</div>
@@ -248,21 +240,6 @@ gtag('config', 'G-V2SVEPJSH0');
         <div class="card-archive-meta">Травень 2026 · Результати доступні</div>
       </div>
     </div>
-  </div>
-</div>
-
-<!-- ══ CHALLENGES LIST ══ -->
-<div id="challengeListPage" class="page">
-  <div class="shell">
-    <div class="page-head">
-      <div class="page-breadcrumb"><a onclick="backToHome()" data-i18n="home">Головна</a><span class="sep">/</span><span>Челенджі</span></div>
-      <div class="page-title">Челенджі</div>
-      <p class="page-lede">Кланові челенджі: правила, пари, бали.</p>
-    </div>
-    <div id="chListOfficer" style="display:none;margin-bottom:16px">
-      <button class="league-apply-btn" onclick="chCreateChallenge()">＋ Створити челендж</button>
-    </div>
-    <div id="chListGrid" class="cards" style="max-width:520px"></div>
   </div>
 </div>
 
@@ -692,7 +669,7 @@ const TRANSLATIONS = {
     no_account:'Немає акаунту?', register_link:'Зареєструватись',
     have_account:'Вже є акаунт?', login_link:'Увійти',
     home:'Головна', sections:'Розділи',
-    nav_tournaments:'Турніри', nav_tournaments_desc:'Поточні та архівні змагання клану.',
+    nav_tournaments:'Челенджі', nav_tournaments_desc:'Клановий челендж «Ветеран + Новачок»: пари, завдання, бали.',
     nav_records:'Рекорди', nav_records_desc:'Кращі результати гравців клану за всі часи.',
     nav_lottery:'Розіграш', nav_lottery_desc:'Колесо удачі для учасників клану.',
     nav_voting:'Голосування', nav_voting_desc:'Актуальні питання для голосування.',
@@ -759,7 +736,7 @@ const TRANSLATIONS = {
     fill_all:'Заповни всі поля', fill_email_pass:'Введи пошту і пароль',
     pass_min6:'Пароль мінімум 6 символів',
     reg_success:'Реєстрація успішна!\n\nОчікуй підтвердження адміністратора.\nПісля підтвердження зможеш редагувати.',
-    active_tournaments:'Активні турніри', archive:'Архів', finished:'Завершено',
+    active_tournaments:'Активні', archive:'Архів', finished:'Завершено',
   },
   ru: {
     nav_ships:'ТТХ Кораблей', ships_lede:'PS4/PS5/XBOX · 436 кораблей · Выбери до 3 для сравнения',
@@ -782,7 +759,7 @@ const TRANSLATIONS = {
     no_account:'Нет аккаунта?', register_link:'Зарегистрироваться',
     have_account:'Уже есть аккаунт?', login_link:'Войти',
     home:'Главная', sections:'Разделы',
-    nav_tournaments:'Турниры', nav_tournaments_desc:'Текущие и архивные соревнования клана.',
+    nav_tournaments:'Челленджи', nav_tournaments_desc:'Клановый челлендж «Ветеран + Новичок»: пары, задания, баллы.',
     nav_records:'Рекорды', nav_records_desc:'Лучшие результаты игроков клана за всё время.',
     nav_lottery:'Розыгрыш', nav_lottery_desc:'Колесо удачи для участников клана.',
     nav_voting:'Голосование', nav_voting_desc:'Актуальные вопросы для голосования.',
@@ -849,7 +826,7 @@ const TRANSLATIONS = {
     fill_all:'Заполни все поля', fill_email_pass:'Введи почту и пароль',
     pass_min6:'Пароль минимум 6 символов',
     reg_success:'Регистрация успешна!\n\nОжидай подтверждения администратора.\nПосле подтверждения сможешь редактировать.',
-    active_tournaments:'Активные турниры', archive:'Архив', finished:'Завершено',
+    active_tournaments:'Активные', archive:'Архив', finished:'Завершено',
   },
   en: {
     nav_ships:'Ship Stats', ships_lede:'PS4/PS5/XBOX · 436 ships · Select up to 3 to compare',
@@ -872,7 +849,7 @@ const TRANSLATIONS = {
     no_account:'No account?', register_link:'Register',
     have_account:'Already have an account?', login_link:'Sign In',
     home:'Home', sections:'Sections',
-    nav_tournaments:'Tournaments', nav_tournaments_desc:'Current and archived clan competitions.',
+    nav_tournaments:'Challenges', nav_tournaments_desc:'Clan challenge "Veteran + Novice": pairs, tasks, points.',
     nav_records:'Records', nav_records_desc:'Best player results of all time.',
     nav_lottery:'Lottery', nav_lottery_desc:'Wheel of fortune for clan members.',
     nav_voting:'Voting', nav_voting_desc:'Current questions open for voting.',
@@ -939,7 +916,7 @@ const TRANSLATIONS = {
     fill_all:'Fill in all fields', fill_email_pass:'Enter email and password',
     pass_min6:'Password must be at least 6 characters',
     reg_success:'Registration successful!\n\nAwait admin confirmation.\nAfter approval you can edit.',
-    active_tournaments:'Active Tournaments', archive:'Archive', finished:'Finished',
+    active_tournaments:'Active', archive:'Archive', finished:'Finished',
   }
 };
 
@@ -1276,8 +1253,8 @@ function updateAuthUI(){
   }
 }
 
-const PAGE_MAP={'':'homePage','home':'homePage','ships':'shipsPage','lottery':'lotteryPage','tournaments':'tournamentsListPage','flex':'tournamentFlexPage','records':'recordsPage','resources':'resourcesPage','voting':'votingPage','challenges':'challengeListPage','challenge':'challengePage','pair':'pairPage'};
-const HASH_MAP={'homePage':'home','shipsPage':'ships','lotteryPage':'lottery','tournamentsListPage':'tournaments','tournamentFlexPage':'flex','recordsPage':'records','resourcesPage':'resources','votingPage':'voting','challengeListPage':'challenges','challengePage':'challenge','pairPage':'pair'};
+const PAGE_MAP={'':'homePage','home':'homePage','ships':'shipsPage','lottery':'lotteryPage','tournaments':'tournamentsListPage','flex':'tournamentFlexPage','records':'recordsPage','resources':'resourcesPage','voting':'votingPage','challenges':'tournamentsListPage','challenge':'challengePage','pair':'pairPage'};
+const HASH_MAP={'homePage':'home','shipsPage':'ships','lotteryPage':'lottery','tournamentsListPage':'tournaments','tournamentFlexPage':'flex','recordsPage':'records','resourcesPage':'resources','votingPage':'voting','challengePage':'challenge','pairPage':'pair'};
 
 function revealCards(){
   document.querySelectorAll('.page.active .card').forEach((card,idx)=>{
@@ -1296,7 +1273,7 @@ function showPage(id){
 }
 function backToHome(){showPage('homePage');}
 function openLottery(){showPage('lotteryPage');setTimeout(()=>{setCanvasSize();drawWheel();},40);}
-function openTournamentsList(){showPage('tournamentsListPage');}
+function openTournamentsList(){showPage('tournamentsListPage');if(window.chRenderList)chRenderList();}
 function openTournamentFlex(){showPage('tournamentFlexPage');updateAuthUI();loadPlayers();updateTimer();}
 function openRecords(){showPage('recordsPage');updateAuthUI();loadRecords();}
 function openResources(){showPage('resourcesPage');}
@@ -1314,9 +1291,9 @@ function restorePage(){
   if(pageId==='tournamentFlexPage'){updateAuthUI();loadPlayers();updateTimer();}
   if(pageId==='recordsPage'){updateAuthUI();loadRecords();}
   if(pageId==='shipsPage'){setTimeout(()=>{fl();},50);}
-  if(pageId==='challengeListPage'&&window.chRenderList)chRenderList();
-  if(pageId==='challengePage'&&window.chLoadChallenge){if(arg)chLoadChallenge(+arg);else showPage('challengeListPage');}
-  if(pageId==='pairPage'&&window.chLoadPair){if(arg)chLoadPair(+arg);else showPage('challengeListPage');}
+  if(pageId==='tournamentsListPage'&&window.chRenderList)chRenderList();
+  if(pageId==='challengePage'&&window.chLoadChallenge){if(arg)chLoadChallenge(+arg);else openTournamentsList();}
+  if(pageId==='pairPage'&&window.chLoadPair){if(arg)chLoadPair(+arg);else openTournamentsList();}
 }
 
 /* ── WHEEL ── */
@@ -2011,7 +1988,7 @@ ${rowBool(reloadBL,ships.map(s=>s.reload_b))}
 }
 
 </script>
-<script src="challenge.js?v=20260916"></script>
+<script src="challenge.js?v=20260916b"></script>
 
 
 </body>

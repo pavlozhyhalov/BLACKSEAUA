@@ -25,13 +25,13 @@ async function chGet(path){
 }
 
 /* ═══════════ NAVIGATION ═══════════ */
-function openChallenges(){showPage('challengeListPage');window.location.hash='challenges';chRenderList();}
+function openChallenges(){showPage('tournamentsListPage');window.location.hash='tournaments';chRenderList();}
 function openChallenge(id){showPage('challengePage');window.location.hash='challenge='+id;chLoadChallenge(id);}
 function openPair(id){showPage('pairPage');window.location.hash='pair='+id;chLoadPair(id);}
 function chBackToChallenge(){if(chPairChallenge)openChallenge(chPairChallenge);else openChallenges();}
 
 function chOnAuthChange(){
-  if(document.getElementById('challengeListPage').classList.contains('active'))chRenderList();
+  if(document.getElementById('tournamentsListPage').classList.contains('active'))chRenderList();
   else if(document.getElementById('challengePage').classList.contains('active')&&chC)chRenderChallenge();
   else if(document.getElementById('pairPage').classList.contains('active')&&chPair)chRenderPair();
 }
