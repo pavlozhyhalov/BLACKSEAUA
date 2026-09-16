@@ -15,6 +15,7 @@ let chPair=null, chPairC=null, chPairRows=[], chPairChallenge=null;
 let chPairTasks=[], chPairTaskDone=[];
 let chSoloScores=[];
 let chSolo=null, chSoloC=null, chSoloRows=[];
+let chMedals=[], chMedalProgress=[], chMedalScores=[];
 let chWA=0;
 
 /* ═══════════ HOME BANNER: recruitment countdown ═══════════ */
@@ -137,14 +138,18 @@ async function chLoadChallenge(id){
     if(!chC){box.innerHTML='<p class="hint">Челендж не знайдено.</p>';return;}
     chTasks =await chGet('challenge_task?challenge_id=eq.'+id+'&order=row_no.asc');
     chParts =await chGet('participant?challenge_id=eq.'+id+'&order=created_at.asc');
+    chPairs=[];chScores=[];chFinal=null;chSoloScores=[];chMedals=[];chMedalProgress=[];chMedalScores=[];
     if(chC.mode==='solo'){
-      chPairs=[];chScores=[];chFinal=null;
       chSoloScores=await chGet('v_solo_scores?challenge_id=eq.'+id);
+    }else if(chC.mode==='medals'){
+      chMedals=await chGet('medal?challenge_id=eq.'+id+'&order=ord.asc');
+      chMedalScores=await chGet('v_medal_scores?challenge_id=eq.'+id);
+      const ids=chParts.map(p=>p.id);
+      chMedalProgress=ids.length?await chGet('medal_progress?participant_id=in.('+ids.join(',')+')&select=*'):[];
     }else{
       chPairs =await chGet('pair?challenge_id=eq.'+id);
       chScores=await chGet('v_pair_scores?challenge_id=eq.'+id);
       const fr=await chGet('final_result?challenge_id=eq.'+id);chFinal=fr[0]||null;
-      chSoloScores=[];
     }
     const cr=document.getElementById('chCrumb');if(cr)cr.textContent=chC.title;
     chRenderChallenge();
@@ -186,6 +191,7 @@ function chRenderChallenge(){
   const off=isOfficer;
   const reg=chC.status==='registration'||chC.status==='draft';
   const solo=chC.mode==='solo';
+  const medals=chC.mode==='medals';
   let h='';
 
   // header
@@ -196,7 +202,7 @@ function chRenderChallenge(){
     <div class="ch-desc" id="chRulesView">${chDescHtml(chC.rules_text)}</div>`;
   if(off)h+=`<button class="ch-mini-btn" onclick="chEditRules()">✏ Редагувати опис</button>`;
   h+=`</div>`;
-  h+=`<div class="ch-section-label">Норми за класами</div>`+chNormsTable();
+  if(!medals)h+=`<div class="ch-section-label">Норми за класами</div>`+chNormsTable();
 
   // officer controls
   if(off){
@@ -220,13 +226,24 @@ function chRenderChallenge(){
     // Block 2 — actions: participants / pairs
     let acts='';
     if(reg)acts+=`<button class="ch-mini-btn" onclick="chOpenAddPart()">＋ Додати учасника</button>`;
-    if(reg&&!solo&&chVets().length>0)acts+=`<button class="ch-mini-btn primary" onclick="chFixPairs()">✔ Зафіксувати пари → Активний</button>`;
-    if(reg&&!solo&&chPairs.length>0)acts+=`<button class="ch-mini-btn danger" onclick="chResetDraw()">↺ Перезапустити жеребкування</button>`;
-    if(chC.status==='active'&&!solo)acts+=`<button class="ch-mini-btn" onclick="chMarkFinalists()">★ Позначити фіналістів (топ-2)</button>`;
+    if(reg&&!solo&&!medals&&chVets().length>0)acts+=`<button class="ch-mini-btn primary" onclick="chFixPairs()">✔ Зафіксувати пари → Активний</button>`;
+    if(reg&&!solo&&!medals&&chPairs.length>0)acts+=`<button class="ch-mini-btn danger" onclick="chResetDraw()">↺ Перезапустити жеребкування</button>`;
+    if(chC.status==='active'&&!solo&&!medals)acts+=`<button class="ch-mini-btn" onclick="chMarkFinalists()">★ Позначити фіналістів (топ-2)</button>`;
     if(acts)h+=`<div class="ch-officer-bar">${acts}</div>`;
   }
 
-  if(solo){
+  if(medals){
+    // ── MEDALS: players × medals matrix ──
+    if(reg&&off){
+      h+=`<div class="ch-section-label">Учасники (${chParts.length})</div>`;
+      if(!chParts.length)h+=`<p class="hint">Учасників ще немає.</p>`;
+      else h+=`<div class="ch-part-list">`+chParts.map(p=>`<span class="ch-chip">${esc(p.nickname)}${
+        off?` <b onclick="event.stopPropagation();chDelPart(${p.id})">✕</b>`:''}</span>`).join('')+`</div>`;
+    }
+    h+=`<div class="ch-section-label">Таблиця медалей (${chParts.length} гравців)</div>`;
+    h+=`<p class="hint" style="margin-bottom:6px">↔ Таблицю можна гортати вліво-вправо${off?' · натисни клітинку, щоб зарахувати медаль':''}</p>`;
+    h+=chMedalMatrix();
+  }else if(solo){
     // ── SOLO: individual leaderboard ──
     if(reg&&off){
       h+=`<div class="ch-section-label">Учасники (${chParts.length})</div>`;
@@ -289,6 +306,35 @@ function chSoloBoard(){
       <td>${CH_CLASS_LABEL[p.class]}</td><td>${s.done_count||0}/7</td>
       <td class="pts">${s.points||0}</td></tr>`;}).join('')
   }</tbody></table></div>`;
+}
+
+function chMedalMatrix(){
+  if(!chParts.length)return '<p class="hint">Гравців ще немає.</p>';
+  const sById=Object.fromEntries(chMedalScores.map(s=>[s.participant_id,s]));
+  const prog={};chMedalProgress.forEach(d=>{prog[d.participant_id+'_'+d.medal_id]=d;});
+  const canEdit=isOfficer&&!(chC.status==='done'&&!isAdmin);
+  const players=[...chParts].sort((a,b)=>((sById[b.id]?.points||0)-(sById[a.id]?.points||0)));
+  const head=`<tr><th class="mx-nick">Гравець</th><th class="mx-sum">Бали</th>${
+    chMedals.map(m=>`<th class="mx-med${m.awardable?'':' na'}"><span>${esc(m.title)}</span></th>`).join('')}</tr>`;
+  let body='';
+  players.forEach(p=>{
+    const pts=sById[p.id]?.points||0;
+    body+=`<tr><td class="mx-nick">${esc(p.nickname)}</td><td class="mx-sum">${pts}</td>${
+      chMedals.map(m=>{
+        const d=(m.awardable)?prog[p.id+'_'+m.id]:null;
+        if(!d)return `<td class="mx-cell na">—</td>`;
+        const on=d.done;
+        if(canEdit)return `<td class="mx-cell ${on?'on':''}" onclick="chToggleMedal(${d.id},${on?'false':'true'})">${on?'1':'·'}</td>`;
+        return `<td class="mx-cell ${on?'on':''}">${on?'1':''}</td>`;
+      }).join('')}</tr>`;
+  });
+  return `<div class="table-wrapper"><table class="ch-medal-table"><thead>${head}</thead><tbody>${body}</tbody></table></div>`;
+}
+async function chToggleMedal(id,done){
+  try{
+    await sbFetch('/rest/v1/medal_progress?id=eq.'+id,{method:'PATCH',body:JSON.stringify({done,updated_at:new Date().toISOString()})});
+    await chLoadChallenge(chC.id);
+  }catch(e){alert('Помилка: '+chErrMsg(e));}
 }
 
 function chPairCards(){
@@ -365,19 +411,19 @@ async function chDrawAll(){
 function chOpenAddPart(){
   document.getElementById('chPartNick').value='';
   document.getElementById('chPartError').textContent='';
+  const cr=document.getElementById('chPartClassRow');if(cr)cr.style.display=(chC.mode==='medals')?'none':'block';
   openModal('chAddPartModal');
   setTimeout(()=>document.getElementById('chPartNick').focus(),50);
 }
 async function chConfirmAddParticipant(){
   const nick=document.getElementById('chPartNick').value.trim();
-  const cls=document.getElementById('chPartClass').value;
+  const cls=chC.mode==='medals'?null:document.getElementById('chPartClass').value;
   const err=document.getElementById('chPartError');err.textContent='';
   if(!nick){err.textContent='Введи нікнейм';return;}
   try{
     await sbFetch('/rest/v1/participant',{method:'POST',body:JSON.stringify({challenge_id:chC.id,nickname:nick,class:cls})});
     closeModal('chAddPartModal');
-    chParts=await chGet('participant?challenge_id=eq.'+chC.id+'&order=created_at.asc');
-    chRenderChallenge();
+    await chLoadChallenge(chC.id);
   }catch(e){err.textContent=chErrMsg(e);}
 }
 async function chDelPart(id){

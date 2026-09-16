@@ -1449,3 +1449,20 @@ footer {
 .ch-solo-board td,.ch-solo-table td{font-size:13px;padding:11px 12px}
 .ch-solo-table th.lft,.ch-solo-table td.lft{text-align:left}
 .ch-solo-table .ch-inp{font-size:12px;padding:6px 8px}
+/* ── CHALLENGE: medals matrix ── */
+.ch-medal-table{border-collapse:separate;border-spacing:0;min-width:100%}
+.ch-medal-table th,.ch-medal-table td{border-bottom:1px solid var(--border);border-right:1px solid var(--border);text-align:center;white-space:nowrap}
+.ch-medal-table thead th{background:var(--surface);color:var(--muted);vertical-align:bottom;padding:6px}
+.ch-medal-table th.mx-med{height:130px;padding:6px 3px}
+.ch-medal-table th.mx-med span{writing-mode:vertical-rl;transform:rotate(180deg);display:inline-block;white-space:nowrap;font-family:var(--f-mono);font-size:10px;letter-spacing:.02em;color:var(--muted)}
+.ch-medal-table th.mx-med.na span{color:var(--border2)}
+.ch-medal-table .mx-nick{position:sticky;left:0;z-index:2;width:120px;min-width:120px;background:var(--surface2);text-align:left;padding:9px 10px;font-weight:600;color:var(--cream)}
+.ch-medal-table .mx-sum{position:sticky;left:120px;z-index:2;min-width:46px;background:var(--surface2);font-family:var(--f-mono);font-weight:700;color:var(--accent)}
+.ch-medal-table thead .mx-nick,.ch-medal-table thead .mx-sum{z-index:3;color:var(--muted);font-weight:400;font-family:var(--f-mono);font-size:10px}
+.ch-medal-table td{padding:10px 6px;font-size:14px;color:var(--text)}
+.ch-medal-table td.mx-cell{color:var(--border2)}
+.ch-medal-table td.mx-cell[onclick]{cursor:pointer;color:var(--muted)}
+.ch-medal-table td.mx-cell[onclick]:hover{background:rgba(184,146,62,.08)}
+.ch-medal-table td.mx-cell.on{background:rgba(184,146,62,.18);color:var(--accent);font-family:var(--f-mono);font-weight:700}
+.ch-medal-table td.mx-cell.na{color:var(--border2);cursor:default}
+.ch-medal-table tbody tr:hover .mx-nick,.ch-medal-table tbody tr:hover .mx-sum{background:#16293a}
