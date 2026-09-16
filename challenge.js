@@ -46,6 +46,19 @@ function chToLocalInput(v){if(!v)return '';const d=new Date(v);if(isNaN(d))retur
 function chDateRange(c){const a=c.date_from?new Date(c.date_from).toLocaleDateString('uk-UA'):null;
   const b=c.date_to?new Date(c.date_to).toLocaleDateString('uk-UA'):null;
   return a&&b?`${a} — ${b}`:(a||'Дати не задані');}
+function chDescHtml(text){
+  const lines=(text||'').split('\n');let html='',inList=false;
+  const closeList=()=>{if(inList){html+='</ul>';inList=false;}};
+  for(const raw of lines){
+    const l=raw.trim();
+    if(!l){closeList();continue;}
+    if(l.startsWith('•')){if(!inList){html+='<ul class="ch-desc-ul">';inList=true;}html+='<li>'+esc(l.replace(/^•\s*/,''))+'</li>';continue;}
+    closeList();
+    const isHead=l.length<=32&&!/[.!?:]$/.test(l)&&!l.includes(',');
+    html+=isHead?('<div class="ch-desc-h">'+esc(l)+'</div>'):('<p class="ch-desc-p">'+esc(l)+'</p>');
+  }
+  closeList();return html;
+}
 
 /* ═══════════ LIST ═══════════ */
 async function chRenderList(){
@@ -61,6 +74,7 @@ async function chRenderList(){
       <div class="card-title">${esc(c.title)}</div>
       <div class="card-desc">${chDateRange(c)}</div>
     </div>`).join('');
+  grid.querySelectorAll('.card').forEach(el=>el.classList.add('visible'));
 }
 
 async function chCreateChallenge(){
@@ -116,7 +130,8 @@ function chNormsTable(){
 function chVets(){return chParts.filter(p=>p.class==='V');}
 function chNovices(){return chParts.filter(p=>p.class!=='V');}
 function chUnpairedNovices(){const set=new Set(chPairs.map(p=>p.novice_id));return chNovices().filter(n=>!set.has(n.id));}
-function chNextUnpairedVet(){const set=new Set(chPairs.map(p=>p.veteran_id));return chVets().find(v=>!set.has(v.id))||null;}
+function chUnpairedVets(){const set=new Set(chPairs.map(p=>p.veteran_id));return chVets().filter(v=>!set.has(v.id));}
+function chNextUnpairedVet(){return chUnpairedVets()[0]||null;}
 
 function chRenderChallenge(){
   const box=document.getElementById('chDetail');if(!box||!chC)return;
@@ -129,10 +144,9 @@ function chRenderChallenge(){
     <p class="page-lede">${chDateRange(chC)} · Поріг допомоги: новачок ${chC.help_threshold}/7</p></div>`;
 
   // rules
-  h+=`<div class="rules-box"><div class="rules-box-title">Правила</div>
-    <div class="ch-rules-text" id="chRulesView">${esc(chC.rules_text||'').replace(/\n/g,'<br>')}</div>`;
-  if(chC.pdf_url)h+=`<a class="ch-pdf" href="${esc(chC.pdf_url)}" target="_blank" rel="noopener">📄 Правила у PDF ↗</a>`;
-  if(off)h+=`<button class="ch-mini-btn" onclick="chEditRules()">✏ Редагувати правила</button>`;
+  h+=`<div class="rules-box"><div class="rules-box-title">Опис</div>
+    <div class="ch-desc" id="chRulesView">${chDescHtml(chC.rules_text)}</div>`;
+  if(off)h+=`<button class="ch-mini-btn" onclick="chEditRules()">✏ Редагувати опис</button>`;
   h+=`</div>`;
   h+=`<div class="ch-section-label">Норми за класами</div>`+chNormsTable();
 
@@ -161,14 +175,14 @@ function chRenderChallenge(){
     if(off){
       h+=`<div class="ch-draw">`;
       if(nv!==nn)h+=`<p class="hint">⚠ Для жеребкування кількість ветеранів (${nv}) має дорівнювати кількості новачків (${nn}).</p>`;
-      const vet=chNextUnpairedVet();
-      if(nv===nn&&nv>0&&vet){
-        h+=`<div class="ch-draw-vet">Жеребкуємо новачка для ветерана: <b>${esc(vet.nickname)}</b></div>
-          <div class="wheel-frame ch-wheel-frame"><canvas id="chWheel" width="300" height="300"></canvas><div class="pointer"></div></div>
-          <label class="ch-balance"><input type="checkbox" id="chBalance"> Балансувати ранги (N1/N2)</label>
-          <button class="spin-btn" id="chSpinBtn" onclick="chDrawSpin()">Крутити колесо</button>`;
-      }else if(nv===nn&&nv>0&&!vet){
-        h+=`<p class="hint">✔ Усі ветерани отримали пару. Натисніть «Зафіксувати пари».</p>`;
+      const upv=chUnpairedVets();
+      if(nv===nn&&nv>0&&upv.length>0){
+        h+=`<div class="ch-draw-title">Жеребкування пар</div>
+          <p class="hint">Натисни «Жеребкувати» — нікнейми перемішаються, і пара утвориться між тими, хто опинився в одному рядку.</p>
+          <div class="table-wrapper"><table class="ch-draw-table"><thead><tr><th>Новачки</th><th></th><th>Ветерани</th></tr></thead><tbody id="chDrawBody"></tbody></table></div>
+          <button class="spin-btn" id="chDrawBtn" onclick="chDrawAll()">🎲 Жеребкувати пари</button>`;
+      }else if(nv===nn&&nv>0&&upv.length===0){
+        h+=`<p class="hint">✔ Усі пари сформовано. Натисни «Зафіксувати пари → Активний».</p>`;
       }
       h+=`</div>`;
     }
@@ -184,8 +198,8 @@ function chRenderChallenge(){
   }
 
   box.innerHTML=h;
-  if(reg&&isOfficer&&chNextUnpairedVet()&&chVets().length===chNovices().length&&chVets().length>0){
-    chDrawWheelStatic(chUnpairedNovices());
+  if(reg&&isOfficer&&chVets().length===chNovices().length&&chVets().length>0&&chUnpairedVets().length>0){
+    chFillDraw(chUnpairedNovices(), chUnpairedVets());
   }
 }
 
@@ -212,61 +226,53 @@ function chPairCards(){
   }).join('');
 }
 
-/* ═══════════ WHEEL (draw) ═══════════ */
-const CH_SC=['#0d2540','#0f2e38','#112038','#0d2b30','#162040','#0d2838','#102030','#142838'];
-function chWheelDraw(ctx,sz,list){
-  const cx=sz/2,cy=sz/2,r=sz/2-6,n=list.length;if(!n)return;const sl=Math.PI*2/n;
-  ctx.clearRect(0,0,sz,sz);
+/* ═══════════ DRAW (two-column shuffle) ═══════════ */
+function chShuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=randInt(i+1);[a[i],a[j]]=[a[j],a[i]];}return a;}
+function chNameOf(id){const p=chParts.find(x=>x.id===id);return p?p.nickname:'?';}
+function chDrawRows(novList,vetList){
+  const body=document.getElementById('chDrawBody');if(!body)return;
+  const n=Math.max(novList.length,vetList.length);let h='';
   for(let i=0;i<n;i++){
-    const s=chWA+i*sl,e=s+sl;
-    ctx.beginPath();ctx.moveTo(cx,cy);ctx.arc(cx,cy,r,s,e);ctx.closePath();
-    ctx.fillStyle=CH_SC[i%CH_SC.length];ctx.fill();ctx.strokeStyle='#07101a';ctx.lineWidth=1.5;ctx.stroke();
-    ctx.save();ctx.translate(cx,cy);ctx.rotate(s+sl/2);ctx.textAlign='right';ctx.textBaseline='middle';
-    ctx.fillStyle='#d8eaf5';ctx.font='600 '+(n<=6?12:n<=12?10:9)+'px Syne,sans-serif';
-    const nm=list[i].nickname, lb=nm.length>12?nm.slice(0,11)+'…':nm;
-    ctx.fillText(lb,r-8,0);ctx.restore();
+    const nn=novList[i], vv=vetList[i];
+    h+=`<tr><td class="dn">${nn?esc(typeof nn==='object'?nn.nickname:chNameOf(nn)):''}</td><td class="dvs">×</td><td class="dv">${vv?esc(typeof vv==='object'?vv.nickname:chNameOf(vv)):''}</td></tr>`;
   }
-  ctx.beginPath();ctx.arc(cx,cy,10,0,Math.PI*2);ctx.fillStyle='#07101a';ctx.fill();ctx.strokeStyle='#b8923e';ctx.lineWidth=2;ctx.stroke();
+  body.innerHTML=h;
 }
-function chDrawWheelStatic(list){
-  const cv=document.getElementById('chWheel');if(!cv)return;
-  chWheelDraw(cv.getContext('2d'),cv.width,list);
-}
-function chAnimateWheel(list,targetIdx){
-  return new Promise(resolve=>{
-    const cv=document.getElementById('chWheel');if(!cv||!list.length){resolve();return;}
-    const ctx=cv.getContext('2d'),sz=cv.width,n=list.length,sl=Math.PI*2/n;
-    const tgt=(((-Math.PI/2)-targetIdx*sl-sl/2)%(Math.PI*2)+Math.PI*2)%(Math.PI*2);
-    const cur=((chWA%(Math.PI*2))+Math.PI*2)%(Math.PI*2);
-    let diff=tgt-cur;if(diff<0)diff+=Math.PI*2;
-    const total=(6+randInt(4))*Math.PI*2+diff, sa=chWA, dur=3500+randInt(1200), t0=performance.now();
-    const ease=t=>1-Math.pow(1-t,4);
-    (function fr(now){
-      const tm=Math.min((now-t0)/dur,1);
-      chWA=sa+total*ease(tm);chWheelDraw(ctx,sz,list);
-      if(tm<1)requestAnimationFrame(fr);else{chWA=sa+total;chWheelDraw(ctx,sz,list);resolve();}
-    })(t0);
-  });
-}
-async function chDrawSpin(){
+function chFillDraw(novs,vets){chDrawRows(novs,vets);}
+
+async function chDrawAll(){
   if(!isOfficer)return;
-  const vet=chNextUnpairedVet();if(!vet)return;
-  const remaining=chUnpairedNovices();if(!remaining.length)return;
-  const balance=document.getElementById('chBalance')?.checked||false;
-  const btn=document.getElementById('chSpinBtn');if(btn)btn.disabled=true;
+  const vets=chUnpairedVets(), novs=chUnpairedNovices();
+  if(vets.length!==novs.length||!vets.length){alert('Кількість вільних ветеранів і новачків має збігатися.');return;}
+  const btn=document.getElementById('chDrawBtn');if(btn){btn.disabled=true;btn.textContent='Жеребкування...';}
+  let result;
   try{
-    const r=await fetch(SUPA_URL+'/rest/v1/rpc/draw_next_pair',{
+    const r=await fetch(SUPA_URL+'/rest/v1/rpc/draw_all_pairs',{
       method:'POST',
       headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+(accessToken||SUPA_KEY),'Content-Type':'application/json'},
-      body:JSON.stringify({p_challenge:chC.id,p_veteran:vet.id,p_balance:balance})
+      body:JSON.stringify({p_challenge:chC.id})
     });
     if(!r.ok)throw new Error(await r.text());
-    const noviceId=await r.json();
-    let idx=remaining.findIndex(n=>n.id===noviceId);if(idx<0)idx=0;
-    await chAnimateWheel(remaining,idx);
-    await chReloadPairs();
-    chRenderChallenge();
-  }catch(e){alert('Помилка жеребкування: '+chErrMsg(e));if(btn)btn.disabled=false;}
+    result=await r.json();   // [{veteran_id, novice_id}...]
+  }catch(e){alert('Помилка жеребкування: '+chErrMsg(e));if(btn){btn.disabled=false;btn.textContent='🎲 Жеребкувати пари';}return;}
+
+  // animate: shuffle both columns for ~2.4s, then settle to the server result
+  await new Promise(resolve=>{
+    const vetObjs=vets, novObjs=novs;
+    let ticks=0; const maxTicks=26;
+    const iv=setInterval(()=>{
+      chDrawRows(chShuffle(novObjs), chShuffle(vetObjs));
+      if(++ticks>=maxTicks){
+        clearInterval(iv);
+        const finalVets=result.map(p=>p.veteran_id);
+        const finalNovs=result.map(p=>p.novice_id);
+        chDrawRows(finalNovs, finalVets);
+        setTimeout(resolve,500);
+      }
+    },90);
+  });
+  await chReloadPairs();
+  chRenderChallenge();
 }
 
 /* ═══════════ OFFICER ACTIONS ═══════════ */
@@ -409,54 +415,76 @@ function chRenderPair(){
     <div class="ch-help ${nDone>=thr?'ok':'frozen'}">${nDone>=thr?`Новачок ${nDone}/7 ✓ — бали ветерана зараховано`:`Новачок ${nDone}/7 · бали ветерана заморожені (треба ${thr})`}</div></div>`;
   if(locked)h+=`<p class="hint">🔒 Челендж завершено — редагування заблоковане.</p>`;
 
-  h+=chPlayerBlock('Ветеран', vet, vRows, taskById, thr, canEdit, sumPts(vRows), doneCnt(vRows), false, vetCounted, nDone>=thr);
-  h+=chPlayerBlock('Новачок', nov, nRows, taskById, thr, canEdit, nPts, nDone, true, nPts, true);
+  const notV=vRows.filter(r=>r.status!=='done').map(r=>taskById[r.task_id]?.title).filter(Boolean);
+  const notN=nRows.filter(r=>r.status!=='done').map(r=>taskById[r.task_id]?.title).filter(Boolean);
+  h+=`<div class="ch-notclosed"><b>${esc(vet?.nickname||'Ветеран')}</b> — ${notV.length?'не закрито: '+notV.map(esc).join(', '):'усі завдання виконано ✓'}</div>`;
+  h+=`<div class="ch-notclosed"><b>${esc(nov?.nickname||'Новачок')}</b> — ${notN.length?'не закрито: '+notN.map(esc).join(', '):'усі завдання виконано ✓'}</div>`;
+  h+=`<div id="chPairMsg" class="ch-row-err" style="margin:10px 0"></div>`;
+  h+=`<p class="hint" style="margin-bottom:6px">↔ Таблицю можна гортати вліво-вправо</p>`;
+  h+=chPairTable(vet,nov,vRows,nRows,taskById,canEdit);
 
   box.innerHTML=h;
 }
 
-function chPlayerBlock(role, part, rows, taskById, thr, canEdit, pts, done, isNovice, countedPts, counted){
-  if(!part)return '';
-  rows=[...rows].sort((a,b)=>(taskById[a.task_id]?.row_no||0)-(taskById[b.task_id]?.row_no||0));
-  const notClosed=rows.filter(r=>r.status!=='done').map(r=>esc(taskById[r.task_id]?.title||'')).filter(Boolean);
-  const normOf=t=>isNovice?(part.class==='N1'?t.norm_n1:t.norm_n2):t.norm_v;
-  let h=`<div class="ch-player-block"><div class="ch-player-head"><span class="ch-player-role ${isNovice?'nov':'vet'}">${role}</span>
-    <span class="ch-player-nick">${esc(part.nickname)}</span><span class="ch-rank">${CH_CLASS_LABEL[part.class]}</span></div>`;
-  h+=`<div class="ch-notclosed">${notClosed.length?('Не закрито: '+notClosed.join(', ')):'Усі завдання виконано ✓'}</div>`;
-  h+=`<div class="ch-rows">`;
-  rows.forEach(r=>{
-    const t=taskById[r.task_id]||{};const done_=r.status==='done';
-    h+=`<div class="ch-row ${done_?'done':''}">
-      <div class="ch-row-head"><span class="ch-row-no">№${t.row_no}</span><span class="ch-row-title">${esc(t.title)}</span>
-        <span class="ch-row-pts">${r.points||0} б</span></div>
-      <div class="ch-row-norm">Норма: ${esc(normOf(t)||'—')}</div>`;
-    if(canEdit){
-      h+=`<div class="ch-row-edit">
-        <select id="st_${r.id}" class="ch-inp"><option value="not_done"${!done_?' selected':''}>Не виконано</option><option value="done"${done_?' selected':''}>Виконав</option></select>
-        <input type="datetime-local" id="bt_${r.id}" class="ch-inp" value="${chToLocalInput(r.battle_at)}">
-        <label class="ch-cb"><input type="checkbox" id="sq_${r.id}"${r.bonus_squad?' checked':''}> Загін</label>
-        ${isNovice?`<label class="ch-cb"><input type="checkbox" id="vn_${r.id}"${r.bonus_vet_norm?' checked':''}> Норма ветерана</label>`:''}
-        <button class="ch-mini-btn primary" onclick="chSaveRow(${r.id})">Зберегти</button>
-      </div><div class="ch-row-err" id="er_${r.id}"></div>`;
-    }else{
-      h+=`<div class="ch-row-ro">Статус: <b>${done_?'Виконав':'Не виконано'}</b>${done_?` · Бій: ${chFmtDT(r.battle_at)}${r.bonus_squad?' · Загін':''}${r.bonus_vet_norm?' · Норма ветерана':''}`:''}</div>`;
-    }
-    h+=`</div>`;
+function chPairTable(vet,nov,vRows,nRows,taskById,canEdit){
+  const vBy=Object.fromEntries(vRows.map(r=>[r.task_id,r]));
+  const nBy=Object.fromEntries(nRows.map(r=>[r.task_id,r]));
+  const novNorm=t=>nov&&nov.class==='N1'?t.norm_n1:t.norm_n2;
+  const stSel=r=>`<select id="st_${r.id}" class="ch-inp"><option value="not_done"${r.status!=='done'?' selected':''}>Не викон.</option><option value="done"${r.status==='done'?' selected':''}>Виконав</option></select>`;
+  const btInp=r=>`<input type="datetime-local" id="bt_${r.id}" class="ch-inp ch-inp-dt" value="${chToLocalInput(r.battle_at)}">`;
+  const cb=(id,ch)=>`<input type="checkbox" id="${id}"${ch?' checked':''}>`;
+  let head=`<tr>
+    <th>№</th><th class="lft">Завдання</th>
+    <th class="grp">В: Норма</th><th class="grp">В: Статус</th><th class="grp">В: Бій</th><th class="grp">В: Загін</th><th class="grp">В: Бали</th>
+    <th class="grp2">Н: Норма</th><th class="grp2">Н: Статус</th><th class="grp2">Н: Бій</th><th class="grp2">Н: Загін</th><th class="grp2">Н: Норма вет.</th><th class="grp2">Н: Бали</th>
+    ${canEdit?'<th></th>':''}</tr>`;
+  let body='';
+  chTasks.forEach(t=>{
+    const vr=vBy[t.id], nr=nBy[t.id];
+    const vDone=vr&&vr.status==='done', nDone=nr&&nr.status==='done';
+    body+=`<tr>
+      <td>${t.row_no}</td><td class="lft">${esc(t.title)}</td>
+      <td>${esc(t.norm_v||'—')}</td>
+      <td>${canEdit?stSel(vr):(vDone?'Виконав':'Не викон.')}</td>
+      <td>${canEdit?btInp(vr):(vDone?chFmtDT(vr.battle_at):'—')}</td>
+      <td>${canEdit?cb('sq_'+vr.id,vr.bonus_squad):(vr&&vr.bonus_squad?'✓':'—')}</td>
+      <td class="pts">${vr?vr.points:0}</td>
+      <td>${esc(novNorm(t)||'—')}</td>
+      <td>${canEdit?stSel(nr):(nDone?'Виконав':'Не викон.')}</td>
+      <td>${canEdit?btInp(nr):(nDone?chFmtDT(nr.battle_at):'—')}</td>
+      <td>${canEdit?cb('sq_'+nr.id,nr.bonus_squad):(nr&&nr.bonus_squad?'✓':'—')}</td>
+      <td>${canEdit?cb('vn_'+nr.id,nr.bonus_vet_norm):(nr&&nr.bonus_vet_norm?'✓':'—')}</td>
+      <td class="pts">${nr?nr.points:0}</td>
+      ${canEdit?`<td><button class="ch-mini-btn primary ch-save-btn" onclick="chSaveTaskRow(${vr.id},${nr.id})">💾</button></td>`:''}
+    </tr>`;
   });
-  h+=`</div><div class="ch-player-sum">Виконано ${done}/7 · бали ${pts}${(!isNovice&&!counted)?' <span class="frozen">(заморожено)</span>':''}</div></div>`;
-  return h;
+  return `<div class="table-wrapper"><table class="lb ch-pair-table"><thead>${head}</thead><tbody>${body}</tbody></table></div>`;
 }
 
-async function chSaveRow(id){
-  const status=document.getElementById('st_'+id).value;
+async function chPatchProgress(id,squadOff){
+  const st=document.getElementById('st_'+id);if(!st)return;
+  const status=st.value;
   const btVal=document.getElementById('bt_'+id)?.value;
   const battle_at=(status==='done'&&btVal)?new Date(btVal).toISOString():null;
-  const bonus_squad=document.getElementById('sq_'+id)?.checked||false;
+  const bonus_squad=squadOff?false:(document.getElementById('sq_'+id)?.checked||false);
   const bonus_vet_norm=document.getElementById('vn_'+id)?.checked||false;
-  const err=document.getElementById('er_'+id);if(err)err.textContent='';
-  const body={status,battle_at,bonus_squad,bonus_vet_norm,updated_at:new Date().toISOString()};
+  await sbFetch('/rest/v1/progress?id=eq.'+id,{method:'PATCH',
+    body:JSON.stringify({status,battle_at,bonus_squad,bonus_vet_norm,updated_at:new Date().toISOString()})});
+}
+
+// Save a whole task row (veteran + novice). Two passes so a «Загін» bonus is
+// validated only after both players already have their done battle recorded.
+async function chSaveTaskRow(vId,nId){
+  const msg=document.getElementById('chPairMsg');if(msg)msg.textContent='';
   try{
-    await sbFetch('/rest/v1/progress?id=eq.'+id,{method:'PATCH',body:JSON.stringify(body)});
+    await chPatchProgress(vId,true);
+    await chPatchProgress(nId,true);
+    await chPatchProgress(vId,false);
+    await chPatchProgress(nId,false);
     await chLoadPair(chPair.id);
-  }catch(e){if(err)err.textContent='⚠ '+chErrMsg(e);}
+  }catch(e){
+    const m='⚠ '+chErrMsg(e);
+    if(msg)msg.textContent=m; else alert(m);
+    await chLoadPair(chPair.id);
+  }
 }
