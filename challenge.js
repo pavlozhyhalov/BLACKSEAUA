@@ -490,8 +490,7 @@ function chPairTasksBlock(canEdit){
   chPairTasks.forEach(t=>{
     const d=doneBy[t.id]; const done=d&&d.done;
     h+=`<div class="ch-ptask ${done?'done':''}">
-      <div class="ch-ptask-main"><span class="ch-ptask-title">${esc(t.title)}</span>${
-        isOfficer?`<button class="ch-ptask-edit" onclick="chEditPairTask(${t.id})" title="Змінити назву">✏</button>`:''}</div>
+      <div class="ch-ptask-main"><span class="ch-ptask-title">${esc(t.title)}</span></div>
       <div class="ch-ptask-right">${
         canEdit&&d?`<label class="ch-cb"><input type="checkbox" ${done?'checked':''} onchange="chTogglePairTask(${d.id},this.checked)"> Виконано</label>`
                  :`<span class="ch-ptask-status ${done?'ok':''}">${done?'Виконано ✓':'Не виконано'}</span>`}
@@ -506,12 +505,6 @@ async function chTogglePairTask(doneId,done){
     await sbFetch('/rest/v1/pair_task_done?id=eq.'+doneId,{method:'PATCH',body:JSON.stringify({done,updated_at:new Date().toISOString()})});
     await chLoadPair(chPair.id);
   }catch(e){const m='⚠ '+chErrMsg(e);if(msg)msg.textContent=m;else alert(m);await chLoadPair(chPair.id);}
-}
-async function chEditPairTask(taskId){
-  const t=chPairTasks.find(x=>x.id===taskId);if(!t)return;
-  const v=prompt('Назва парного завдання:',t.title);if(v===null)return;
-  try{await sbFetch('/rest/v1/pair_task?id=eq.'+taskId,{method:'PATCH',body:JSON.stringify({title:v.trim()})});await chLoadPair(chPair.id);}
-  catch(e){alert('Помилка: '+chErrMsg(e));}
 }
 
 function chPairTable(vet,nov,vRows,nRows,taskById,canEdit){
