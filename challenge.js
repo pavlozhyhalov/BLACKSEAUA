@@ -12,6 +12,7 @@ const CH_STATUS={draft:['Чернетка','done'],registration:['Реєстра
 
 let chChallenges=[], chC=null, chTasks=[], chParts=[], chPairs=[], chScores=[], chFinal=null;
 let chPair=null, chPairC=null, chPairRows=[], chPairChallenge=null;
+let chPairTasks=[], chPairTaskDone=[];
 let chWA=0;
 
 /* ═══════════ HOME BANNER: recruitment countdown ═══════════ */
@@ -20,28 +21,34 @@ const CH_DEADLINE=new Date('2026-09-20T20:59:00Z');
 let chReg=null; // {id,title} of a challenge currently in registration
 function chBannerClick(){ if(chReg)openChallenge(chReg.id); else openChallenges(); }
 function chPad(n){return String(n).padStart(2,'0');}
+function chKyivStr(dl){try{return dl.toLocaleString('uk-UA',{timeZone:'Europe/Kyiv',day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});}catch(_){return dl.toLocaleString('uk-UA');}}
 function updateChallengeBanner(){
   const b=document.getElementById('chBanner');if(!b)return;
   if(!chReg){b.style.display='none';return;}
   b.style.display='block';
   const t=document.getElementById('chBannerTitle');if(t)t.textContent=chReg.title;
-  const diff=CH_DEADLINE.getTime()-Date.now();
+  const dl=chReg.reg_deadline?new Date(chReg.reg_deadline):CH_DEADLINE;
+  const diff=dl.getTime()-Date.now();
   const sub=document.getElementById('chBannerSub');
   if(diff<=0){
     if(sub)sub.textContent='Набір завершено';
     ['cbD','cbH','cbM','cbS'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent='0';});
     return;
   }
+  if(sub)sub.textContent='Набір заявок завершується '+chKyivStr(dl)+' за Києвом';
   const d=Math.floor(diff/86400000), h=Math.floor(diff%86400000/3600000),
         m=Math.floor(diff%3600000/60000), s=Math.floor(diff%60000/1000);
   const set=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v;};
   set('cbD',d);set('cbH',chPad(h));set('cbM',chPad(m));set('cbS',chPad(s));
 }
-function chInitBanner(){
-  updateChallengeBanner();
-  fetch(SUPA_URL+'/rest/v1/challenge?status=eq.registration&select=id,title&order=created_at.desc&limit=1',
+function chFetchReg(){
+  return fetch(SUPA_URL+'/rest/v1/challenge?status=eq.registration&select=id,title,reg_deadline&order=created_at.desc&limit=1',
     {headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY}})
     .then(r=>r.ok?r.json():[]).then(d=>{chReg=(Array.isArray(d)&&d[0])?d[0]:null;updateChallengeBanner();}).catch(()=>{});
+}
+function chInitBanner(){
+  updateChallengeBanner();
+  chFetchReg();
   setInterval(updateChallengeBanner,1000);
 }
 
@@ -191,6 +198,11 @@ function chRenderChallenge(){
     if(chC.status==='final')h+=`<button class="ch-mini-btn primary" onclick="chSetStatus('done')">✔ Завершити челендж</button>`;
     if(chC.status==='done'&&isAdmin)h+=`<button class="ch-mini-btn" onclick="chSetStatus('final')">↩ Розблокувати (адмін)</button>`;
     h+=`</div>`;
+    h+=`<div class="ch-deadline-edit">
+      <span class="ch-deadline-lbl">Дедлайн набору (за вашим часовим поясом):</span>
+      <input type="datetime-local" id="chDeadlineInp" class="ch-inp" value="${chToLocalInput(chC.reg_deadline)}">
+      <button class="ch-mini-btn primary" onclick="chSetDeadline()">Зберегти дедлайн</button>
+    </div>`;
   }
 
   // participants + draw (registration)
@@ -244,7 +256,7 @@ function chPairCards(){
     const finalist=p.is_finalist||(idx<2&&(chC.status==='final'||chC.status==='done'));
     return `<div class="ch-pair-card" onclick="openPair(${p.id})">
       <div class="ch-pair-top">
-        <div class="ch-pair-names">⚓ ${esc(vet?vet.nickname:'?')} <span class="ch-vs">×</span> ${esc(nov?nov.nickname:'?')} <span class="ch-rank">${nov?CH_CLASS_LABEL[nov.class]:''}</span></div>
+        <div class="ch-pair-names">${esc(vet?vet.nickname:'?')} <span class="ch-vs">×</span> ${esc(nov?nov.nickname:'?')}</div>
         ${finalist?'<span class="ch-finalist">★ ФІНАЛІСТ</span>':''}
       </div>
       <div class="ch-pair-total">${s.pair_total||0}<span> балів</span></div>
@@ -361,6 +373,15 @@ async function chMarkFinalists(){
     await chLoadChallenge(chC.id);
   }catch(e){alert('Помилка: '+chErrMsg(e));}
 }
+async function chSetDeadline(){
+  const v=document.getElementById('chDeadlineInp')?.value;
+  if(!v){alert('Вкажи дату й час дедлайну набору.');return;}
+  try{
+    await sbFetch('/rest/v1/challenge?id=eq.'+chC.id,{method:'PATCH',body:JSON.stringify({reg_deadline:new Date(v).toISOString(),updated_at:new Date().toISOString()})});
+    await chLoadChallenge(chC.id);
+    chFetchReg();
+  }catch(e){alert('Помилка: '+chErrMsg(e));}
+}
 async function chEditRules(){
   const cur=chC.rules_text||'';
   const val=prompt('Текст правил:',cur);
@@ -417,6 +438,8 @@ async function chLoadPair(id){
     chTasks=await chGet('challenge_task?challenge_id=eq.'+chPair.challenge_id+'&order=row_no.asc');
     chParts=await chGet('participant?id=in.('+chPair.veteran_id+','+chPair.novice_id+')');
     chPairRows=await chGet('v_progress_points?pair_id=eq.'+id+'&select=*');
+    chPairTasks=await chGet('pair_task?challenge_id=eq.'+chPair.challenge_id+'&order=row_no.asc');
+    chPairTaskDone=await chGet('pair_task_done?pair_id=eq.'+id);
     const cr=document.getElementById('chPairCrumbCh');if(cr)cr.textContent=chPairC.title;
     chRenderPair();
   }catch(e){if(box)box.innerHTML='<p class="hint">Помилка: '+esc(chErrMsg(e))+'</p>';}
@@ -433,14 +456,16 @@ function chRenderPair(){
   const vRows=rowsOf(chPair.veteran_id), nRows=rowsOf(chPair.novice_id);
   const vPts=sumPts(vRows), nPts=sumPts(nRows);
   const vDone=doneCnt(vRows), nDone=doneCnt(nRows);
-  const pairTotal=nPts+vPts;
+  const ptById=Object.fromEntries(chPairTasks.map(t=>[t.id,t]));
+  const ptPts=chPairTaskDone.reduce((a,d)=>a+(d.done?(ptById[d.pair_task_id]?.points||0):0),0);
+  const pairTotal=nPts+vPts+ptPts;
   const locked=chPairC.status==='done'&&!isAdmin;
   const canEdit=isOfficer&&!locked;
 
-  let h=`<div class="page-head"><div class="page-title">${esc(vet?.nickname||'?')} <span class="ch-vs">×</span> ${esc(nov?.nickname||'?')} <span class="ch-rank">${nov?CH_CLASS_LABEL[nov.class]:''}</span></div>
+  let h=`<div class="page-head"><div class="page-title">${esc(vet?.nickname||'?')} <span class="ch-vs">×</span> ${esc(nov?.nickname||'?')}</div>
     <p class="page-lede">${esc(chPairC.title)}</p></div>`;
   h+=`<div class="ch-pairtot-box"><div class="ch-pairtot-lbl">Бали пари</div><div class="ch-pairtot-val">${pairTotal}</div>
-    <div class="ch-help ok">Ветеран ${vPts} б (${vDone}/7) · Новачок ${nPts} б (${nDone}/7)</div></div>`;
+    <div class="ch-help ok">${esc(vet?.nickname||'Ветеран')} ${vPts} б (${vDone}/7) · ${esc(nov?.nickname||'Новачок')} ${nPts} б (${nDone}/7)${chPairTasks.length?` · Парні ${ptPts} б`:''}</div></div>`;
   if(locked)h+=`<p class="hint">🔒 Челендж завершено — редагування заблоковане.</p>`;
 
   const notV=vRows.filter(r=>r.status!=='done').map(r=>taskById[r.task_id]?.title).filter(Boolean);
@@ -450,8 +475,40 @@ function chRenderPair(){
   h+=`<div id="chPairMsg" class="ch-row-err" style="margin:10px 0"></div>`;
   h+=`<p class="hint" style="margin-bottom:6px">↔ Таблицю можна гортати вліво-вправо</p>`;
   h+=chPairTable(vet,nov,vRows,nRows,taskById,canEdit);
+  h+=chPairTasksBlock(canEdit);
 
   box.innerHTML=h;
+}
+
+function chPairTasksBlock(canEdit){
+  if(!chPairTasks.length)return '';
+  const doneBy=Object.fromEntries(chPairTaskDone.map(d=>[d.pair_task_id,d]));
+  let h=`<div class="ch-section-label">Парні завдання</div><div class="ch-ptasks">`;
+  chPairTasks.forEach(t=>{
+    const d=doneBy[t.id]; const done=d&&d.done;
+    h+=`<div class="ch-ptask ${done?'done':''}">
+      <div class="ch-ptask-main"><span class="ch-ptask-title">${esc(t.title)}</span>${
+        isOfficer?`<button class="ch-ptask-edit" onclick="chEditPairTask(${t.id})" title="Змінити назву">✏</button>`:''}</div>
+      <div class="ch-ptask-right">${
+        canEdit&&d?`<label class="ch-cb"><input type="checkbox" ${done?'checked':''} onchange="chTogglePairTask(${d.id},this.checked)"> Виконано</label>`
+                 :`<span class="ch-ptask-status ${done?'ok':''}">${done?'Виконано ✓':'Не виконано'}</span>`}
+        <span class="ch-ptask-pts">${done?('+'+(t.points||0)+' б'):''}</span></div>
+    </div>`;
+  });
+  return h+`</div>`;
+}
+async function chTogglePairTask(doneId,done){
+  const msg=document.getElementById('chPairMsg');if(msg)msg.textContent='';
+  try{
+    await sbFetch('/rest/v1/pair_task_done?id=eq.'+doneId,{method:'PATCH',body:JSON.stringify({done,updated_at:new Date().toISOString()})});
+    await chLoadPair(chPair.id);
+  }catch(e){const m='⚠ '+chErrMsg(e);if(msg)msg.textContent=m;else alert(m);await chLoadPair(chPair.id);}
+}
+async function chEditPairTask(taskId){
+  const t=chPairTasks.find(x=>x.id===taskId);if(!t)return;
+  const v=prompt('Назва парного завдання:',t.title);if(v===null)return;
+  try{await sbFetch('/rest/v1/pair_task?id=eq.'+taskId,{method:'PATCH',body:JSON.stringify({title:v.trim()})});await chLoadPair(chPair.id);}
+  catch(e){alert('Помилка: '+chErrMsg(e));}
 }
 
 function chPairTable(vet,nov,vRows,nRows,taskById,canEdit){
@@ -463,8 +520,8 @@ function chPairTable(vet,nov,vRows,nRows,taskById,canEdit){
   const head=`<thead>
     <tr>
       <th rowspan="2">№</th><th rowspan="2" class="lft">Завдання</th>
-      <th colspan="4" class="grp">Ветеран${vet?' · '+esc(vet.nickname):''}</th>
-      <th colspan="5" class="grp2">Новачок${nov?' · '+esc(nov.nickname):''}</th>
+      <th colspan="4" class="grp">${vet?esc(vet.nickname):'Ветеран'}</th>
+      <th colspan="5" class="grp2">${nov?esc(nov.nickname):'Новачок'}</th>
       ${canEdit?'<th rowspan="2"></th>':''}
     </tr>
     <tr>

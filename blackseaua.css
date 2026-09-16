@@ -1419,3 +1419,18 @@ footer {
   background:rgba(7,16,26,.5);border:1px solid var(--border2);border-radius:var(--r);padding:8px 6px}
 .ch-banner-countdown .cbseg b{font-family:var(--f-mono);font-size:24px;font-weight:700;color:var(--accent);line-height:1}
 .ch-banner-countdown .cbseg i{font-style:normal;font-family:var(--f-mono);font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-top:4px}
+
+/* ── CHALLENGE: deadline editor + pair tasks ── */
+.ch-deadline-edit{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin:10px 0 4px;padding:12px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r)}
+.ch-deadline-lbl{font-family:var(--f-mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);width:100%}
+.ch-ptasks{display:flex;flex-direction:column;gap:8px}
+.ch-ptask{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:12px 14px}
+.ch-ptask.done{border-left:2px solid var(--green)}
+.ch-ptask-main{display:flex;align-items:center;gap:8px;min-width:0;flex:1}
+.ch-ptask-title{font-size:14px;font-weight:500;color:var(--cream)}
+.ch-ptask-edit{background:transparent;border:none;color:var(--muted);cursor:pointer;font-size:13px;padding:2px 4px}
+.ch-ptask-edit:hover{color:var(--accent)}
+.ch-ptask-right{display:flex;align-items:center;gap:12px;flex-shrink:0}
+.ch-ptask-status{font-family:var(--f-mono);font-size:11px;color:var(--muted)}
+.ch-ptask-status.ok{color:var(--green)}
+.ch-ptask-pts{font-family:var(--f-mono);font-size:13px;font-weight:700;color:var(--accent);min-width:44px;text-align:right}
