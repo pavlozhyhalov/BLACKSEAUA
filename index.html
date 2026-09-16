@@ -208,6 +208,11 @@ gtag('config', 'G-V2SVEPJSH0');
           <div class="card-title" data-i18n="nav_ships">ТТХ Кораблів</div>
           <div class="card-desc" data-i18n="nav_ships_desc">Характеристики та порівняння всіх кораблів.</div>
         </div>
+        <div class="card" ontouchstart="" onclick="openChallenges()" style="border-left:2px solid var(--accent)">
+          <span class="card-num">07 · <span style="color:var(--accent);letter-spacing:.06em">⚔ НОВЕ</span></span>
+          <div class="card-title" data-i18n="nav_challenges">Челенджі</div>
+          <div class="card-desc" data-i18n="nav_challenges_desc">Клановий челендж «Ветеран + Новачок»: пари, завдання, бали.</div>
+        </div>
       </div>
     </div>
 
@@ -232,6 +237,58 @@ gtag('config', 'G-V2SVEPJSH0');
         <div class="card-desc" data-i18n="flex_desc">4 класи, 12 днів, призовий фонд до 10 000 дублонів</div>
         <div class="card-archive-meta">Травень 2026 · Результати доступні</div>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ CHALLENGES LIST ══ -->
+<div id="challengeListPage" class="page">
+  <div class="shell">
+    <div class="page-head">
+      <div class="page-breadcrumb"><a onclick="backToHome()" data-i18n="home">Головна</a><span class="sep">/</span><span>Челенджі</span></div>
+      <div class="page-title">Челенджі</div>
+      <p class="page-lede">Кланові челенджі: правила, пари, бали.</p>
+    </div>
+    <div id="chListOfficer" style="display:none;margin-bottom:16px">
+      <button class="league-apply-btn" onclick="chCreateChallenge()">＋ Створити челендж</button>
+    </div>
+    <div id="chListGrid" class="cards" style="max-width:520px"></div>
+  </div>
+</div>
+
+<!-- ══ CHALLENGE DETAIL ══ -->
+<div id="challengePage" class="page">
+  <div class="shell">
+    <div class="page-breadcrumb"><a onclick="backToHome()" data-i18n="home">Головна</a><span class="sep">/</span><a onclick="openChallenges()">Челенджі</a><span class="sep">/</span><span id="chCrumb">—</span></div>
+    <div id="chDetail"><div class="sync-status"><div class="sync-dot loading"></div><span>Завантаження...</span></div></div>
+  </div>
+</div>
+
+<!-- ══ PAIR DETAIL ══ -->
+<div id="pairPage" class="page">
+  <div class="shell">
+    <div class="page-breadcrumb"><a onclick="backToHome()" data-i18n="home">Головна</a><span class="sep">/</span><a onclick="openChallenges()">Челенджі</a><span class="sep">/</span><a id="chPairCrumbCh" onclick="chBackToChallenge()">—</a><span class="sep">/</span><span>Пара</span></div>
+    <div id="chPairDetail"><div class="sync-status"><div class="sync-dot loading"></div><span>Завантаження...</span></div></div>
+  </div>
+</div>
+
+<!-- ══ CHALLENGE: ADD PARTICIPANT MODAL ══ -->
+<div class="modal-overlay" id="chAddPartModal" onclick="if(event.target===this)closeModal('chAddPartModal')">
+  <div class="modal-box">
+    <div class="modal-title">Додати учасника</div>
+    <div class="modal-sub">Нік у грі та клас гравця.</div>
+    <label class="modal-label">Нікнейм</label>
+    <input type="text" class="modal-input" id="chPartNick" placeholder="Твій_Нікнейм" autocomplete="off" maxlength="40">
+    <label class="modal-label" style="margin-top:10px">Клас</label>
+    <select class="modal-input" id="chPartClass">
+      <option value="V">Ветеран (VIII–Легендарні)</option>
+      <option value="N1">Новачок ранг 1 (I–IV)</option>
+      <option value="N2">Новачок ранг 2 (V–VII)</option>
+    </select>
+    <div class="modal-error" id="chPartError"></div>
+    <div class="modal-actions">
+      <button class="btn-primary" onclick="chConfirmAddParticipant()">Додати</button>
+      <button class="btn-secondary" onclick="closeModal('chAddPartModal')">Скасувати</button>
     </div>
   </div>
 </div>
@@ -606,6 +663,7 @@ gtag('config', 'G-V2SVEPJSH0');
 const TRANSLATIONS = {
   uk: {
     nav_ships:'ТТХ Кораблів', ships_lede:'428 кораблів · порівняння до 5',
+    nav_challenges:'Челенджі', nav_challenges_desc:'Клановий челендж «Ветеран + Новачок»: пари, завдання, бали.',
     nav_ships_desc:'Характеристики та порівняння всіх кораблів.',
     ships_search_ph:'Назва корабля...',
     ships_class:'Клас', ships_tier:'Рівень', ships_nation:'Нація', ships_type:'Тип',
@@ -695,6 +753,7 @@ const TRANSLATIONS = {
   },
   ru: {
     nav_ships:'ТТХ Кораблей', ships_lede:'PS4/PS5/XBOX · 436 кораблей · Выбери до 3 для сравнения',
+    nav_challenges:'Челленджи', nav_challenges_desc:'Клановый челлендж «Ветеран + Новичок»: пары, задания, баллы.',
     nav_ships_desc:'Характеристики и сравнение всех кораблей.',
     ships_search_ph:'Название корабля...',
     ships_class:'Класс', ships_tier:'Уровень', ships_nation:'Нация', ships_type:'Тип',
@@ -784,6 +843,7 @@ const TRANSLATIONS = {
   },
   en: {
     nav_ships:'Ship Stats', ships_lede:'PS4/PS5/XBOX · 436 ships · Select up to 3 to compare',
+    nav_challenges:'Challenges', nav_challenges_desc:'Clan challenge "Veteran + Novice": pairs, tasks, points.',
     nav_ships_desc:'Stats and comparison of all ships.',
     ships_search_ph:'Ship name...',
     ships_class:'Class', ships_tier:'Tier', ships_nation:'Nation', ships_type:'Type',
@@ -1008,7 +1068,7 @@ const RECORD_CATS=[
   {key:'medals',  label:'Медалі',        unit:'шт'},
 ];
 
-let currentUser=null,userApproved=false,accessToken=null;
+let currentUser=null,userApproved=false,accessToken=null,isOfficer=false,isAdmin=false;
 
 function esc(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML;}
 
@@ -1045,6 +1105,7 @@ async function doLogin(){
     closeModal('loginModal');updateAuthUI();
     if(document.getElementById('tournamentFlexPage').classList.contains('active'))renderTable();
     if(document.getElementById('recordsPage').classList.contains('active'))renderRecords();
+    if(window.chOnAuthChange)chOnAuthChange();
   }catch(e){errEl.textContent=e.message;}
   finally{btn.disabled=false;btn.textContent=t('login');}
 }
@@ -1077,23 +1138,27 @@ async function doRegister(){
 }
 
 async function checkApproval(){
-  if(!currentUser){userApproved=false;return;}
+  if(!currentUser){userApproved=false;isOfficer=false;isAdmin=false;return;}
   try{
-    const res=await fetch(`${SUPA_URL}/rest/v1/allowed_users?email=eq.${encodeURIComponent(currentUser.email.toLowerCase())}&select=approved`,{
+    const res=await fetch(`${SUPA_URL}/rest/v1/allowed_users?email=eq.${encodeURIComponent(currentUser.email.toLowerCase())}&select=approved,is_officer,is_admin`,{
       headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+(accessToken||SUPA_KEY)}
     });
     const data=await res.json();
-    userApproved=Array.isArray(data)&&data[0]?.approved===true;
-  }catch(e){userApproved=false;}
+    const row=Array.isArray(data)?data[0]:null;
+    userApproved=row?.approved===true;
+    isAdmin=row?.is_admin===true;
+    isOfficer=row?.is_officer===true||isAdmin;
+  }catch(e){userApproved=false;isOfficer=false;isAdmin=false;}
 }
 
 function doLogout(){
-  currentUser=null;userApproved=false;accessToken=null;
+  currentUser=null;userApproved=false;accessToken=null;isOfficer=false;isAdmin=false;
   try{localStorage.removeItem('sb_token');}catch(e){}
   try{localStorage.removeItem('sb_refresh');}catch(e){}
   updateAuthUI();
   if(document.getElementById('tournamentFlexPage').classList.contains('active'))renderTable();
   if(document.getElementById('recordsPage').classList.contains('active'))renderRecords();
+  if(window.chOnAuthChange)chOnAuthChange();
 }
 
 async function tryRestoreSession(){
@@ -1201,8 +1266,8 @@ function updateAuthUI(){
   }
 }
 
-const PAGE_MAP={'':'homePage','home':'homePage','ships':'shipsPage','lottery':'lotteryPage','tournaments':'tournamentsListPage','flex':'tournamentFlexPage','records':'recordsPage','resources':'resourcesPage','voting':'votingPage'};
-const HASH_MAP={'homePage':'home','shipsPage':'ships','lotteryPage':'lottery','tournamentsListPage':'tournaments','tournamentFlexPage':'flex','recordsPage':'records','resourcesPage':'resources','votingPage':'voting'};
+const PAGE_MAP={'':'homePage','home':'homePage','ships':'shipsPage','lottery':'lotteryPage','tournaments':'tournamentsListPage','flex':'tournamentFlexPage','records':'recordsPage','resources':'resourcesPage','voting':'votingPage','challenges':'challengeListPage','challenge':'challengePage','pair':'pairPage'};
+const HASH_MAP={'homePage':'home','shipsPage':'ships','lotteryPage':'lottery','tournamentsListPage':'tournaments','tournamentFlexPage':'flex','recordsPage':'records','resourcesPage':'resources','votingPage':'voting','challengeListPage':'challenges','challengePage':'challenge','pairPage':'pair'};
 
 function revealCards(){
   document.querySelectorAll('.page.active .card').forEach((card,idx)=>{
@@ -1229,14 +1294,19 @@ function openVoting(){showPage('votingPage');}
 function openShips(){showPage('shipsPage');setTimeout(()=>{fl();},50);}
 
 function restorePage(){
-  const hash=window.location.hash.replace('#','');
-  const pageId=PAGE_MAP[hash]||'homePage';
+  const raw=window.location.hash.replace('#','');
+  const base=raw.split('=')[0];
+  const arg=raw.split('=')[1];
+  const pageId=PAGE_MAP[base]||'homePage';
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.getElementById(pageId).classList.add('active');
   if(pageId==='lotteryPage')setTimeout(()=>{setCanvasSize();drawWheel();},40);
   if(pageId==='tournamentFlexPage'){updateAuthUI();loadPlayers();updateTimer();}
   if(pageId==='recordsPage'){updateAuthUI();loadRecords();}
   if(pageId==='shipsPage'){setTimeout(()=>{fl();},50);}
+  if(pageId==='challengeListPage'&&window.chRenderList)chRenderList();
+  if(pageId==='challengePage'&&window.chLoadChallenge){if(arg)chLoadChallenge(+arg);else showPage('challengeListPage');}
+  if(pageId==='pairPage'&&window.chLoadPair){if(arg)chLoadPair(+arg);else showPage('challengeListPage');}
 }
 
 /* ── WHEEL ── */
@@ -1647,6 +1717,7 @@ function updateFlipCountdown(){
   await tryRestoreSession();
   restorePage();
   updateAuthUI();
+  if(window.chOnAuthChange)chOnAuthChange();
   restoreLangUI();
   applyTranslations();
   setInterval(updateTimer,1000);
@@ -1930,6 +2001,7 @@ ${rowBool(reloadBL,ships.map(s=>s.reload_b))}
 }
 
 </script>
+<script src="challenge.js"></script>
 
 
 </body>
