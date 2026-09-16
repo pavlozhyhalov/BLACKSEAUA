@@ -1453,8 +1453,8 @@ footer {
 .ch-medal-table{border-collapse:separate;border-spacing:0;min-width:100%}
 .ch-medal-table th,.ch-medal-table td{border-bottom:1px solid var(--border);border-right:1px solid var(--border);text-align:center;white-space:nowrap}
 .ch-medal-table thead th{background:var(--surface);color:var(--muted);vertical-align:bottom;padding:6px}
-.ch-medal-table th.mx-med{height:130px;padding:6px 3px}
-.ch-medal-table th.mx-med span{writing-mode:vertical-rl;transform:rotate(180deg);display:inline-block;white-space:nowrap;font-family:var(--f-mono);font-size:10px;letter-spacing:.02em;color:var(--muted)}
+.ch-medal-table th.mx-med{padding:8px 6px;width:84px;min-width:84px;vertical-align:bottom}
+.ch-medal-table th.mx-med span{display:block;white-space:normal;font-family:var(--f-mono);font-size:10px;line-height:1.25;letter-spacing:.01em;color:var(--muted)}
 .ch-medal-table th.mx-med.na span{color:var(--border2)}
 .ch-medal-table .mx-nick{position:sticky;left:0;z-index:2;width:120px;min-width:120px;background:var(--surface2);text-align:left;padding:9px 10px;font-weight:600;color:var(--cream)}
 .ch-medal-table .mx-sum{position:sticky;left:120px;z-index:2;min-width:46px;background:var(--surface2);font-family:var(--f-mono);font-weight:700;color:var(--accent)}
