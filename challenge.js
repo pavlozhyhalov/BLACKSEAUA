@@ -141,7 +141,7 @@ function chRenderChallenge(){
 
   // header
   h+=`<div class="page-head"><div class="page-title">${esc(chC.title)} ${chStatusBadge(chC.status)}</div>
-    <p class="page-lede">${chDateRange(chC)} · Поріг допомоги: новачок ${chC.help_threshold}/7</p></div>`;
+    <p class="page-lede">${chDateRange(chC)} · Бали ветерана зараховуються, коли новачок виконав щонайменше ${chC.help_threshold} із 7</p></div>`;
 
   // rules
   h+=`<div class="rules-box"><div class="rules-box-title">Опис</div>
@@ -180,7 +180,7 @@ function chRenderChallenge(){
         h+=`<div class="ch-draw-title">Жеребкування пар</div>
           <p class="hint">Натисни «Жеребкувати» — нікнейми перемішаються, і пара утвориться між тими, хто опинився в одному рядку.</p>
           <div class="table-wrapper"><table class="ch-draw-table"><thead><tr><th>Новачки</th><th></th><th>Ветерани</th></tr></thead><tbody id="chDrawBody"></tbody></table></div>
-          <button class="spin-btn" id="chDrawBtn" onclick="chDrawAll()">🎲 Жеребкувати пари</button>`;
+          <button class="spin-btn" id="chDrawBtn" onclick="chDrawAll()">Жеребкувати пари</button>`;
       }else if(nv===nn&&nv>0&&upv.length===0){
         h+=`<p class="hint">✔ Усі пари сформовано. Натисни «Зафіксувати пари → Активний».</p>`;
       }
@@ -254,7 +254,7 @@ async function chDrawAll(){
     });
     if(!r.ok)throw new Error(await r.text());
     result=await r.json();   // [{veteran_id, novice_id}...]
-  }catch(e){alert('Помилка жеребкування: '+chErrMsg(e));if(btn){btn.disabled=false;btn.textContent='🎲 Жеребкувати пари';}return;}
+  }catch(e){alert('Помилка жеребкування: '+chErrMsg(e));if(btn){btn.disabled=false;btn.textContent='Жеребкувати пари';}return;}
 
   // animate: shuffle both columns for ~2.4s, then settle to the server result
   await new Promise(resolve=>{
@@ -412,7 +412,9 @@ function chRenderPair(){
   let h=`<div class="page-head"><div class="page-title">${esc(vet?.nickname||'?')} <span class="ch-vs">×</span> ${esc(nov?.nickname||'?')} <span class="ch-rank">${nov?CH_CLASS_LABEL[nov.class]:''}</span></div>
     <p class="page-lede">${esc(chPairC.title)} · Поріг допомоги: ${thr}/7</p></div>`;
   h+=`<div class="ch-pairtot-box"><div class="ch-pairtot-lbl">Бали пари</div><div class="ch-pairtot-val">${pairTotal}</div>
-    <div class="ch-help ${nDone>=thr?'ok':'frozen'}">${nDone>=thr?`Новачок ${nDone}/7 ✓ — бали ветерана зараховано`:`Новачок ${nDone}/7 · бали ветерана заморожені (треба ${thr})`}</div></div>`;
+    <div class="ch-help ${nDone>=thr?'ok':'frozen'}">${nDone>=thr
+      ? `Новачок виконав ${nDone} із 7 — бали ветерана зараховуються`
+      : `Бали ветерана додадуться, коли новачок виконає щонайменше ${thr} із 7 (зараз ${nDone})`}</div></div>`;
   if(locked)h+=`<p class="hint">🔒 Челендж завершено — редагування заблоковане.</p>`;
 
   const notV=vRows.filter(r=>r.status!=='done').map(r=>taskById[r.task_id]?.title).filter(Boolean);
@@ -430,14 +432,20 @@ function chPairTable(vet,nov,vRows,nRows,taskById,canEdit){
   const vBy=Object.fromEntries(vRows.map(r=>[r.task_id,r]));
   const nBy=Object.fromEntries(nRows.map(r=>[r.task_id,r]));
   const novNorm=t=>nov&&nov.class==='N1'?t.norm_n1:t.norm_n2;
-  const stSel=r=>`<select id="st_${r.id}" class="ch-inp"><option value="not_done"${r.status!=='done'?' selected':''}>Не викон.</option><option value="done"${r.status==='done'?' selected':''}>Виконав</option></select>`;
-  const btInp=r=>`<input type="datetime-local" id="bt_${r.id}" class="ch-inp ch-inp-dt" value="${chToLocalInput(r.battle_at)}">`;
+  const stSel=r=>`<select id="st_${r.id}" class="ch-inp"><option value="not_done"${r.status!=='done'?' selected':''}>Не виконано</option><option value="done"${r.status==='done'?' selected':''}>Виконано</option></select>`;
   const cb=(id,ch)=>`<input type="checkbox" id="${id}"${ch?' checked':''}>`;
-  let head=`<tr>
-    <th>№</th><th class="lft">Завдання</th>
-    <th class="grp">В: Норма</th><th class="grp">В: Статус</th><th class="grp">В: Бій</th><th class="grp">В: Загін</th><th class="grp">В: Бали</th>
-    <th class="grp2">Н: Норма</th><th class="grp2">Н: Статус</th><th class="grp2">Н: Бій</th><th class="grp2">Н: Загін</th><th class="grp2">Н: Норма вет.</th><th class="grp2">Н: Бали</th>
-    ${canEdit?'<th></th>':''}</tr>`;
+  const head=`<thead>
+    <tr>
+      <th rowspan="2">№</th><th rowspan="2" class="lft">Завдання</th>
+      <th colspan="4" class="grp">Ветеран${vet?' · '+esc(vet.nickname):''}</th>
+      <th colspan="5" class="grp2">Новачок${nov?' · '+esc(nov.nickname):''}</th>
+      ${canEdit?'<th rowspan="2"></th>':''}
+    </tr>
+    <tr>
+      <th class="grp">Норма</th><th class="grp">Статус</th><th class="grp">Загін</th><th class="grp">Бали</th>
+      <th class="grp2">Норма</th><th class="grp2">Статус</th><th class="grp2">Загін</th><th class="grp2">Норма ветерана</th><th class="grp2">Бали</th>
+    </tr>
+  </thead>`;
   let body='';
   chTasks.forEach(t=>{
     const vr=vBy[t.id], nr=nBy[t.id];
@@ -445,31 +453,27 @@ function chPairTable(vet,nov,vRows,nRows,taskById,canEdit){
     body+=`<tr>
       <td>${t.row_no}</td><td class="lft">${esc(t.title)}</td>
       <td>${esc(t.norm_v||'—')}</td>
-      <td>${canEdit?stSel(vr):(vDone?'Виконав':'Не викон.')}</td>
-      <td>${canEdit?btInp(vr):(vDone?chFmtDT(vr.battle_at):'—')}</td>
-      <td>${canEdit?cb('sq_'+vr.id,vr.bonus_squad):(vr&&vr.bonus_squad?'✓':'—')}</td>
+      <td>${canEdit?stSel(vr):(vDone?'Виконано':'Не виконано')}</td>
+      <td>${canEdit?cb('sq_'+vr.id,vr.bonus_squad):(vr&&vr.bonus_squad?'Так':'—')}</td>
       <td class="pts">${vr?vr.points:0}</td>
       <td>${esc(novNorm(t)||'—')}</td>
-      <td>${canEdit?stSel(nr):(nDone?'Виконав':'Не викон.')}</td>
-      <td>${canEdit?btInp(nr):(nDone?chFmtDT(nr.battle_at):'—')}</td>
-      <td>${canEdit?cb('sq_'+nr.id,nr.bonus_squad):(nr&&nr.bonus_squad?'✓':'—')}</td>
-      <td>${canEdit?cb('vn_'+nr.id,nr.bonus_vet_norm):(nr&&nr.bonus_vet_norm?'✓':'—')}</td>
+      <td>${canEdit?stSel(nr):(nDone?'Виконано':'Не виконано')}</td>
+      <td>${canEdit?cb('sq_'+nr.id,nr.bonus_squad):(nr&&nr.bonus_squad?'Так':'—')}</td>
+      <td>${canEdit?cb('vn_'+nr.id,nr.bonus_vet_norm):(nr&&nr.bonus_vet_norm?'Так':'—')}</td>
       <td class="pts">${nr?nr.points:0}</td>
-      ${canEdit?`<td><button class="ch-mini-btn primary ch-save-btn" onclick="chSaveTaskRow(${vr.id},${nr.id})">💾</button></td>`:''}
+      ${canEdit?`<td><button class="ch-mini-btn primary ch-save-btn" onclick="chSaveTaskRow(${vr.id},${nr.id})">Зберегти</button></td>`:''}
     </tr>`;
   });
-  return `<div class="table-wrapper"><table class="lb ch-pair-table"><thead>${head}</thead><tbody>${body}</tbody></table></div>`;
+  return `<div class="table-wrapper"><table class="lb ch-pair-table">${head}<tbody>${body}</tbody></table></div>`;
 }
 
 async function chPatchProgress(id,squadOff){
   const st=document.getElementById('st_'+id);if(!st)return;
   const status=st.value;
-  const btVal=document.getElementById('bt_'+id)?.value;
-  const battle_at=(status==='done'&&btVal)?new Date(btVal).toISOString():null;
   const bonus_squad=squadOff?false:(document.getElementById('sq_'+id)?.checked||false);
   const bonus_vet_norm=document.getElementById('vn_'+id)?.checked||false;
   await sbFetch('/rest/v1/progress?id=eq.'+id,{method:'PATCH',
-    body:JSON.stringify({status,battle_at,bonus_squad,bonus_vet_norm,updated_at:new Date().toISOString()})});
+    body:JSON.stringify({status,bonus_squad,bonus_vet_norm,updated_at:new Date().toISOString()})});
 }
 
 // Save a whole task row (veteran + novice). Two passes so a «Загін» bonus is
