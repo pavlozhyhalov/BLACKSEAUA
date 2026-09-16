@@ -411,7 +411,9 @@ async function chDrawAll(){
 function chOpenAddPart(){
   document.getElementById('chPartNick').value='';
   document.getElementById('chPartError').textContent='';
-  const cr=document.getElementById('chPartClassRow');if(cr)cr.style.display=(chC.mode==='medals')?'none':'block';
+  const medals=chC.mode==='medals';
+  const cr=document.getElementById('chPartClassRow');if(cr)cr.style.display=medals?'none':'block';
+  const sb=document.getElementById('chPartSub');if(sb)sb.textContent=medals?'Нік гравця у грі.':'Нік у грі та рівень кораблів.';
   openModal('chAddPartModal');
   setTimeout(()=>document.getElementById('chPartNick').focus(),50);
 }
