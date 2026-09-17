@@ -780,12 +780,13 @@ function renderVisits(rows){
   if(!rows.length){h+='<p class="hint">Записів ще немає — журнал почне наповнюватися з наступних відкриттів сайту.</p>';box.innerHTML=h;return;}
   h+=`<p class="hint" style="margin:16px 0 6px">Останні візити (до 500) · час за Києвом</p>`;
   h+=`<div class="table-wrapper"><table class="lb ch-visit-table"><thead><tr>
-    <th class="lft">Час</th><th>Тип</th><th class="lft">Хто</th><th class="lft">Пристрій</th><th class="lft">Звідки</th><th class="lft">Сторінка</th></tr></thead><tbody>${
+    <th class="lft">Час</th><th>Тип</th><th class="lft">Хто</th><th class="lft">Пристрій</th><th class="lft">Локація</th><th class="lft">Звідки</th></tr></thead><tbody>${
     rows.map(r=>{
       const t=new Date(r.created_at).toLocaleString('uk-UA',{timeZone:'Europe/Kyiv',day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});
-      const who=r.email?esc(r.email):('гість · '+esc((r.visitor_id||'').slice(0,6)));
-      const ref=r.referer?esc(r.referer.replace(/^https?:\/\//,'').slice(0,40)):'—';
-      return `<tr class="${r.is_bot?'v-bot':''}"><td class="lft">${t}</td><td>${r.is_bot?'🤖 бот':'🧑 людина'}</td><td class="lft">${who}</td><td class="lft">${esc(chUAShort(r.user_agent))}</td><td class="lft">${ref}</td><td class="lft">${esc(r.path||'/')}</td></tr>`;
+      const who=r.email?esc(r.email):('гість · '+esc((r.visitor_id||'').replace(/^ip:/,'').slice(0,6)));
+      const loc=[r.city,r.country].filter(Boolean).map(esc).join(', ')||'—';
+      const ref=r.referer?esc(r.referer.replace(/^https?:\/\//,'').replace(/\/$/,'').slice(0,40)):'—';
+      return `<tr class="${r.is_bot?'v-bot':''}"><td class="lft">${t}</td><td>${r.is_bot?'🤖 бот':'🧑 людина'}</td><td class="lft">${who}</td><td class="lft">${esc(chUAShort(r.user_agent))}</td><td class="lft">${loc}</td><td class="lft">${ref}</td></tr>`;
     }).join('')
   }</tbody></table></div>`;
   box.innerHTML=h;
