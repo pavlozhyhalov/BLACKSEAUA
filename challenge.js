@@ -77,6 +77,7 @@ function chOnAuthChange(){
   else if(document.getElementById('challengePage').classList.contains('active')&&chC)chRenderChallenge();
   else if(document.getElementById('pairPage').classList.contains('active')&&chPair)chRenderPair();
   else if(document.getElementById('soloPlayerPage').classList.contains('active')&&chSolo)chRenderSolo();
+  else if(document.getElementById('visitsPage').classList.contains('active'))loadVisits();
 }
 
 /* ═══════════ HELPERS ═══════════ */
@@ -721,6 +722,73 @@ async function chSaveSoloRow(id){
       body:JSON.stringify({status:st.value,bonus_squad:false,bonus_vet_norm:false,updated_at:new Date().toISOString()})});
     await chLoadSolo(chSolo.id);
   }catch(e){const m='⚠ '+chErrMsg(e);if(msg)msg.textContent=m;else alert(m);await chLoadSolo(chSolo.id);}
+}
+
+/* ═══════════ VISIT LOG (owner-only journal) ═══════════ */
+const SUPER_ADMIN='pavlozhyhalov@gmail.com';
+function isSuperAdmin(){return !!(currentUser&&currentUser.email&&currentUser.email.toLowerCase()===SUPER_ADMIN);}
+function chDetectBot(ua){
+  return /bot|crawl|spider|slurp|bing|google|yandex|baidu|duckduck|facebookexternalhit|headless|preview|python|curl|wget|monitor|uptime|semrush|ahrefs|petalbot|scan/i.test(ua||'')
+    || (navigator.webdriver===true);
+}
+function logVisit(){
+  try{
+    let vid=null;try{vid=localStorage.getItem('visitor_id');}catch(_){}
+    if(!vid){vid=(window.crypto&&crypto.randomUUID)?crypto.randomUUID():(Date.now()+'-'+Math.random().toString(16).slice(2));try{localStorage.setItem('visitor_id',vid);}catch(_){}}
+    const ua=(navigator.userAgent||'').slice(0,300);
+    fetch(SUPA_URL+'/rest/v1/visit_log',{method:'POST',
+      headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+(accessToken||SUPA_KEY),'Content-Type':'application/json','Prefer':'return=minimal'},
+      body:JSON.stringify({visitor_id:vid,email:currentUser?currentUser.email:null,path:(location.hash||'/').slice(0,120),user_agent:ua,referer:(document.referrer||'').slice(0,300),is_bot:chDetectBot(ua)})
+    }).catch(()=>{});
+  }catch(_){}
+}
+function chUAShort(ua){
+  ua=ua||'';let os='?';
+  if(/iPhone|iPad|iPod/.test(ua))os='iPhone/iPad';
+  else if(/Android/.test(ua))os='Android';
+  else if(/Windows/.test(ua))os='Windows';
+  else if(/Mac OS X|Macintosh/.test(ua))os='Mac';
+  else if(/Linux/.test(ua))os='Linux';
+  let br='';
+  if(/CriOS|Chrome/.test(ua))br='Chrome';
+  else if(/Firefox|FxiOS/.test(ua))br='Firefox';
+  else if(/Safari/.test(ua)&&!/Chrome|CriOS/.test(ua))br='Safari';
+  return os+(br?' · '+br:'');
+}
+function openVisits(){showPage('visitsPage');window.location.hash='visits';loadVisits();}
+async function loadVisits(){
+  const box=document.getElementById('visitsBody');if(!box)return;
+  if(!isSuperAdmin()){box.innerHTML='<p class="hint">Доступно лише власнику акаунта.</p>';return;}
+  box.innerHTML=CH_LOADING;
+  try{const rows=await chGet('visit_log?select=*&order=created_at.desc&limit=500');renderVisits(rows);}
+  catch(e){box.innerHTML='<p class="hint">Помилка: '+esc(chErrMsg(e))+'</p>';}
+}
+function renderVisits(rows){
+  const box=document.getElementById('visitsBody');if(!box)return;
+  const now=Date.now();
+  const within=(r,ms)=>now-Date.parse(r.created_at)<=ms;
+  const uniq=arr=>new Set(arr.map(r=>r.visitor_id||('id'+r.id))).size;
+  const day=rows.filter(r=>within(r,86400000));
+  const dayHumans=day.filter(r=>!r.is_bot), dayBots=day.filter(r=>r.is_bot);
+  const weekHumans=rows.filter(r=>within(r,7*86400000)&&!r.is_bot);
+  let h=`<div class="ch-manage" style="gap:14px">
+    <div class="ch-manage-item"><span class="ch-manage-lbl">Унікальні люди · 24 год</span><div class="ch-pairtot-val" style="font-size:30px">${uniq(dayHumans)}</div></div>
+    <div class="ch-manage-item"><span class="ch-manage-lbl">Заходів людей · 24 год</span><div class="ch-pairtot-val" style="font-size:30px">${dayHumans.length}</div></div>
+    <div class="ch-manage-item"><span class="ch-manage-lbl">Ботів · 24 год</span><div class="ch-pairtot-val" style="font-size:30px;color:var(--muted)">${dayBots.length}</div></div>
+    <div class="ch-manage-item"><span class="ch-manage-lbl">Унікальні люди · 7 днів</span><div class="ch-pairtot-val" style="font-size:30px">${uniq(weekHumans)}</div></div>
+  </div>`;
+  if(!rows.length){h+='<p class="hint">Записів ще немає — журнал почне наповнюватися з наступних відкриттів сайту.</p>';box.innerHTML=h;return;}
+  h+=`<p class="hint" style="margin:16px 0 6px">Останні візити (до 500) · час за Києвом</p>`;
+  h+=`<div class="table-wrapper"><table class="lb ch-visit-table"><thead><tr>
+    <th class="lft">Час</th><th>Тип</th><th class="lft">Хто</th><th class="lft">Пристрій</th><th class="lft">Звідки</th><th class="lft">Сторінка</th></tr></thead><tbody>${
+    rows.map(r=>{
+      const t=new Date(r.created_at).toLocaleString('uk-UA',{timeZone:'Europe/Kyiv',day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});
+      const who=r.email?esc(r.email):('гість · '+esc((r.visitor_id||'').slice(0,6)));
+      const ref=r.referer?esc(r.referer.replace(/^https?:\/\//,'').slice(0,40)):'—';
+      return `<tr class="${r.is_bot?'v-bot':''}"><td class="lft">${t}</td><td>${r.is_bot?'🤖 бот':'🧑 людина'}</td><td class="lft">${who}</td><td class="lft">${esc(chUAShort(r.user_agent))}</td><td class="lft">${ref}</td><td class="lft">${esc(r.path||'/')}</td></tr>`;
+    }).join('')
+  }</tbody></table></div>`;
+  box.innerHTML=h;
 }
 
 /* start home recruitment banner */

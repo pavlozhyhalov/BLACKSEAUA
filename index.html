@@ -3,7 +3,7 @@
 <head>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-V2SVEPJSH0"></script>
-<script src="ships.js?v=20260916p"></script>
+<script src="ships.js?v=20260916q"></script>
 <script>
 window.dataLayer = window.dataLayer || [];
 function gtag(){dataLayer.push(arguments);}
@@ -14,7 +14,7 @@ gtag('config', 'G-V2SVEPJSH0');
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <title>BLACKSEAUA · WORLD OF WARSHIPS LEGENDS</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Syne+Mono&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="blackseaua.css?v=20260916p">
+<link rel="stylesheet" href="blackseaua.css?v=20260916q">
 <style>
 
 /* ══ SHIPS TTX PAGE ══ */
@@ -223,6 +223,11 @@ gtag('config', 'G-V2SVEPJSH0');
           <div class="card-title" data-i18n="nav_ships">ТТХ Кораблів</div>
           <div class="card-desc" data-i18n="nav_ships_desc">Характеристики та порівняння всіх кораблів.</div>
         </div>
+        <div class="card" id="visitsCard" ontouchstart="" onclick="openVisits()" style="display:none;border-left:2px solid var(--accent)">
+          <span class="card-num">🔒 <span style="color:var(--accent);letter-spacing:.06em">ЛИШЕ ВЛАСНИК</span></span>
+          <div class="card-title">Журнал відвідувань</div>
+          <div class="card-desc">Хто заходив на сайт: люди / боти, пристрій, час.</div>
+        </div>
       </div>
     </div>
 
@@ -275,6 +280,18 @@ gtag('config', 'G-V2SVEPJSH0');
   <div class="shell">
     <div class="page-breadcrumb"><a onclick="backToHome()" data-i18n="home">Головна</a><span class="sep">/</span><a onclick="openChallenges()">Челенджі</a><span class="sep">/</span><a id="chSoloCrumbCh" onclick="chBackToChallenge()">—</a><span class="sep">/</span><span>Гравець</span></div>
     <div id="chSoloDetail"><div class="sync-status"><div class="sync-dot loading"></div><span>Завантаження...</span></div></div>
+  </div>
+</div>
+
+<!-- ══ VISIT LOG (owner-only) ══ -->
+<div id="visitsPage" class="page">
+  <div class="shell">
+    <div class="page-head">
+      <div class="page-breadcrumb"><a onclick="backToHome()" data-i18n="home">Головна</a><span class="sep">/</span><span>Журнал відвідувань</span></div>
+      <div class="page-title">Журнал відвідувань 🔒</div>
+      <p class="page-lede">Приватна сторінка — видима лише власнику акаунта.</p>
+    </div>
+    <div id="visitsBody"><div class="sync-status"><div class="sync-dot loading"></div><span>Завантаження...</span></div></div>
   </div>
 </div>
 
@@ -1225,6 +1242,8 @@ async function tryRestoreSession(){
 }
 
 function updateAuthUI(){
+  const vc=document.getElementById('visitsCard');
+  if(vc)vc.style.display=(currentUser&&currentUser.email&&currentUser.email.toLowerCase()==='pavlozhyhalov@gmail.com')?'':'none';
   const area=document.getElementById('headerAuth');
   if(currentUser){
     const cls=userApproved?'approved':'';
@@ -1274,8 +1293,8 @@ function updateAuthUI(){
   }
 }
 
-const PAGE_MAP={'':'homePage','home':'homePage','ships':'shipsPage','lottery':'lotteryPage','tournaments':'tournamentsListPage','flex':'tournamentFlexPage','records':'recordsPage','resources':'resourcesPage','voting':'votingPage','challenges':'tournamentsListPage','challenge':'challengePage','pair':'pairPage','solo':'soloPlayerPage'};
-const HASH_MAP={'homePage':'home','shipsPage':'ships','lotteryPage':'lottery','tournamentsListPage':'tournaments','tournamentFlexPage':'flex','recordsPage':'records','resourcesPage':'resources','votingPage':'voting','challengePage':'challenge','pairPage':'pair','soloPlayerPage':'solo'};
+const PAGE_MAP={'':'homePage','home':'homePage','ships':'shipsPage','lottery':'lotteryPage','tournaments':'tournamentsListPage','flex':'tournamentFlexPage','records':'recordsPage','resources':'resourcesPage','voting':'votingPage','challenges':'tournamentsListPage','challenge':'challengePage','pair':'pairPage','solo':'soloPlayerPage','visits':'visitsPage'};
+const HASH_MAP={'homePage':'home','shipsPage':'ships','lotteryPage':'lottery','tournamentsListPage':'tournaments','tournamentFlexPage':'flex','recordsPage':'records','resourcesPage':'resources','votingPage':'voting','challengePage':'challenge','pairPage':'pair','soloPlayerPage':'solo','visitsPage':'visits'};
 
 function revealCards(){
   document.querySelectorAll('.page.active .card').forEach((card,idx)=>{
@@ -1316,6 +1335,7 @@ function restorePage(){
   if(pageId==='challengePage'&&window.chLoadChallenge){if(arg)chLoadChallenge(+arg);else openTournamentsList();}
   if(pageId==='pairPage'&&window.chLoadPair){if(arg)chLoadPair(+arg);else openTournamentsList();}
   if(pageId==='soloPlayerPage'&&window.chLoadSolo){if(arg)chLoadSolo(+arg);else openTournamentsList();}
+  if(pageId==='visitsPage'&&window.loadVisits)loadVisits();
 }
 
 /* ── WHEEL ── */
@@ -1727,6 +1747,7 @@ function updateFlipCountdown(){
   restorePage();
   updateAuthUI();
   if(window.chOnAuthChange)chOnAuthChange();
+  if(window.logVisit)logVisit();
   restoreLangUI();
   applyTranslations();
   setInterval(updateTimer,1000);
@@ -2010,7 +2031,7 @@ ${rowBool(reloadBL,ships.map(s=>s.reload_b))}
 }
 
 </script>
-<script src="challenge.js?v=20260916p"></script>
+<script src="challenge.js?v=20260916q"></script>
 
 
 </body>

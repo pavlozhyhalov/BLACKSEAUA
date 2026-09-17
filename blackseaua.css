@@ -1466,3 +1466,7 @@ footer {
 .ch-medal-table td.mx-cell.on{background:rgba(184,146,62,.18);color:var(--accent);font-family:var(--f-mono);font-weight:700}
 .ch-medal-table td.mx-cell.na{color:var(--border2);cursor:default}
 .ch-medal-table tbody tr:hover .mx-nick,.ch-medal-table tbody tr:hover .mx-sum{background:#16293a}
+/* ── VISIT LOG ── */
+.ch-visit-table th.lft,.ch-visit-table td.lft{text-align:left}
+.ch-visit-table th,.ch-visit-table td{font-size:12px;padding:9px 10px;white-space:nowrap}
+.ch-visit-table tr.v-bot{opacity:.5}
